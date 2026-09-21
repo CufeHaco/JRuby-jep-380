@@ -19,6 +19,7 @@ core/src/main/java/org/jruby/ext/socket/UnixDomainContext.java
 patches/SocketType_forChannel.java     → edit SocketType.java
 patches/RubyUNIXSocket_init.java       → edit RubyUNIXSocket.java
 patches/RubyUNIXServer_accept.java     → edit RubyUNIXServer.java
+patches/RubyBasicSocket_unixAddr.java  → edit RubyBasicSocket.java
 ```
 
 See [INTERPRETER.md](INTERPRETER.md).

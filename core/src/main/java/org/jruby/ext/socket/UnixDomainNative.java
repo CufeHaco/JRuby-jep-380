@@ -3,6 +3,7 @@ package org.jruby.ext.socket;
 import org.jruby.util.log.Logger;
 import org.jruby.util.log.LoggerFactory;
 
+import java.lang.foreign.AddressLayout;
 import java.lang.foreign.Arena;
 import java.lang.foreign.FunctionDescriptor;
 import java.lang.foreign.Linker;
@@ -39,7 +40,7 @@ public final class UnixDomainNative {
     private static final ValueLayout.OfInt  C_INT  = ValueLayout.JAVA_INT;
     private static final ValueLayout.OfLong C_LONG = ValueLayout.JAVA_LONG;
     private static final ValueLayout.OfByte C_BYTE = ValueLayout.JAVA_BYTE;
-    private static final ValueLayout        C_PTR  = ValueLayout.ADDRESS;
+    private static final AddressLayout      C_PTR  = ValueLayout.ADDRESS;
 
     private static final int BITS;
     private static final MethodHandle MH_SOCKETPAIR;
@@ -220,8 +221,8 @@ public final class UnixDomainNative {
             try {
                 return a >= 0 && b >= 0;
             } finally {
-                close.invokeExact(a);
-                close.invokeExact(b);
+                int ignoredA = (int) close.invokeExact(a);
+                int ignoredB = (int) close.invokeExact(b);
             }
         }
     }

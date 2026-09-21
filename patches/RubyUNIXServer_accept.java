@@ -1,4 +1,7 @@
 // Replacements inside core/src/main/java/org/jruby/ext/socket/RubyUNIXServer.java
+// After applying: remove the now-unused imports
+// jnr.unixsocket.UnixServerSocketChannel / UnixSocketAddress / UnixSocketChannel,
+// and add java.nio.channels.Channel.
 
     @JRubyMethod
     public IRubyObject accept(ThreadContext context) {
@@ -59,4 +62,21 @@
 
     private ServerSocketChannel asUnixServer() {
         return (ServerSocketChannel) getChannel();
+    }
+
+    // WHY: these overrides used to hard-cast getChannel() to JNR's
+    // UnixServerSocketChannel. Under JEP-380 the channel is a plain JDK
+    // ServerSocketChannel, so that cast threw ClassCastException on every
+    // call. Route through SocketType.forChannel, which already knows how to
+    // fetch the local address for either channel flavor (see SocketType_forChannel.java).
+    @Override
+    protected SocketAddress getUnixSocketAddress() {
+        Channel channel = getChannel();
+        SocketAddress socketAddress = SocketType.forChannel(channel).getLocalSocketAddress(channel);
+        return UnixDomain.isUnixAddress(socketAddress) ? socketAddress : null;
+    }
+
+    @Override
+    protected SocketAddress getUnixRemoteSocket(ThreadContext context) {
+        return getUnixSocketAddress();
     }

@@ -15,6 +15,16 @@
         return unixSocket;
     }
 
+    // WHY: getUnixRemoteSocket(context) can now return a JEP-380
+    // UnixDomainSocketAddress, not just JNR's UnixSocketAddress — .path()
+    // only exists on the JNR type. Use UnixDomain.pathOf, which handles both.
+    @JRubyMethod
+    public IRubyObject peeraddr(ThreadContext context) {
+        final String _path = UnixDomain.pathOf(getUnixRemoteSocket(context));
+        final RubyString path = _path.isEmpty() ? newEmptyString(context) : newString(context, _path);
+        return newArray(context, newString(context, "AF_UNIX"), path);
+    }
+
     @JRubyMethod
     public IRubyObject path(ThreadContext context) {
         String stored = openFile.getPath();

@@ -28,9 +28,22 @@ The interpreter change is: open a JDK Unix `SocketChannel`, hand it to
 | `patches/SocketType_forChannel.java` | edit `SocketType.java` |
 | `patches/RubyUNIXSocket_init.java` | edit `RubyUNIXSocket.java` |
 | `patches/RubyUNIXServer_accept.java` | edit `RubyUNIXServer.java` |
+| `patches/RubyBasicSocket_unixAddr.java` | edit `RubyBasicSocket.java` |
 
 TCP/SSL files on this branch stay as prototype history. They do not
 belong in the #9040 PR.
+
+## Landmine 2
+
+`RubyBasicSocket`'s `getUnixSocketAddress()`/`getUnixRemoteSocket()` used to
+assume every UNIX `SocketAddress` is JNR's `jnr.unixsocket.UnixSocketAddress`.
+A JEP-380 channel's local/remote address is JDK's `UnixDomainSocketAddress`
+instead — same for `RubyUNIXServer`'s overrides, which used to hard-cast
+`getChannel()` to JNR's `UnixServerSocketChannel`. Both are wrong under this
+patch and throw (NPE / ClassCastException) on `peeraddr`, `getpeername`,
+`getsockname`, `local_address`, `remote_address`. Route through
+`UnixDomain.isUnixAddress` / `UnixDomain.pathOf`, which accept either
+address flavor — JNR addresses still occur via `UNIXSocket.for_fd` on a raw fd.
 
 ## Split
 

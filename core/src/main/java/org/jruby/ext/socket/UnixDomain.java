@@ -91,7 +91,21 @@ public final class UnixDomain {
             Path p = u.getPath();
             return p == null ? "" : p.toString();
         }
+        if (addr instanceof jnr.unixsocket.UnixSocketAddress u) {
+            String p = u.path();
+            return p == null ? "" : p;
+        }
         return "";
+    }
+
+    /**
+     * True for either address flavor a UNIXSocket/UNIXServer channel can produce:
+     * JEP-380's {@link UnixDomainSocketAddress} (new interpreter path) or JNR's
+     * {@code UnixSocketAddress} ({@code for_fd} on a raw fd still goes through JNR).
+     * RubyBasicSocket/RubyUNIXServer must not assume only one of these.
+     */
+    public static boolean isUnixAddress(SocketAddress addr) {
+        return addr instanceof UnixDomainSocketAddress || addr instanceof jnr.unixsocket.UnixSocketAddress;
     }
 
     public static SocketAddress localAddress(Channel channel) throws IOException {
