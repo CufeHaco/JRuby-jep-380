@@ -1,39 +1,16 @@
 #!/usr/bin/env ruby
-# unix_hub.rb - Unix Domain Socket Chat Hub
-#
-# Multi-user chat relay server using Unix sockets.
-# First process becomes the server, others become clients.
-# Works seamlessly with both MRI and JRuby.
-#
-# Usage:
-#   # Terminal 1 (becomes server)
+# First process binds /tmp/unix_hub.sock; later processes join.
 #   irb -r ./unix_hub.rb
-#
-#   # Terminal 2+ (become clients)
-#   irb -r ./unix_hub.rb
-#
-# Commands:
-#   hub_online              # List connected users
-#   hub_send(user, msg)     # Send message to specific user
-#   hub_broadcast(msg)      # Send to all users
-#   hub_on { |from, msg| puts "#{from}: #{msg}" }  # Listen for messages
-#   hub_me                  # Your username
-#   hub_server?             # Are you the server?
-#
-# Features:
-#   - Auto-start (first process = server)
-#   - Cross-user support (with permissions)
-#   - Auto-reconnect on errors
-#   - Clean shutdown
+#   hub_send(user, msg); hub_broadcast(msg); hub_online
 
-require 'fileutils'
-require 'thread'
-require 'set'
-require 'socket'
+require "fileutils"
+require "thread"
+require "set"
+require "socket"
 
 module UnixHub
-  USER      = (ENV['USER'] || 'user').gsub(/[^\w]/, '_')
-  PATH      = '/tmp/unix_hub.sock'.freeze
+  USER = (ENV["USER"] || "user").gsub(/[^\w]/, "_")
+  PATH = "/tmp/unix_hub.sock".freeze
 
   @clients   = Set.new
   @listeners = Set.new
@@ -42,14 +19,10 @@ module UnixHub
   @client    = nil
   @is_server = false
 
-  # ==================================================================
-  # UNIFIED: Works with both MRI and JRuby now!
-  # ==================================================================
   def self.start_server!
     return if File.exist?(PATH)
-    File.delete(PATH) if File.exist?(PATH)
     @server = UNIXServer.new(PATH)
-    File.chmod(0666, PATH)  # Allow cross-user communication
+    File.chmod(0o666, PATH)
     Thread.new { server_loop }
     sleep 0.2
   end
@@ -75,9 +48,6 @@ module UnixHub
     data.split("\n", 2).first
   end
 
-  # ==================================================================
-  # SERVER & CLIENT LOGIC
-  # ==================================================================
   def self.server_loop
     loop { Thread.new { handle_client(@server.accept) } }
   end
@@ -118,11 +88,11 @@ module UnixHub
     loop do
       line = read_line(sock)
       break unless line
-      broadcast(line, except: ident) if line.start_with?('MSG:')
+      broadcast(line, except: ident) if line.start_with?("MSG:")
     end
   ensure
-    @clients.delete(ident)
-    broadcast("LEAVE:#{ident}")
+    @clients.delete(ident) if ident
+    broadcast("LEAVE:#{ident}") if ident
     sock.close
   end
 
@@ -131,9 +101,6 @@ module UnixHub
     @client.send("#{msg}\n", 0) unless except == USER
   end
 
-  # ==================================================================
-  # API
-  # ==================================================================
   def self.send(to, text)      = broadcast("MSG:#{to}:#{text}")
   def self.broadcast_all(text) = broadcast("MSG:*:#{text}")
   def self.on_message(&b)      = @listeners.add(b)
@@ -141,9 +108,6 @@ module UnixHub
   def self.me                  = USER
   def self.server?             = @is_server
 
-  # ==================================================================
-  # AUTO-START: First = SERVER, Others = CLIENT
-  # ==================================================================
   @mutex.synchronize do
     if File.exist?(PATH)
       connect!
@@ -157,7 +121,6 @@ module UnixHub
   at_exit { @client&.close }
 end
 
-# IRB/JIRB shortcuts
 def hub_send(to, msg)     = UnixHub.send(to, msg)
 def hub_broadcast(msg)    = UnixHub.broadcast_all(msg)
 def hub_on(&b)            = UnixHub.on_message(&b)
@@ -165,5 +128,4 @@ def hub_online            = UnixHub.online
 def hub_me                = UnixHub.me
 def hub_server?           = UnixHub.server?
 
-# Return true
 true
