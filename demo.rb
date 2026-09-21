@@ -1,32 +1,29 @@
-# demo.rb
-require 'socket'
+#!/usr/bin/env ruby
+# One-process UNIXServer / UNIXSocket ping-pong.
+#   ruby demo.rb
+#   jruby demo.rb
 
-path = "/tmp/demo.sock"
+require "socket"
+
+path = "/tmp/jep380-demo.#{Process.pid}.sock"
 File.delete(path) if File.exist?(path)
 
-puts "Starting server..."
 server_thread = Thread.new do
   server = UNIXServer.new(path)
-  puts "Server listening"
   client = server.accept
-  puts "Client connected"
   msg = client.recv(1024)
-  puts "Received: #{msg}"
-  client.send("Hello back", 0)
+  client.send("echo:#{msg}", 0)
   client.close
   server.close
 end
 
-sleep 0.5
-
-puts "Connecting client..."
-client = UNIXSocket.new(path)
-client.send("Hello server", 0)
-response = client.recv(1024)
-puts "Got response: #{response}"
-client.close
-
-server_thread.join
-File.delete(path)
-puts "Done"
-
+begin
+  sleep 0.05 until File.exist?(path)
+  sock = UNIXSocket.new(path)
+  sock.send("hello", 0)
+  puts sock.recv(1024)
+  sock.close
+  server_thread.join
+ensure
+  File.delete(path) if File.exist?(path)
+end

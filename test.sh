@@ -1,22 +1,7 @@
-# run_tests.sh
 #!/bin/bash
-
-echo "JRuby Unix Socket Tests"
-echo "======================="
-echo ""
-
-# Check versions
-echo "Environment:"
-java -version 2>&1 | head -n 1
-jruby --version
-echo ""
-
-# Clean up
-rm -f /tmp/test_*.sock
-
-# Run tests
-echo "Running tests..."
+set -euo pipefail
+rm -f /tmp/test_*.sock /tmp/jep380-demo.*.sock
+echo "java $(java -version 2>&1 | head -n1)"
+command -v jruby >/dev/null && jruby --version || echo "jruby not on PATH"
 jruby test_sockets.rb
-
-echo ""
-echo "Done."
+ruby demo.rb

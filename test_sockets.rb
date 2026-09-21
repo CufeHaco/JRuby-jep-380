@@ -1,130 +1,108 @@
-# test_sockets.rb
-require 'socket'
+#!/usr/bin/env ruby
+# UNIXSocket / UNIXServer checks against whatever the runtime ships.
+#   ruby test_sockets.rb
+#   jruby test_sockets.rb
+
+require "socket"
+
+def with_sock
+  path = "/tmp/test_uds.#{Process.pid}.#{rand(1 << 16)}.sock"
+  File.delete(path) if File.exist?(path)
+  yield path
+ensure
+  File.delete(path) if File.exist?(path)
+end
 
 def test_basic
-  path = "/tmp/test_basic.sock"
-  File.delete(path) if File.exist?(path)
-  
-  server_thread = Thread.new do
-    server = UNIXServer.new(path)
-    client = server.accept
-    msg = client.recv(100)
-    client.send("ECHO: #{msg}", 0)
-    client.close
-    server.close
+  with_sock do |path|
+    t = Thread.new do
+      server = UNIXServer.new(path)
+      c = server.accept
+      c.send("ECHO:#{c.recv(100)}", 0)
+      c.close
+      server.close
+    end
+    sleep 0.05 until File.exist?(path)
+    c = UNIXSocket.new(path)
+    c.send("TEST", 0)
+    ok = c.recv(100) == "ECHO:TEST"
+    c.close
+    t.join
+    ok
   end
-  
-  sleep 0.1
-  
-  client = UNIXSocket.new(path)
-  client.send("TEST", 0)
-  response = client.recv(100)
-  client.close
-  
-  server_thread.join
-  File.delete(path)
-  
-  response == "ECHO: TEST"
 end
 
 def test_large_data
-  path = "/tmp/test_large.sock"
-  File.delete(path) if File.exist?(path)
-  
-  data = "X" * 10000
-  
-  server_thread = Thread.new do
-    server = UNIXServer.new(path)
-    client = server.accept
-    received = ""
-    while chunk = client.recv(1024)
-      received << chunk
-      break if received.size >= data.size
+  data = "X" * 10_000
+  with_sock do |path|
+    t = Thread.new do
+      server = UNIXServer.new(path)
+      c = server.accept
+      received = +""
+      while received.bytesize < data.bytesize
+        chunk = c.recv(1024)
+        break if chunk.nil? || chunk.empty?
+        received << chunk
+      end
+      c.close
+      server.close
+      received
     end
-    client.close
-    server.close
-    received
+    sleep 0.05 until File.exist?(path)
+    c = UNIXSocket.new(path)
+    sent = 0
+    while sent < data.bytesize
+      n = c.send(data.byteslice(sent, 1024), 0)
+      sent += n
+    end
+    c.close
+    t.value.bytesize == data.bytesize
   end
-  
-  sleep 0.1
-  
-  client = UNIXSocket.new(path)
-  sent = 0
-  while sent < data.size
-    chunk = data[sent, 1024]
-    client.send(chunk, 0)
-    sent += chunk.size
-  end
-  client.close
-  
-  received = server_thread.value
-  File.delete(path)
-  
-  received.size == data.size
 end
 
 def test_concurrent
-  path = "/tmp/test_concurrent.sock"
-  File.delete(path) if File.exist?(path)
-  
-  num_clients = 5
-  
-  server_thread = Thread.new do
-    server = UNIXServer.new(path)
-    num_clients.times do |i|
-      client = server.accept
-      msg = client.recv(100)
-      client.send("ACK#{i}", 0)
-      client.close
+  n = 5
+  with_sock do |path|
+    t = Thread.new do
+      server = UNIXServer.new(path)
+      n.times do
+        c = server.accept
+        c.send("ACK:#{c.recv(100)}", 0)
+        c.close
+      end
+      server.close
     end
-    server.close
-  end
-  
-  sleep 0.1
-  
-  threads = num_clients.times.map do |i|
-    Thread.new do
-      client = UNIXSocket.new(path)
-      client.send("MSG#{i}", 0)
-      response = client.recv(100)
-      client.close
-      response
-    end
-  end
-  
-  results = threads.map(&:value)
-  server_thread.join
-  File.delete(path)
-  
-  results.size == num_clients
-end
-
-# Run tests
-tests = {
-  'Basic connection' => method(:test_basic),
-  'Large data (10KB)' => method(:test_large_data),
-  'Concurrent clients' => method(:test_concurrent)
-}
-
-passed = 0
-failed = 0
-
-tests.each do |name, test|
-  print "#{name}... "
-  begin
-    if test.call
-      puts "PASS"
-      passed += 1
-    else
-      puts "FAIL"
-      failed += 1
-    end
-  rescue => e
-    puts "FAIL: #{e.message}"
-    failed += 1
+    sleep 0.05 until File.exist?(path)
+    results = n.times.map do |i|
+      Thread.new do
+        c = UNIXSocket.new(path)
+        c.send("MSG#{i}", 0)
+        r = c.recv(100)
+        c.close
+        r
+      end
+    end.map(&:value)
+    t.join
+    results.size == n && results.all? { |r| r.start_with?("ACK:") }
   end
 end
 
-puts ""
-puts "Results: #{passed} passed, #{failed} failed"
-exit(failed > 0 ? 1 : 0)
+if $PROGRAM_NAME == __FILE__
+  tests = {
+    "basic" => method(:test_basic),
+    "large 10KB" => method(:test_large_data),
+    "concurrent 5" => method(:test_concurrent)
+  }
+  failed = 0
+  tests.each do |name, fn|
+    ok = begin
+      fn.call
+    rescue => e
+      warn "#{name}: #{e.class}: #{e.message}"
+      false
+    end
+    puts "#{ok ? "ok" : "FAIL"}  #{name}"
+    failed += 1 unless ok
+  end
+  exit(failed.zero? ? 0 : 1)
+end
