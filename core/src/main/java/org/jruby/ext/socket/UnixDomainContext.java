@@ -15,15 +15,15 @@ import java.util.WeakHashMap;
  *
  * CRuby (thread.c):
  *   rb_thread_io_blocking_region(func, data, fd)
- *     th-&gt;waiting_fd = fd
+ *     th->waiting_fd = fd
  *     BLOCKING_REGION { val = func(); saved_errno = errno; }
- *     th-&gt;waiting_fd = -1
+ *     th->waiting_fd = -1
  *     RUBY_VM_CHECK_INTS_BLOCKING(th)
  *     errno = saved_errno
  *
  * JRuby already has the execution context: ThreadContext.
- * Fibers swap it. Do not hang this off java.lang.ThreadLocal —
- * that follows the carrier thread and lies when a fiber migrates.
+ * Fibers swap it. Do not hang this off java.lang.ThreadLocal.
+ * That follows the carrier thread and lies when a fiber migrates.
  */
 public final class UnixDomainContext {
     public static final Object KEY = new Object();
@@ -44,7 +44,7 @@ public final class UnixDomainContext {
 
     public static Frame current(ThreadContext context) {
         synchronized (FRAMES) {
-            return FRAMES.computeIfAbsent(context, ignored -&gt; new Frame());
+            return FRAMES.computeIfAbsent(context, ignored -> new Frame());
         }
     }
 
@@ -97,7 +97,7 @@ public final class UnixDomainContext {
         Frame frame = current(context);
         frame.lastOp = op;
         frame.lastRc = rc;
-        frame.lastErrno = rc &lt; 0 ? captureErrno() : 0;
+        frame.lastErrno = rc < 0 ? captureErrno() : 0;
     }
 
     private static MethodHandle errnoLocation() {
@@ -108,7 +108,7 @@ public final class UnixDomainContext {
                 Linker linker = Linker.nativeLinker();
                 MemorySegment sym = linker.defaultLookup()
                         .find("__errno_location")
-                        .or(() -&gt; linker.defaultLookup().find("__error"))
+                        .or(() -> linker.defaultLookup().find("__error"))
                         .orElseThrow();
                 MH_ERRNO_LOC = linker.downcallHandle(sym,
                         FunctionDescriptor.of(ValueLayout.ADDRESS));
