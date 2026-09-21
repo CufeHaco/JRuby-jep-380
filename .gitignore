@@ -1,0 +1,2 @@
+msgpack_rust_client/target/
+*.o
