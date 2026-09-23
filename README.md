@@ -16,10 +16,12 @@ shape for a core patch, not a second IO stack.
 core/src/main/java/org/jruby/ext/socket/UnixDomain.java
 core/src/main/java/org/jruby/ext/socket/UnixDomainNative.java
 core/src/main/java/org/jruby/ext/socket/UnixDomainContext.java
+core/src/main/java/org/jruby/ext/socket/UnixFdChannel.java
 patches/SocketType_forChannel.java     → edit SocketType.java
 patches/RubyUNIXSocket_init.java       → edit RubyUNIXSocket.java
 patches/RubyUNIXServer_accept.java     → edit RubyUNIXServer.java
 patches/RubyBasicSocket_unixAddr.java  → edit RubyBasicSocket.java
+patches/FilenoUtil_getDescriptorFromChannel.java → edit FilenoUtil.java
 ```
 
 See [INTERPRETER.md](INTERPRETER.md).

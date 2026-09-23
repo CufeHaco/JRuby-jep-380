@@ -1,6 +1,9 @@
 // Replacements inside core/src/main/java/org/jruby/ext/socket/RubyUNIXSocket.java
-// Keep send_io / recv_io — they already talk POSIX sendmsg on fptr.getFileno().
 
+    // WHY: was jnr.unixsocket.UnixSocketChannel.fromFD(fileno) -- JEP-380 has
+    // no public API to wrap an existing raw fd, so this is the one place
+    // that still needs a hand-built Channel. UnixFdChannel (FFM read/write,
+    // see its own doc comment) replaces the JNR one; nothing else changes.
     @JRubyMethod(meta = true)
     public static IRubyObject for_fd(ThreadContext context, IRubyObject recv, IRubyObject _fileno) {
         int fileno = toInt(context, _fileno);
@@ -10,9 +13,93 @@
         if (FilenoUtil.isFake(fileno)) {
             throw typeError(context, "file descriptor is not native");
         }
-        jnr.unixsocket.UnixSocketChannel channel = jnr.unixsocket.UnixSocketChannel.fromFD(fileno);
+        Channel channel = UnixDomainNative.channelFromFd(fileno);
         unixSocket.init_sock(context.runtime, channel);
         return unixSocket;
+    }
+
+    // WHY: was context.runtime.getPosix().sendmsg/recvmsg (jnr-posix) --
+    // UnixDomainNative.sendIo/recvIo (FFM sendmsg/recvmsg with SCM_RIGHTS)
+    // do the exact same job. Wrapped in UnixDomainContext.blocking for the
+    // same per-ThreadContext errno capture already used elsewhere in this
+    // PR (WeakHashMap-keyed, not ThreadLocal, since Fibers swap ThreadContext
+    // -- see UnixDomainContext's own doc comment), not a new mechanism.
+    @JRubyMethod
+    public IRubyObject send_io(ThreadContext context, IRubyObject arg) {
+        OpenFile fptr = getOpenFileChecked();
+        int fd;
+
+        if (arg.callMethod(context, "kind_of?", ioClass(context)).isTrue()) {
+            fd = ((RubyIO) arg).getOpenFileChecked().getFileno();
+        } else if (arg.callMethod(context, "kind_of?", fixnumClass(context)).isTrue()) {
+            fd = ((RubyFixnum) arg).asInt(context);
+        } else {
+            throw typeError(context, "neither IO nor file descriptor");
+        }
+
+        if (FilenoUtil.isFake(fd)) throw typeError(context, "file descriptor is not native");
+
+        int sockFd = fptr.getFileno();
+        if (FilenoUtil.isFake(sockFd)) throw typeError(context, "file descriptor is not native");
+
+        final int passFd = fd;
+        boolean locked = fptr.lock();
+        try {
+            while (true) {
+                try {
+                    UnixDomainContext.blocking(context, sockFd, "sendmsg",
+                            () -> UnixDomainNative.sendIo(sockFd, passFd));
+                    break;
+                } catch (Exception e) {
+                    int errno = UnixDomainContext.lastErrno(context);
+                    if (errno == UnixDomainNative.EAGAIN && fptr.waitWritable(context)) continue;
+                    throw context.runtime.newErrnoFromInt(errno, "sendmsg(2)");
+                }
+            }
+        } finally {
+            if (locked) fptr.unlock();
+        }
+
+        return context.nil;
+    }
+
+    @JRubyMethod(optional = 2, checkArity = false)
+    public IRubyObject recv_io(ThreadContext context, IRubyObject[] args) {
+        int argc = Arity.checkArgumentCount(context, args, 0, 2);
+        OpenFile fptr = getOpenFileChecked();
+        IRubyObject klass = argc > 0 ? args[0] : ioClass(context);
+        IRubyObject mode = argc > 1 ? args[1] : context.nil;
+
+        int sockFd = fptr.getFileno();
+        if (FilenoUtil.isFake(sockFd)) throw typeError(context, "file descriptor is not native");
+
+        int receivedFd;
+        boolean locked = fptr.lock();
+        try {
+            while (true) {
+                try {
+                    receivedFd = UnixDomainContext.blocking(context, sockFd, "recvmsg",
+                            () -> UnixDomainNative.recvIo(sockFd));
+                    break;
+                } catch (Exception e) {
+                    int errno = UnixDomainContext.lastErrno(context);
+                    if (errno == UnixDomainNative.EAGAIN && fptr.waitReadable(context)) continue;
+                    throw context.runtime.newErrnoFromInt(errno, "recvmsg(2)");
+                }
+            }
+        } finally {
+            if (locked) fptr.unlock();
+        }
+
+        IRubyObject fdObj = asFixnum(context, receivedFd);
+
+        if (klass.isNil()) {
+            return fdObj;
+        } else if (mode.isNil()) {
+            return Helpers.invoke(context, klass, "for_fd", fdObj);
+        } else {
+            return Helpers.invoke(context, klass, "for_fd", fdObj, mode);
+        }
     }
 
     // WHY: getUnixRemoteSocket(context) can now return a JEP-380

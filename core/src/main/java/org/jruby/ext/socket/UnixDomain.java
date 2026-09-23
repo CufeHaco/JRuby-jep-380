@@ -71,6 +71,7 @@ public final class UnixDomain {
     public static boolean hasNativeFileno() { return (BITS & BIT_FILENO) != 0; }
 
     public static boolean isUnixChannel(Channel channel) {
+        if (channel instanceof UnixFdChannel) return true;
         try {
             if (channel instanceof SocketChannel sc) {
                 SocketAddress local = sc.getLocalAddress();
@@ -91,29 +92,31 @@ public final class UnixDomain {
             Path p = u.getPath();
             return p == null ? "" : p.toString();
         }
-        if (addr instanceof jnr.unixsocket.UnixSocketAddress u) {
-            String p = u.path();
-            return p == null ? "" : p;
-        }
         return "";
     }
 
     /**
-     * True for either address flavor a UNIXSocket/UNIXServer channel can produce:
-     * JEP-380's {@link UnixDomainSocketAddress} (new interpreter path) or JNR's
-     * {@code UnixSocketAddress} ({@code for_fd} on a raw fd still goes through JNR).
-     * RubyBasicSocket/RubyUNIXServer must not assume only one of these.
+     * True for the address flavor every channel in this file's interpreter
+     * path produces: JEP-380's {@link UnixDomainSocketAddress}. (Used to
+     * also accept JNR's UnixSocketAddress, back when for_fd on a raw fd
+     * went through jnr.unixsocket.UnixSocketChannel.fromFD -- for_fd now
+     * uses UnixFdChannel instead, so that case no longer occurs here.)
      */
     public static boolean isUnixAddress(SocketAddress addr) {
-        return addr instanceof UnixDomainSocketAddress || addr instanceof jnr.unixsocket.UnixSocketAddress;
+        return addr instanceof UnixDomainSocketAddress;
     }
 
     public static SocketAddress localAddress(Channel channel) throws IOException {
+        // UnixFdChannel (UNIXSocket.pair/for_fd) is a connected socket with
+        // no path -- MRI reports that as ["AF_UNIX", ""], not ENOTCONN, so
+        // this must return a real (if empty) address, not null.
+        if (channel instanceof UnixFdChannel) return UnixDomainSocketAddress.of("");
         if (channel instanceof NetworkChannel net) return net.getLocalAddress();
         return null;
     }
 
     public static SocketAddress remoteAddress(Channel channel) throws IOException {
+        if (channel instanceof UnixFdChannel) return UnixDomainSocketAddress.of("");
         if (channel instanceof SocketChannel sc) return sc.getRemoteAddress();
         return null;
     }

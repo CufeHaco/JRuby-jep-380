@@ -25,10 +25,12 @@
 
         public void shutdownInput(Channel channel) throws IOException {
             if (channel instanceof SocketChannel sc) sc.shutdownInput();
+            else if (channel instanceof UnixFdChannel ufc) UnixDomainNative.shutdown(ufc.fd(), UnixDomainNative.SHUT_RD);
         }
 
         public void shutdownOutput(Channel channel) throws IOException {
             if (channel instanceof SocketChannel sc) sc.shutdownOutput();
+            else if (channel instanceof UnixFdChannel ufc) UnixDomainNative.shutdown(ufc.fd(), UnixDomainNative.SHUT_WR);
         }
     },
 

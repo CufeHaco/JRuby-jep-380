@@ -17,7 +17,9 @@ import java.nio.file.FileSystems;
  * FFM (JEP-454) libc bindings for the Unix IPC ops JEP-380 does not provide.
  *
  * JEP-380 owns the Channel. This class owns the connection primitives:
- * socketpair(2), getsockname(2), sendmsg/recvmsg SCM_RIGHTS, close(2).
+ * socketpair(2), getsockname(2), sendmsg/recvmsg SCM_RIGHTS, close(2), and
+ * read(2)/write(2)/shutdown(2) for UnixFdChannel -- the ByteChannel wrapper
+ * for fds JEP-380 has no public API to wrap (socketpair/SCM_RIGHTS ends).
  *
  * Boot is Build-Match-Verify-Execute. Probe fails closed without
  * --enable-native-access. Layout is Linux LP64.
@@ -37,6 +39,14 @@ public final class UnixDomainNative {
     static final int SCM_RIGHTS  = 1;
     static final int SUN_PATH    = 108;
 
+    public static final int SHUT_RD   = 0;
+    public static final int SHUT_WR   = 1;
+    public static final int SHUT_RDWR = 2;
+
+    /** EAGAIN == EWOULDBLOCK on Linux. Matches this file's existing
+     * Linux-only scope (see linuxLp64()). */
+    public static final int EAGAIN = 11;
+
     private static final ValueLayout.OfInt  C_INT  = ValueLayout.JAVA_INT;
     private static final ValueLayout.OfLong C_LONG = ValueLayout.JAVA_LONG;
     private static final ValueLayout.OfByte C_BYTE = ValueLayout.JAVA_BYTE;
@@ -48,11 +58,15 @@ public final class UnixDomainNative {
     private static final MethodHandle MH_GETSOCKNAME;
     private static final MethodHandle MH_SENDMSG;
     private static final MethodHandle MH_RECVMSG;
+    private static final MethodHandle MH_READ;
+    private static final MethodHandle MH_WRITE;
+    private static final MethodHandle MH_SHUTDOWN;
     private static final String ERROR;
 
     static {
         int bits = 0;
         MethodHandle socketpair = null, close = null, getsockname = null, sendmsg = null, recvmsg = null;
+        MethodHandle read = null, write = null, shutdown = null;
         String error = null;
         try {
             if (!linuxLp64()) {
@@ -71,6 +85,12 @@ public final class UnixDomainNative {
                     FunctionDescriptor.of(C_LONG, C_INT, C_PTR, C_INT));
             recvmsg = downcall(linker, libc, "recvmsg",
                     FunctionDescriptor.of(C_LONG, C_INT, C_PTR, C_INT));
+            read = downcall(linker, libc, "read",
+                    FunctionDescriptor.of(C_LONG, C_INT, C_PTR, C_LONG));
+            write = downcall(linker, libc, "write",
+                    FunctionDescriptor.of(C_LONG, C_INT, C_PTR, C_LONG));
+            shutdown = downcall(linker, libc, "shutdown",
+                    FunctionDescriptor.of(C_INT, C_INT, C_INT));
             bits |= BIT_FFM;
             if (verifyPair(socketpair, close)) {
                 bits |= BIT_PAIR;
@@ -87,6 +107,9 @@ public final class UnixDomainNative {
         MH_GETSOCKNAME = getsockname;
         MH_SENDMSG = sendmsg;
         MH_RECVMSG = recvmsg;
+        MH_READ = read;
+        MH_WRITE = write;
+        MH_SHUTDOWN = shutdown;
         ERROR = error;
     }
 
@@ -123,7 +146,49 @@ public final class UnixDomainNative {
     }
 
     public static java.nio.channels.Channel channelFromFd(int fd) {
-        return jnr.unixsocket.UnixSocketChannel.fromFD(fd);
+        return new UnixFdChannel(fd);
+    }
+
+    public static long read(int fd, MemorySegment buf, long count) throws NativeException {
+        require(BIT_FFM, "read");
+        try {
+            long rc = (long) MH_READ.invokeExact(fd, buf, count);
+            if (rc < 0) throw new NativeException("read", (int) rc);
+            return rc;
+        } catch (NativeException e) {
+            throw e;
+        } catch (Throwable t) {
+            throw new NativeException("read", t);
+        }
+    }
+
+    public static long write(int fd, MemorySegment buf, long count) throws NativeException {
+        require(BIT_FFM, "write");
+        try {
+            long rc = (long) MH_WRITE.invokeExact(fd, buf, count);
+            if (rc < 0) throw new NativeException("write", (int) rc);
+            return rc;
+        } catch (NativeException e) {
+            throw e;
+        } catch (Throwable t) {
+            throw new NativeException("write", t);
+        }
+    }
+
+    /**
+     * Best-effort, like close(): used to force a thread blocked in read(2)
+     * on this fd to return (see UnixFdChannel), not to report success.
+     * shutdown(2) is the safe way to do that -- unlike close(2), it doesn't
+     * race with fd reuse in another thread, and reliably unblocks a pending
+     * recv/read on this exact socket.
+     */
+    public static int shutdown(int fd, int how) {
+        if (fd < 0 || MH_SHUTDOWN == null) return -1;
+        try {
+            return (int) MH_SHUTDOWN.invokeExact(fd, how);
+        } catch (Throwable t) {
+            return -1;
+        }
     }
 
     public static String pathOf(int fd) throws NativeException {
