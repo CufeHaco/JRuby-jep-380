@@ -26,8 +26,37 @@ import java.nio.channels.spi.AbstractInterruptibleChannel;
  * fd reuse if another thread is still blocked in read(2) on this exact fd
  * (a real POSIX gotcha), while shutdown(2) reliably forces that blocked
  * read to return first.
+ *
+ * RubyBasicSocket#recv/#read hand this a heap ByteBuffer (plain
+ * ByteBuffer.allocate, not allocateDirect), so the heap path below is the
+ * one real Ruby code actually takes, not a fallback. A fresh
+ * Arena.ofConfined() per call measured ~35% slower than JNR's channel on
+ * UNIXSocket.pair ping-pong -- SCRATCH reuses one growable native buffer
+ * per carrier thread instead. Safe as a plain ThreadLocal (unlike
+ * UnixDomainContext's Fiber-sensitive per-ThreadContext state): this
+ * buffer is written and consumed within one synchronous read()/write()
+ * call and never observed across a fiber-switch boundary, so which OS
+ * thread backs it doesn't matter -- it's a scratch buffer, not
+ * Ruby-visible state.
  */
 public final class UnixFdChannel extends AbstractInterruptibleChannel implements ByteChannel {
+    private static final int SCRATCH_DEFAULT_SIZE = 8192;
+    private static final ThreadLocal<Scratch> SCRATCH = ThreadLocal.withInitial(Scratch::new);
+
+    private static final class Scratch {
+        private Arena arena = Arena.ofConfined();
+        private MemorySegment segment = arena.allocate(SCRATCH_DEFAULT_SIZE);
+
+        MemorySegment get(int minSize) {
+            if (segment.byteSize() < minSize) {
+                arena.close();
+                arena = Arena.ofConfined();
+                segment = arena.allocate(minSize);
+            }
+            return segment;
+        }
+    }
+
     private final int fd;
 
     UnixFdChannel(int fd) {
@@ -51,10 +80,16 @@ public final class UnixFdChannel extends AbstractInterruptibleChannel implements
                 n = nativeRead(seg, remaining);
                 if (n > 0) dst.position(dst.position() + (int) n);
             } else {
-                try (Arena arena = Arena.ofConfined()) {
-                    MemorySegment tmp = arena.allocate(remaining);
-                    n = nativeRead(tmp, remaining);
-                    if (n > 0) {
+                MemorySegment tmp = SCRATCH.get().get(remaining);
+                n = nativeRead(tmp, remaining);
+                if (n > 0) {
+                    if (dst.hasArray()) {
+                        // Copy straight into dst's backing array -- one copy,
+                        // not native->byte[]->dst via an intermediate put().
+                        int off = dst.arrayOffset() + dst.position();
+                        MemorySegment.copy(tmp, ValueLayout.JAVA_BYTE, 0, dst.array(), off, (int) n);
+                        dst.position(dst.position() + (int) n);
+                    } else {
                         byte[] bytes = new byte[(int) n];
                         MemorySegment.copy(tmp, ValueLayout.JAVA_BYTE, 0, bytes, 0, (int) n);
                         dst.put(bytes);
@@ -83,16 +118,21 @@ public final class UnixFdChannel extends AbstractInterruptibleChannel implements
                 n = nativeWrite(seg, remaining);
                 if (n > 0) src.position(src.position() + (int) n);
             } else {
-                int startPos = src.position();
-                byte[] bytes = new byte[remaining];
-                src.get(bytes);
-                src.position(startPos);
-                try (Arena arena = Arena.ofConfined()) {
-                    MemorySegment tmp = arena.allocate(remaining);
+                MemorySegment tmp = SCRATCH.get().get(remaining);
+                if (src.hasArray()) {
+                    // Copy straight from src's backing array -- one copy,
+                    // not src->byte[]->native via an intermediate get().
+                    int off = src.arrayOffset() + src.position();
+                    MemorySegment.copy(src.array(), off, tmp, ValueLayout.JAVA_BYTE, 0, remaining);
+                } else {
+                    int startPos = src.position();
+                    byte[] bytes = new byte[remaining];
+                    src.get(bytes);
+                    src.position(startPos);
                     MemorySegment.copy(bytes, 0, tmp, ValueLayout.JAVA_BYTE, 0, remaining);
-                    n = nativeWrite(tmp, remaining);
                 }
-                if (n > 0) src.position(startPos + (int) n);
+                n = nativeWrite(tmp, remaining);
+                if (n > 0) src.position(src.position() + (int) n);
             }
             completed = true;
             return (int) n;
