@@ -23,7 +23,9 @@ Section 6 has the test results. The full history of each finding is in `INTERPRE
 Commits 1-4 together equal the tested socket diff byte for byte, and commit 5 equals the tested
 labels diff. The whole branch was tested as one build (section 6).
 
-Suggested PR shapes, from least to most to review:
+**Plan: one PR with all five commits**, as on the branch. The commits keep the scopes readable
+for review; the code is not split into separate PRs unless Charles asks. If he does, the cuts
+are ready:
 
 - **#9040 only**: commits 1 + 2. Commit 2 needs commit 1's `NONBLOCK_EOF`/`readChannel`.
 - **#9040 + socket compatibility**: commits 1-4.
@@ -188,8 +190,9 @@ Evidence for each run is under `evidence/`.
 >
 > Commits: (1) two IO bugs found along the way that reproduce on stock with TCPSocket;
 > (2) the migration; (3) the rest of `library/socket` against MRI; (4) a poll(2) fast path
-> that makes `sysread` 2.5x faster; (5) Ruby 3.4 backtrace labels, which can be split out.
-> 1+2 is the minimal #9040 change; each commit builds on its own.
+> that makes `sysread` 2.5x faster; (5) Ruby 3.4 backtrace labels. Each commit builds on its
+> own and is one scope, so any of them can be split into its own PR if you'd prefer; 1+2 is
+> the minimal #9040 change.
 >
 > `library/socket` passes completely; nothing in core/io, thread, fiber, kernel, exception,
 > method, proc, module or language that passes on master fails here. FFM works with the
