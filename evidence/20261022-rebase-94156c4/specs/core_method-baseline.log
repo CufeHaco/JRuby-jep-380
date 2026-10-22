@@ -1,0 +1,45 @@
+jruby 10.1.3.0-SNAPSHOT (4.0.0) 2026-10-22 ffffffffff OpenJDK 64-Bit Server VM 25.0.4.1+1-1-24.04.4-Ubuntu on 25.0.4.1+1-1-24.04.4-Ubuntu +indy +jit [x86_64-linux]
+............................F...........................F.....................................................................................................................................F........
+
+1)
+Method#=== is an alias of Method#call FAILED
+Expected #<UnboundMethod: Method#===(_)> == #<UnboundMethod: Method#call(*)>
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/method/case_compare_spec.rb:5:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/method/case_compare_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+2)
+Method#eql? is an alias of Method#== FAILED
+Expected #<UnboundMethod: Method#eql?(_)> == #<UnboundMethod: Method#==(_)>
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/method/eql_spec.rb:5:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/method/eql_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+3)
+Method#to_s does not annotate a directly looked-up Kernel method with a shared internal name FAILED
+Expected "#<Method: Object(Kernel)#is_a?(kind_of?)(_)>".include? "(kind_of?)"
+to be falsy but was true
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/method/shared/aliased_inspect.rb:20:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/method/to_s_spec.rb:5:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+Finished in 4.082920 seconds
+
+27 files, 199 examples, 312 expectations, 3 failures, 0 errors, 0 tagged

@@ -1,0 +1,172 @@
+jruby 10.1.3.0-SNAPSHOT (4.0.0) 2026-10-22 ffffffffff OpenJDK 64-Bit Server VM 25.0.4.1+1-1-24.04.4-Ubuntu on 25.0.4.1+1-1-24.04.4-Ubuntu +indy +jit [x86_64-linux]
+...........................................................E...............F..E..............................FF.................................................................................FFF................EE..............F................F.
+
+1)
+Errno::EINVAL.new accepts an optional custom message and location ERROR
+ArgumentError: wrong number of arguments (given 2, expected 0..1)
+org/jruby/RubySystemCallError.java:243:in 'initialize'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/errno_spec.rb:20:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/errno_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+2)
+LocalJumpError#exit_value returns the value given to return FAILED
+Expected nil == 42
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/exit_value_spec.rb:10:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/exit_value_spec.rb:9:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/exit_value_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+3)
+FrozenError#message includes a receiver ERROR
+Expected FrozenError("can't modify frozen Object: #<Object:0x1b4ba615>")
+but got: FrozenError("can't modify frozen Object: #<Object:0x1b4ba615>: #<Object:0x1b4ba615>")
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/frozen_error_spec.rb:32:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/frozen_error_spec.rb:33:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/frozen_error_spec.rb:24:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+4)
+Interrupt is raised on the main Thread by the default SIGINT handler FAILED
+Expected exit status is 0 but actual is 130 for command ruby_exe("/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/bin/jruby -Xbacktrace.style=mri /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/rubyspec_temp/115831/1-rubyexe.rb")
+Output:
+
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/interrupt_spec.rb:41:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/interrupt_spec.rb:37:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+5)
+Interrupt shows the backtrace and has a signaled exit status FAILED
+Expected nil == 2
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/interrupt_spec.rb:55:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/interrupt_spec.rb:37:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+6)
+SignalException runs after at_exit FAILED
+Expected exit status is :SIGKILL but actual is 137 for command ruby_exe("/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/bin/jruby -Xbacktrace.style=mri /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/rubyspec_temp/115831/3-rubyexe.rb")
+Output:
+  hello
+
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/signal_exception_spec.rb:96:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/signal_exception_spec.rb:80:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+7)
+SignalException cannot be trapped with Signal.trap FAILED
+Expected exit status is :SIGPROF but actual is 155 for command ruby_exe("/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/bin/jruby -Xbacktrace.style=mri /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/rubyspec_temp/115831/4-rubyexe.rb")
+Output:
+
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/signal_exception_spec.rb:110:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/signal_exception_spec.rb:80:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+8)
+SignalException self-signals for USR1 FAILED
+Expected exit status is :SIGUSR1 but actual is 138 for command ruby_exe("/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/bin/jruby -Xbacktrace.style=mri /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/rubyspec_temp/115831/5-rubyexe.rb")
+Output:
+
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/signal_exception_spec.rb:119:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/signal_exception_spec.rb:80:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+9)
+SystemCallError.new accepts an optional third argument specifying the location ERROR
+ArgumentError: wrong number of arguments (given 3, expected 0..2)
+org/jruby/RubySystemCallError.java:220:in 'initialize'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/system_call_error_spec.rb:72:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/system_call_error_spec.rb:24:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+10)
+SystemCallError.new coerces location if it is not a String ERROR
+ArgumentError: wrong number of arguments (given 3, expected 0..2)
+org/jruby/RubySystemCallError.java:220:in 'initialize'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/system_call_error_spec.rb:79:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/system_call_error_spec.rb:24:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+11)
+SystemCallError#dup copies the errno FAILED
+Expected nil == 42
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/system_call_error_spec.rb:155:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/system_call_error_spec.rb:152:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+12)
+An Exception reaching the top level kills all threads and fibers, ensure clauses are only run for threads current fibers, not for suspended fibers with ensure on non-root fiber FAILED
+Expected "" == 
+"current fiber ensure
+"
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/top_level_spec.rb:62:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/exception/top_level_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+Finished in 22.780797 seconds
+
+39 files, 250 examples, 698 expectations, 8 failures, 4 errors, 4 tagged

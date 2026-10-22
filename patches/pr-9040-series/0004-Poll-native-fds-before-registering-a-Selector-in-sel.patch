@@ -1,0 +1,74 @@
+From 37bb2e4b4af95ea68c76200cd947be9889c93758 Mon Sep 17 00:00:00 2001
+From: CufeHaco <redeagleteam2005@gmail.com>
+Date: Thu, 22 Oct 2026 16:38:16 -0400
+Subject: [PATCH 4/5] Poll native fds before registering a Selector in
+ selectReadyOps
+
+Outside #9040's scope; found benchmarking it. IO#sysread (MRI's
+rb_thread_wait_fd) selects before every read, and RubyThread#select
+configures the channel non-blocking, registers it with a pooled
+Selector, selects, deregisters and restores blocking mode: about 6us of
+the 8.5us a 100-byte UNIXSocket sysread took, on jnr channels too.
+
+For a channel with a real OS fd (ChannelFD#chNative), poll(2) it with a
+zero timeout first. Ready: run pollThreadEvents as the selector path
+does after waking, and return. Not ready: a zero timeout returns 0,
+anything else falls through to the unchanged Selector wait, so
+Thread#kill/raise, Timeout and IO#close still wake a blocked reader.
+The pollfd lives in the calling thread's FFM scratch segment, so the
+probe allocates nothing. Only single-op requests take this path.
+
+syswrite + sysread on a UNIXSocket: 8.5us -> 3.2us per pair (jnr
+8.0-8.8us).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ core/src/main/java/org/jruby/RubyThread.java | 25 ++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/core/src/main/java/org/jruby/RubyThread.java b/core/src/main/java/org/jruby/RubyThread.java
+index 619298f127..adbfa91b7e 100644
+--- a/core/src/main/java/org/jruby/RubyThread.java
++++ b/core/src/main/java/org/jruby/RubyThread.java
+@@ -95,6 +95,7 @@ import org.jruby.runtime.backtrace.RubyStackTraceElement;
+ import org.jruby.runtime.builtin.IRubyObject;
+ import org.jruby.util.ByteList;
+ import org.jruby.util.io.BlockingIO;
++import org.jruby.ext.socket.UnixDomainNative;
+ import org.jruby.util.io.ChannelFD;
+ import org.jruby.util.io.OpenFile;
+ import org.jruby.util.log.Logger;
+@@ -2453,6 +2454,30 @@ public class RubyThread extends RubyObject implements ExecutionContext {
+     public int selectReadyOps(Channel channel, OpenFile fptr, int ops, long timeout) {
+         // Use selectables but only if they're not associated with a file (which has odd select semantics)
+         ChannelFD fd = fptr == null ? null : fptr.fd();
++        // WHY: a channel with a real OS fd (jnr's or a JEP-380 unix socket's,
++        // see ChannelFD#jepUnixNativeChannel) is asked poll(2) first, with a
++        // zero timeout. Registering it with a Selector costs a
++        // configureBlocking(false)/(true) round trip plus a register/deregister
++        // on every call -- ~6us of the ~8us a 100-byte UNIXSocket#sysread took
++        // (JFR) -- and in request/response traffic the data is usually already
++        // there. Not ready: a zero timeout is answered here, otherwise the
++        // Selector path below waits as before, so Thread#kill/raise and
++        // IO#close still wake it. The pollfd lives in the calling thread's
++        // FFM scratch segment, so the probe allocates nothing. Single-op
++        // requests only: the probe reports ready-or-not, not which op.
++        int nativeFd;
++        if (fd != null && fd.chNative != null && channel == fd.chSelect
++                && (nativeFd = fd.chNative.getFD()) >= 0 && UnixDomainNative.hasPoll()) {
++            short events = ops == SelectionKey.OP_READ || ops == SelectionKey.OP_ACCEPT ? UnixDomainNative.POLLIN
++                    : ops == SelectionKey.OP_WRITE || ops == SelectionKey.OP_CONNECT ? UnixDomainNative.POLLOUT : 0;
++            if (events != 0) {
++                if (UnixDomainNative.poll(nativeFd, events, 0) > 0) {
++                    pollThreadEvents(); // as after a select(): a pending kill/raise lands before the I/O
++                    return ops;
++                }
++                if (timeout == 0) return 0;
++            }
++        }
+         if (channel instanceof SelectableChannel && fd != null) {
+             SelectableChannel selectable = (SelectableChannel)channel;
+ 
+-- 
+2.43.0
+

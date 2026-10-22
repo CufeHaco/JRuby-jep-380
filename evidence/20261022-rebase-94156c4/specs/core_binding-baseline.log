@@ -1,0 +1,116 @@
+jruby 10.1.3.0-SNAPSHOT (4.0.0) 2026-10-22 ffffffffff OpenJDK 64-Bit Server VM 25.0.4.1+1-1-24.04.4-Ubuntu on 25.0.4.1+1-1-24.04.4-Ubuntu +indy +jit [x86_64-linux]
+..........................................EEEEEE....................................................
+
+1)
+Binding#implicit_parameter_get raises a NameError for not existing numbered parameter ERROR
+Expected NameError(/implicit parameter '_1' is not defined for/)
+but got: NameError("'_1' is not an implicit parameter")
+org/jruby/RubyBinding.java:206:in 'implicit_parameter_get'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:29:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:29:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1448:in 'eval'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:5:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+2)
+Binding#implicit_parameter_get raises a NameError for not existing "it" parameter ERROR
+Expected NameError(/implicit parameter 'it' is not defined for/)
+but got: NameError("'it' is not an implicit parameter")
+org/jruby/RubyBinding.java:206:in 'implicit_parameter_get'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:33:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:33:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1448:in 'eval'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:5:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+3)
+Binding#implicit_parameter_get raises a NameError when a numbered parameter is defined in a parent scope ERROR
+Expected NameError(/implicit parameter '_1' is not defined for/)
+but got: NameError("'_1' is not an implicit parameter")
+org/jruby/RubyBinding.java:206:in 'implicit_parameter_get'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:39:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:39:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:37:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1448:in 'eval'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:5:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+4)
+Binding#implicit_parameter_get raises a NameError when "it" parameter is defined in a parent scope ERROR
+Expected NameError(/implicit parameter 'it' is not defined for/)
+but got: NameError("'it' is not an implicit parameter")
+org/jruby/RubyBinding.java:206:in 'implicit_parameter_get'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:46:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:46:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:44:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1448:in 'eval'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:5:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+5)
+Binding#implicit_parameter_get raises a NameError when a numbered parameter is defined in a nested scope ERROR
+Expected NameError(/implicit parameter '_1' is not defined for/)
+but got: NameError("'_1' is not an implicit parameter")
+org/jruby/RubyBinding.java:206:in 'implicit_parameter_get'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:53:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:51:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1448:in 'eval'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:5:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+6)
+Binding#implicit_parameter_get raises a NameError when "it" parameter is defined in a nested scope ERROR
+Expected NameError(/implicit parameter 'it' is not defined for/)
+but got: NameError("'it' is not an implicit parameter")
+org/jruby/RubyBinding.java:206:in 'implicit_parameter_get'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:60:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:58:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1448:in 'eval'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:5:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/binding/implicit_parameter_get_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+Finished in 5.219917 seconds
+
+12 files, 100 examples, 157 expectations, 0 failures, 6 errors, 0 tagged

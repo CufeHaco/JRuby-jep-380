@@ -12,21 +12,27 @@ shape for a core patch, not a second IO stack.
 
 ## What belongs in jruby/jruby
 
-**`patches/jruby-jep380.diff` is the patch.** A unified diff against
-jruby/jruby `0e6e01b` (master, 2026-09-20); apply with
-`git apply patches/jruby-jep380.diff` -- verified to apply cleanly. It is the
-whole change: the five new `ext/socket/UnixDomain*.java` / `UnixFdChannel` /
-`UnixSocketNativeChannel` files plus every edit to existing JRuby files.
-It does not include the separate `Builtins.java` race fix (#9116/#9119).
+**Start with [`PR-9040-NOTES.md`](PR-9040-NOTES.md):** the PR layout, which parts are in and out of
+#9040's scope, every bug found and fixed, what was found and left alone, the rebase onto current
+master, design trade-offs and test results.
 
-What it does beyond the original #9040 scope (see INTERPRETER.md
-Landmines 17-18): no JNR unix channels remain (`Socket.new(:UNIX, :STREAM)`
-is JEP-380, `Socket.socketpair` / `UNIXSocket.pair` are FFM and take
-`:DGRAM`); `Socket#listen/#accept/#sysaccept`; `sendmsg`/`recvmsg` and
-`Socket::AncillaryData`; native `getsockopt`/`setsockopt`, `ioctl`,
-`getpeereid`, recv/send flags; MRI-layout packed sockaddrs; and a list of
-MRI-compat fixes. All of `spec/ruby/library/socket` passes except one
-example that depends on JRuby's general backtrace labeling.
+**Branch:** [`CufeHaco/jruby` `jep380-pr-9040`](https://github.com/CufeHaco/jruby/tree/jep380-pr-9040),
+five commits on jruby/jruby master `94156c4` (2026-10-22), one per scope; each builds on its own.
+The same series is in `patches/pr-9040-series/` (`git am`).
+
+**`patches/jruby-jep380.diff`** is the socket work as one diff against `94156c4` (commits 1-4):
+the five new `ext/socket/UnixDomain*.java` / `UnixFdChannel` / `UnixSocketNativeChannel` files
+plus every edit to existing JRuby files. **`patches/jruby-backtrace-labels.diff`** is commit 5,
+Ruby 3.4+ backtrace labels, which is independent of sockets. Each applies on its own or with the
+other, in either order. Neither includes the separate `Builtins.java` race fix (#9116/#9119).
+The versions against the old base `0e6e01b` are in `patches/base-0e6e01b/`.
+
+What the socket work does beyond the original #9040 scope (INTERPRETER.md Landmines 17-18, 20):
+no JNR unix channels remain (`Socket.new(:UNIX, :STREAM)` is JEP-380, `Socket.socketpair` /
+`UNIXSocket.pair` are FFM and take `:DGRAM`); `Socket#listen/#accept/#sysaccept`;
+`sendmsg`/`recvmsg` and `Socket::AncillaryData`; native `getsockopt`/`setsockopt`, `ioctl`,
+`getpeereid`, recv/send flags; MRI-layout packed sockaddrs; MRI-compat fixes; and a `poll(2)`
+fast path for `IO#sysread`. All of `spec/ruby/library/socket` passes.
 
 The per-method fragments below are the earlier, hand-maintained form of the
 same change; they no longer cover everything -- use the diff.

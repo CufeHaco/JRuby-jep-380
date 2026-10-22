@@ -1,0 +1,92 @@
+library/socket/unixsocket rebase rc=0 15 files, 66 examples, 79 expectations, 0 failures, 0 errors, 1 tagged
+library/socket/unixsocket baseline rc=1 15 files, 65 examples, 75 expectations, 2 failures, 4 errors, 1 tagged
+library/socket/unixserver rebase rc=0 8 files, 35 examples, 44 expectations, 0 failures, 0 errors, 0 tagged
+library/socket/unixserver baseline rc=1 8 files, 35 examples, 43 expectations, 2 failures, 1 error, 0 tagged
+library/socket/socket rebase rc=0 43 files, 392 examples, 619 expectations, 0 failures, 0 errors, 8 tagged
+library/socket/socket baseline rc=1 43 files, 324 examples, 439 expectations, 35 failures, 181 errors, 8 tagged
+library/socket/basicsocket rebase rc=0 24 files, 415 examples, 595 expectations, 0 failures, 0 errors, 10 tagged
+library/socket/basicsocket baseline rc=124 
+library/socket/addrinfo rebase rc=0 48 files, 539 examples, 682 expectations, 0 failures, 0 errors, 0 tagged
+library/socket/addrinfo baseline rc=1 48 files, 512 examples, 631 expectations, 10 failures, 38 errors, 0 tagged
+library/socket/ancillarydata rebase rc=0 12 files, 101 examples, 101 expectations, 0 failures, 0 errors, 0 tagged
+library/socket/ancillarydata baseline rc=1 12 files, 41 examples, 18 expectations, 0 failures, 101 errors, 0 tagged
+library/socket/constants rebase rc=0 1 file, 13 examples, 41 expectations, 0 failures, 0 errors, 0 tagged
+library/socket/constants baseline rc=1 1 file, 13 examples, 40 expectations, 2 failures, 0 errors, 0 tagged
+library/socket/ipsocket rebase rc=0 5 files, 47 examples, 65 expectations, 0 failures, 0 errors, 4 tagged
+library/socket/ipsocket baseline rc=1 5 files, 47 examples, 65 expectations, 12 failures, 1 error, 4 tagged
+library/socket/option rebase rc=0 6 files, 29 examples, 78 expectations, 0 failures, 0 errors, 0 tagged
+library/socket/option baseline rc=1 6 files, 29 examples, 71 expectations, 0 failures, 3 errors, 0 tagged
+library/socket/tcpserver rebase rc=0 7 files, 68 examples, 114 expectations, 0 failures, 0 errors, 0 tagged
+library/socket/tcpserver baseline rc=1 7 files, 64 examples, 90 expectations, 6 failures, 10 errors, 0 tagged
+library/socket/tcpsocket rebase rc=0 9 files, 109 examples, 133 expectations, 0 failures, 0 errors, 0 tagged
+library/socket/tcpsocket baseline rc=1 9 files, 107 examples, 127 expectations, 8 failures, 10 errors, 0 tagged
+library/socket/udpsocket rebase rc=0 10 files, 102 examples, 122 expectations, 0 failures, 0 errors, 3 tagged
+library/socket/udpsocket baseline rc=1 10 files, 102 examples, 114 expectations, 7 failures, 5 errors, 3 tagged
+core/io rebase rc=1 104 files, 1648 examples, 2495 expectations, 114 failures, 57 errors, 4 tagged
+core/io baseline rc=1 104 files, 1648 examples, 2495 expectations, 115 failures, 57 errors, 4 tagged
+core/thread rebase rc=1 55 files, 397 examples, 1018 expectations, 17 failures, 7 errors, 0 tagged
+core/thread baseline rc=1 55 files, 397 examples, 1000 expectations, 58 failures, 7 errors, 0 tagged
+core/fiber rebase rc=1 15 files, 191 examples, 265 expectations, 4 failures, 0 errors, 0 tagged
+core/fiber baseline rc=1 15 files, 191 examples, 265 expectations, 5 failures, 0 errors, 0 tagged
+core/kernel rebase rc=1 118 files, 2239 examples, 22861 expectations, 53 failures, 25 errors, 1 tagged
+core/kernel baseline rc=1 118 files, 2239 examples, 22861 expectations, 56 failures, 25 errors, 1 tagged
+core/exception rebase rc=1 39 files, 250 examples, 698 expectations, 8 failures, 4 errors, 4 tagged
+core/exception baseline rc=1 39 files, 250 examples, 698 expectations, 8 failures, 4 errors, 4 tagged
+core/method rebase rc=1 27 files, 199 examples, 312 expectations, 3 failures, 0 errors, 0 tagged
+core/method baseline rc=1 27 files, 199 examples, 312 expectations, 3 failures, 0 errors, 0 tagged
+core/unboundmethod rebase rc=1 21 files, 108 examples, 196 expectations, 2 failures, 0 errors, 0 tagged
+core/unboundmethod baseline rc=1 21 files, 108 examples, 196 expectations, 2 failures, 0 errors, 0 tagged
+core/proc rebase rc=0 26 files, 247 examples, 510 expectations, 0 failures, 0 errors, 0 tagged
+core/proc baseline rc=0 26 files, 247 examples, 510 expectations, 0 failures, 0 errors, 0 tagged
+core/module rebase rc=1 86 files, 1064 examples, 2319 expectations, 20 failures, 6 errors, 2 tagged
+core/module baseline rc=1 86 files, 1064 examples, 2319 expectations, 20 failures, 6 errors, 2 tagged
+core/binding rebase rc=1 12 files, 100 examples, 157 expectations, 0 failures, 6 errors, 0 tagged
+core/binding baseline rc=1 12 files, 100 examples, 157 expectations, 0 failures, 6 errors, 0 tagged
+language rebase rc=1 80 files, 2944 examples, 5564 expectations, 43 failures, 25 errors, 0 tagged
+language baseline rc=1 80 files, 2944 examples, 5564 expectations, 43 failures, 25 errors, 0 tagged
+library/timeout rebase rc=0 2 files, 7 examples, 7 expectations, 0 failures, 0 errors, 0 tagged
+library/timeout baseline rc=0 2 files, 7 examples, 7 expectations, 0 failures, 0 errors, 0 tagged
+library/io-wait rebase rc=0 3 files, 39 examples, 50 expectations, 0 failures, 0 errors, 0 tagged
+library/io-wait baseline rc=0 3 files, 39 examples, 50 expectations, 0 failures, 0 errors, 0 tagged
+SPECDONE
+12:38:44 host valenthree nproc 40 patched=jruby 10.1.3.0-SNAPSHOT (4.0.0) 2026-10-22 18d1eb449f OpenJD stock=jruby 10.1.3.0-SNAPSHOT (4.0.0) 2026-10-
+12:38:53 inet_probe patched-vs-MRI differing lines (ports normalized): 0
+12:38:53 addr_probe patched-vs-stock diff (path/pid-normalized): 6 differing lines
+12:38:58 eof_probe patched-vs-MRI differing lines (ports normalized): 0
+12:39:02 mspec unixsocket patched rc=0 15 files, 66 examples, 79 expectations, 0 failures, 0 errors, 1 tagged
+12:39:05 mspec unixsocket stock rc=1 15 files, 65 examples, 75 expectations, 2 failures, 4 errors, 1 tagged
+12:39:09 mspec unixserver patched rc=0 8 files, 35 examples, 44 expectations, 0 failures, 0 errors, 0 tagged
+12:39:13 mspec unixserver stock rc=1 8 files, 35 examples, 43 expectations, 2 failures, 1 error, 0 tagged
+12:39:17 mspec ancillarydata patched rc=0 12 files, 101 examples, 101 expectations, 0 failures, 0 errors, 0 tagged
+12:39:20 mspec ancillarydata stock rc=1 12 files, 41 examples, 18 expectations, 0 failures, 101 errors, 0 tagged
+12:39:25 mspec addrinfo patched rc=0 48 files, 539 examples, 682 expectations, 0 failures, 0 errors, 0 tagged
+12:39:30 mspec addrinfo stock rc=1 48 files, 512 examples, 631 expectations, 10 failures, 38 errors, 0 tagged
+12:41:50 mspec socket patched rc=0 43 files, 392 examples, 619 expectations, 0 failures, 0 errors, 8 tagged
+12:44:10 mspec socket stock rc=1 43 files, 324 examples, 439 expectations, 35 failures, 181 errors, 8 tagged
+12:44:15 mspec basicsocket patched rc=0 24 files, 415 examples, 595 expectations, 0 failures, 0 errors, 10 tagged
+12:49:15 mspec basicsocket stock rc=124 
+12:49:19 mspec constants patched rc=0 1 file, 13 examples, 41 expectations, 0 failures, 0 errors, 0 tagged
+12:49:22 mspec constants stock rc=1 1 file, 13 examples, 40 expectations, 2 failures, 0 errors, 0 tagged
+12:49:26 mspec ipsocket patched rc=0 5 files, 47 examples, 65 expectations, 0 failures, 0 errors, 4 tagged
+12:49:30 mspec ipsocket stock rc=1 5 files, 47 examples, 65 expectations, 12 failures, 1 error, 4 tagged
+12:49:33 mspec option patched rc=0 6 files, 29 examples, 78 expectations, 0 failures, 0 errors, 0 tagged
+12:49:37 mspec option stock rc=1 6 files, 29 examples, 71 expectations, 0 failures, 3 errors, 0 tagged
+12:49:41 mspec tcpserver patched rc=0 7 files, 68 examples, 114 expectations, 0 failures, 0 errors, 0 tagged
+12:49:45 mspec tcpserver stock rc=1 7 files, 64 examples, 90 expectations, 6 failures, 10 errors, 0 tagged
+12:49:49 mspec tcpsocket patched rc=0 9 files, 109 examples, 133 expectations, 0 failures, 0 errors, 0 tagged
+12:54:23 mspec tcpsocket stock rc=1 9 files, 107 examples, 127 expectations, 8 failures, 10 errors, 0 tagged
+12:54:27 mspec udpsocket patched rc=0 10 files, 102 examples, 122 expectations, 0 failures, 0 errors, 3 tagged
+12:54:31 mspec udpsocket stock rc=1 10 files, 102 examples, 114 expectations, 7 failures, 5 errors, 3 tagged
+12:54:35 regression-patched-1 rc=1 PASS=0 FAIL=0 | 
+12:54:38 regression-stock-1 rc=1 PASS=0 FAIL=0 | 
+12:54:41 regression-patched-2 rc=1 PASS=0 FAIL=0 | 
+12:54:45 regression-stock-2 rc=1 PASS=0 FAIL=0 | 
+12:54:50 regression-patched-3 rc=1 PASS=0 FAIL=0 | 
+12:54:53 regression-stock-3 rc=1 PASS=0 FAIL=0 | 
+12:54:57 stress_uds-patched rc=1 PASS=0 FAIL=0 | 
+12:55:00 stress-patched rc=1 PASS=0 FAIL=0 | 
+12:55:03 stress_uds-stock rc=1 PASS=0 FAIL=0 | 
+12:55:07 stress-stock rc=1 PASS=0 FAIL=0 | 
+12:55:07 patched jar: 87bf3d13491a13da
+12:55:07 DONE
+ALLDONE

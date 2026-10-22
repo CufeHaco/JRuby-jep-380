@@ -1,0 +1,15 @@
+jruby 10.1.3.0-SNAPSHOT (4.0.0) 2026-10-22 18d1eb449f OpenJDK 64-Bit Server VM 25.0.4.1+1-1-24.04.4-Ubuntu on 25.0.4.1+1-1-24.04.4-Ubuntu +indy +jit [x86_64-linux]
+...............................................................................
+be_false is deprecated, use .should == false instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/basicsocket/getsockopt_spec.rb:206:in 'block (3 levels) in <top (required)>'
+
+raise_error is deprecated, use .should.raise instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/basicsocket/getsockopt_spec.rb:207:in 'block (3 levels) in <top (required)>'
+
+be_true is deprecated, use .should == true instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/basicsocket/getsockopt_spec.rb:208:in 'block (3 levels) in <top (required)>'
+......................................................................................................................................................................................................................................................................................................................................
+
+Finished in 1.911681 seconds
+
+24 files, 415 examples, 595 expectations, 0 failures, 0 errors, 10 tagged

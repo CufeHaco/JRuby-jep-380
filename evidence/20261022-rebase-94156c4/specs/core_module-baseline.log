@@ -1,0 +1,876 @@
+jruby 10.1.3.0-SNAPSHOT (4.0.0) 2026-10-22 ffffffffff OpenJDK 64-Bit Server VM 25.0.4.1+1-1-24.04.4-Ubuntu on 25.0.4.1+1-1-24.04.4-Ubuntu +indy +jit [x86_64-linux]
+E.......
+be_nil is deprecated, use .should == nil instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:334:in 'block in <main>'
+
+equal is deprecated, use .should.equal? instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:339:in 'block in <main>'
+
+equal is deprecated, use .should.equal? instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:355:in 'block in <main>'
+
+equal is deprecated, use .should.equal? instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:364:in 'block in <main>'
+
+be_false is deprecated, use .should == false instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:365:in 'block in <main>'
+
+equal is deprecated, use .should.equal? instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:376:in 'block in <main>'
+
+raise_error is deprecated, use .should.raise instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:385:in 'block in <main>'
+
+be_nil is deprecated, use .should == nil instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:387:in 'block in <main>'
+
+equal is deprecated, use .should.equal? instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:391:in 'block in <main>'
+
+be_nil is deprecated, use .should == nil instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:404:in 'block in <main>'
+
+equal is deprecated, use .should.equal? instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:409:in 'block in <main>'
+
+equal is deprecated, use .should.equal? instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:420:in 'block in <main>'
+
+be_nil is deprecated, use .should == nil instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:437:in 'block in <main>'
+
+equal is deprecated, use .should.equal? instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:442:in 'block in <main>'
+
+equal is deprecated, use .should.equal? instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:451:in 'block in <main>'
+E....../data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/version.rb:3: warning: already initialized constant IO::Console::VERSION
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console.rb:30: warning: constant IO::Console::Mode::VERSION is deprecated
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console.rb:30: warning: already initialized constant IO::Console::Mode::VERSION
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console.rb:35: warning: constant IO::ConsoleMode is deprecated
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console.rb:35: warning: already initialized constant IO::ConsoleMode
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:2: warning: already initialized constant IO::Console::Constants::TCFLAG_TYPE
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:3: warning: already initialized constant IO::Console::Constants::SPEED_TYPE
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:4: warning: already initialized constant IO::Console::Constants::TERMIOS_HAS_LINE
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:6: warning: already initialized constant IO::Console::Constants::VINTR
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:7: warning: already initialized constant IO::Console::Constants::VQUIT
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:8: warning: already initialized constant IO::Console::Constants::VERASE
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:9: warning: already initialized constant IO::Console::Constants::VKILL
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:10: warning: already initialized constant IO::Console::Constants::VEOF
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:11: warning: already initialized constant IO::Console::Constants::VTIME
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:12: warning: already initialized constant IO::Console::Constants::VMIN
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:13: warning: already initialized constant IO::Console::Constants::VSWTC
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:14: warning: already initialized constant IO::Console::Constants::VSTART
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:15: warning: already initialized constant IO::Console::Constants::VSTOP
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:16: warning: already initialized constant IO::Console::Constants::VSUSP
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:17: warning: already initialized constant IO::Console::Constants::VEOL
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:18: warning: already initialized constant IO::Console::Constants::VREPRINT
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:19: warning: already initialized constant IO::Console::Constants::VDISCARD
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:20: warning: already initialized constant IO::Console::Constants::VWERASE
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:21: warning: already initialized constant IO::Console::Constants::VLNEXT
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:22: warning: already initialized constant IO::Console::Constants::VEOL2
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:25: warning: already initialized constant IO::Console::Constants::IGNBRK
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:26: warning: already initialized constant IO::Console::Constants::BRKINT
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:27: warning: already initialized constant IO::Console::Constants::IGNPAR
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:28: warning: already initialized constant IO::Console::Constants::PARMRK
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:29: warning: already initialized constant IO::Console::Constants::INPCK
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:30: warning: already initialized constant IO::Console::Constants::ISTRIP
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:31: warning: already initialized constant IO::Console::Constants::INLCR
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:32: warning: already initialized constant IO::Console::Constants::IGNCR
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:33: warning: already initialized constant IO::Console::Constants::ICRNL
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:34: warning: already initialized constant IO::Console::Constants::IUCLC
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:35: warning: already initialized constant IO::Console::Constants::IXON
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:36: warning: already initialized constant IO::Console::Constants::IXANY
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:37: warning: already initialized constant IO::Console::Constants::IXOFF
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:38: warning: already initialized constant IO::Console::Constants::IMAXBEL
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:39: warning: already initialized constant IO::Console::Constants::IUTF8
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:42: warning: already initialized constant IO::Console::Constants::OPOST
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:43: warning: already initialized constant IO::Console::Constants::OLCUC
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:44: warning: already initialized constant IO::Console::Constants::ONLCR
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:45: warning: already initialized constant IO::Console::Constants::OCRNL
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:46: warning: already initialized constant IO::Console::Constants::ONOCR
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:47: warning: already initialized constant IO::Console::Constants::ONLRET
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:48: warning: already initialized constant IO::Console::Constants::OFILL
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:49: warning: already initialized constant IO::Console::Constants::OFDEL
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:50: warning: already initialized constant IO::Console::Constants::NLDLY
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:51: warning: already initialized constant IO::Console::Constants::NL0
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:52: warning: already initialized constant IO::Console::Constants::NL1
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:53: warning: already initialized constant IO::Console::Constants::CRDLY
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:54: warning: already initialized constant IO::Console::Constants::CR0
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:55: warning: already initialized constant IO::Console::Constants::CR1
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:56: warning: already initialized constant IO::Console::Constants::CR2
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:57: warning: already initialized constant IO::Console::Constants::CR3
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:58: warning: already initialized constant IO::Console::Constants::TABDLY
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:59: warning: already initialized constant IO::Console::Constants::TAB0
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:60: warning: already initialized constant IO::Console::Constants::TAB1
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:61: warning: already initialized constant IO::Console::Constants::TAB2
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:62: warning: already initialized constant IO::Console::Constants::TAB3
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:63: warning: already initialized constant IO::Console::Constants::XTABS
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:64: warning: already initialized constant IO::Console::Constants::BSDLY
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:65: warning: already initialized constant IO::Console::Constants::BS0
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:66: warning: already initialized constant IO::Console::Constants::BS1
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:67: warning: already initialized constant IO::Console::Constants::VTDLY
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:68: warning: already initialized constant IO::Console::Constants::VT0
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:69: warning: already initialized constant IO::Console::Constants::VT1
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:70: warning: already initialized constant IO::Console::Constants::FFDLY
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:71: warning: already initialized constant IO::Console::Constants::FF0
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:72: warning: already initialized constant IO::Console::Constants::FF1
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:75: warning: already initialized constant IO::Console::Constants::CBAUD
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:76: warning: already initialized constant IO::Console::Constants::B0
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:77: warning: already initialized constant IO::Console::Constants::B50
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:78: warning: already initialized constant IO::Console::Constants::B75
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:79: warning: already initialized constant IO::Console::Constants::B110
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:80: warning: already initialized constant IO::Console::Constants::B134
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:81: warning: already initialized constant IO::Console::Constants::B150
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:82: warning: already initialized constant IO::Console::Constants::B200
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:83: warning: already initialized constant IO::Console::Constants::B300
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:84: warning: already initialized constant IO::Console::Constants::B600
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:85: warning: already initialized constant IO::Console::Constants::B1200
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:86: warning: already initialized constant IO::Console::Constants::B1800
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:87: warning: already initialized constant IO::Console::Constants::B2400
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:88: warning: already initialized constant IO::Console::Constants::B4800
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:89: warning: already initialized constant IO::Console::Constants::B9600
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:90: warning: already initialized constant IO::Console::Constants::B19200
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:91: warning: already initialized constant IO::Console::Constants::B38400
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:92: warning: already initialized constant IO::Console::Constants::EXTA
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:93: warning: already initialized constant IO::Console::Constants::EXTB
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:94: warning: already initialized constant IO::Console::Constants::CSIZE
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:95: warning: already initialized constant IO::Console::Constants::CS5
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:96: warning: already initialized constant IO::Console::Constants::CS6
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:97: warning: already initialized constant IO::Console::Constants::CS7
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:98: warning: already initialized constant IO::Console::Constants::CS8
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:99: warning: already initialized constant IO::Console::Constants::CSTOPB
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:100: warning: already initialized constant IO::Console::Constants::CREAD
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:101: warning: already initialized constant IO::Console::Constants::PARENB
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:102: warning: already initialized constant IO::Console::Constants::PARODD
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:103: warning: already initialized constant IO::Console::Constants::HUPCL
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:104: warning: already initialized constant IO::Console::Constants::CLOCAL
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:105: warning: already initialized constant IO::Console::Constants::CBAUDEX
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:106: warning: already initialized constant IO::Console::Constants::BOTHER
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:107: warning: already initialized constant IO::Console::Constants::B57600
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:108: warning: already initialized constant IO::Console::Constants::B115200
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:109: warning: already initialized constant IO::Console::Constants::B230400
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:110: warning: already initialized constant IO::Console::Constants::B460800
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:111: warning: already initialized constant IO::Console::Constants::B500000
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:112: warning: already initialized constant IO::Console::Constants::B576000
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:113: warning: already initialized constant IO::Console::Constants::B921600
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:114: warning: already initialized constant IO::Console::Constants::B1000000
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:115: warning: already initialized constant IO::Console::Constants::B1152000
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:116: warning: already initialized constant IO::Console::Constants::B1500000
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:117: warning: already initialized constant IO::Console::Constants::B2000000
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:118: warning: already initialized constant IO::Console::Constants::B2500000
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:119: warning: already initialized constant IO::Console::Constants::B3000000
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:120: warning: already initialized constant IO::Console::Constants::B3500000
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:121: warning: already initialized constant IO::Console::Constants::B4000000
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:122: warning: already initialized constant IO::Console::Constants::CIBAUD
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:123: warning: already initialized constant IO::Console::Constants::CMSPAR
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:124: warning: already initialized constant IO::Console::Constants::CRTSCTS
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:126: warning: already initialized constant IO::Console::Constants::IBSHIFT
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:129: warning: already initialized constant IO::Console::Constants::ISIG
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:130: warning: already initialized constant IO::Console::Constants::ICANON
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:131: warning: already initialized constant IO::Console::Constants::XCASE
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:132: warning: already initialized constant IO::Console::Constants::ECHO
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:133: warning: already initialized constant IO::Console::Constants::ECHOE
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:134: warning: already initialized constant IO::Console::Constants::ECHOK
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:135: warning: already initialized constant IO::Console::Constants::ECHONL
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:136: warning: already initialized constant IO::Console::Constants::NOFLSH
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:137: warning: already initialized constant IO::Console::Constants::TOSTOP
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:138: warning: already initialized constant IO::Console::Constants::ECHOCTL
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:139: warning: already initialized constant IO::Console::Constants::ECHOPRT
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:140: warning: already initialized constant IO::Console::Constants::ECHOKE
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:141: warning: already initialized constant IO::Console::Constants::FLUSHO
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:142: warning: already initialized constant IO::Console::Constants::PENDIN
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:143: warning: already initialized constant IO::Console::Constants::IEXTEN
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:146: warning: already initialized constant IO::Console::Constants::TCOOFF
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:147: warning: already initialized constant IO::Console::Constants::TCOON
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:148: warning: already initialized constant IO::Console::Constants::TCIOFF
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:149: warning: already initialized constant IO::Console::Constants::TCION
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:152: warning: already initialized constant IO::Console::Constants::TCIFLUSH
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:153: warning: already initialized constant IO::Console::Constants::TCOFLUSH
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:154: warning: already initialized constant IO::Console::Constants::TCIOFLUSH
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:157: warning: already initialized constant IO::Console::Constants::TCSANOW
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:158: warning: already initialized constant IO::Console::Constants::TCSADRAIN
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:159: warning: already initialized constant IO::Console::Constants::TCSAFLUSH
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:160: warning: already initialized constant IO::Console::Constants::NCCS
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:161: warning: already initialized constant IO::Console::Constants::TIOCGWINSZ
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/constants/linux.rb:162: warning: already initialized constant IO::Console::Constants::TIOCSWINSZ
+[DEPRECATION] Struct layout is already defined for class IO::Console::LibC::Termios. Redefinition as in /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/backend/ffi/termios.rb:38:in '<class:Termios>' will be disallowed in ffi-2.0.
+[DEPRECATION] Struct layout is already defined for class IO::Console::LibC::Winsize. Redefinition as in /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/backend/ffi/termios.rb:42:in '<class:Winsize>' will be disallowed in ffi-2.0.
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/backend/ffi/termios.rb:105: warning: already initialized constant IO::Console::TTY_SET_MIN
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/backend/ffi/termios.rb:109: warning: already initialized constant IO::Console::TTY_SET_TIME
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/backend/ffi/termios.rb:113: warning: already initialized constant IO::Console::TTY_RAW
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/backend/ffi/termios.rb:134: warning: already initialized constant IO::Console::TTY_COOKED
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/io/console/backend/ffi/termios.rb:148: warning: already initialized constant IO::Console::TTY_ECHO
+F........E.F...................F.....FF...F.....F..F.....FE.....F....F.
+
+1)
+Module#alias_method raises an EncodingError for a String name containing invalid bytes ERROR
+Java::JavaLang::ArrayIndexOutOfBoundsException: Index -1 out of bounds for length 256
+org.jruby.dist/org.jcodings.AbstractEncoding.isCodeCTypeInternal(AbstractEncoding.java:45)
+org.jruby.dist/org.jcodings.unicode.UnicodeEncoding.isCodeCType(UnicodeEncoding.java:66)
+org.jruby.dist/org.jcodings.Encoding.isAlnum(Encoding.java:443)
+org.jruby.dist/org.jruby.util.IdUtil.lambda$determineSymbolNameType$0(IdUtil.java:317)
+org.jruby.dist/org.jruby.util.ByteListHelper.eachMBCCodePointWhile(ByteListHelper.java:99)
+org.jruby.dist/org.jruby.util.ByteListHelper.eachCodePointWhile(ByteListHelper.java:71)
+org.jruby.dist/org.jruby.util.IdUtil.determineSymbolNameType(IdUtil.java:316)
+org.jruby.dist/org.jruby.RubySymbol.<init>(RubySymbol.java:143)
+org.jruby.dist/org.jruby.RubySymbol$SymbolTable.createSymbol(RubySymbol.java:1238)
+org.jruby.dist/org.jruby.RubySymbol$SymbolTable.getSymbol(RubySymbol.java:1097)
+org.jruby.dist/org.jruby.RubySymbol.newHardSymbol(RubySymbol.java:331)
+org.jruby.dist/org.jruby.api.Check.checkID(Check.java:49)
+org.jruby.dist/org.jruby.RubyModule.aliasMethod(RubyModule.java:4079)
+org.jruby.dist/org.jruby.RubyModule$INVOKER$i$2$0$aliasMethod.call(RubyModule$INVOKER$i$2$0$aliasMethod.gen)
+org.jruby.dist/org.jruby.internal.runtime.methods.JavaMethod$JavaMethodN.call(JavaMethod.java:733)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:432)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:90)
+org.jruby.dist/org.jruby.ir.instructions.CallBase.interpret(CallBase.java:551)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:375)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:97)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:216)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:203)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:236)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:462)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:291)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:333)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_BLOCK(Interpreter.java:120)
+org.jruby.dist/org.jruby.runtime.MixedModeIRBlockBody.commonYieldPath(MixedModeIRBlockBody.java:138)
+org.jruby.dist/org.jruby.runtime.IRBlockBody.call(IRBlockBody.java:68)
+org.jruby.dist/org.jruby.runtime.Block.call(Block.java:154)
+org.jruby.dist/org.jruby.RubyProc.call(RubyProc.java:349)
+org.jruby.dist/org.jruby.RubyProc$INVOKER$i$call.call(RubyProc$INVOKER$i$call.gen)
+org.jruby.dist/org.jruby.internal.runtime.methods.JavaMethod$JavaMethodZeroOrNBlock.call(JavaMethod.java:310)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:191)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:355)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:91)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:183)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:170)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:228)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:240)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:323)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:97)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:216)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:203)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:236)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:462)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:291)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:333)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_BLOCK(Interpreter.java:120)
+org.jruby.dist/org.jruby.runtime.MixedModeIRBlockBody.commonYieldPath(MixedModeIRBlockBody.java:138)
+org.jruby.dist/org.jruby.runtime.IRBlockBody.doYield(IRBlockBody.java:177)
+org.jruby.dist/org.jruby.runtime.BlockBody.yield(BlockBody.java:116)
+org.jruby.dist/org.jruby.runtime.Block.yieldArray(Block.java:250)
+org.jruby.dist/org.jruby.RubyBasicObject.yieldUnder(RubyBasicObject.java:1887)
+org.jruby.dist/org.jruby.RubyBasicObject.instance_exec(RubyBasicObject.java:2782)
+org.jruby.dist/org.jruby.RubyBasicObject$INVOKER$i$0$0$instance_exec.call(RubyBasicObject$INVOKER$i$0$0$instance_exec.gen)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:88)
+org.jruby.dist/org.jruby.ir.instructions.CallBase.interpret(CallBase.java:551)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:375)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:91)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:183)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:170)
+org.jruby.dist/org.jruby.runtime.CompiledIRBlockBody.yieldDirect(CompiledIRBlockBody.java:151)
+org.jruby.dist/org.jruby.runtime.BlockBody.yield(BlockBody.java:106)
+org.jruby.dist/org.jruby.runtime.Block.yield(Block.java:195)
+org.jruby.dist/org.jruby.RubyArrayNative.all_pCommon(RubyArrayNative.java:4109)
+org.jruby.dist/org.jruby.RubyArrayNative.all_p(RubyArrayNative.java:4093)
+org.jruby.dist/org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:139)
+org.jruby.dist/org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:178)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:200)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:236)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:462)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:291)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:333)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_BLOCK(Interpreter.java:120)
+org.jruby.dist/org.jruby.runtime.MixedModeIRBlockBody.commonYieldPath(MixedModeIRBlockBody.java:138)
+org.jruby.dist/org.jruby.runtime.IRBlockBody.yieldSpecific(IRBlockBody.java:78)
+org.jruby.dist/org.jruby.runtime.Block.yieldSpecific(Block.java:164)
+org.jruby.dist/org.jruby.ir.runtime.IRRuntimeHelpers.yieldSpecific(IRRuntimeHelpers.java:530)
+org.jruby.dist/org.jruby.ir.instructions.YieldInstr.interpret(YieldInstr.java:85)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.processOtherOp(StartupInterpreterEngine.java:155)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:98)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:118)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:105)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:432)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:90)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:101)
+org.jruby.dist/org.jruby.ir.instructions.CallBase.interpret(CallBase.java:548)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:375)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_BLOCK(Interpreter.java:120)
+org.jruby.dist/org.jruby.runtime.MixedModeIRBlockBody.commonYieldPath(MixedModeIRBlockBody.java:138)
+org.jruby.dist/org.jruby.runtime.IRBlockBody.doYield(IRBlockBody.java:170)
+org.jruby.dist/org.jruby.runtime.BlockBody.yield(BlockBody.java:108)
+org.jruby.dist/org.jruby.runtime.Block.yield(Block.java:195)
+org.jruby.dist/org.jruby.RubyArrayNative.each(RubyArrayNative.java:1657)
+org.jruby.dist/org.jruby.RubyArray$INVOKER$i$0$0$each.call(RubyArray$INVOKER$i$0$0$each.gen)
+org.jruby.dist/org.jruby.internal.runtime.methods.JavaMethod$JavaMethodZeroBlock.call(JavaMethod.java:498)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:432)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:90)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:101)
+org.jruby.dist/org.jruby.ir.instructions.CallBase.interpret(CallBase.java:548)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:375)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:85)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:150)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:137)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:220)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:442)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:193)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:355)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:118)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:105)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:432)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:90)
+org.jruby.dist/org.jruby.ir.instructions.CallBase.interpret(CallBase.java:551)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:375)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:91)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:183)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:170)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:457)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:257)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:268)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:346)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_ROOT(Interpreter.java:100)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.execute(Interpreter.java:85)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.execute(Interpreter.java:35)
+org.jruby.dist/org.jruby.ir.IRTranslator.execute(IRTranslator.java:42)
+org.jruby.dist/org.jruby.Ruby.runInterpreter(Ruby.java:1250)
+org.jruby.dist/org.jruby.Ruby.loadFile(Ruby.java:3034)
+org.jruby.dist/org.jruby.runtime.load.LibrarySearcher$ResourceLibrary.load(LibrarySearcher.java:946)
+org.jruby.dist/org.jruby.runtime.load.LibrarySearcher$FoundLibrary.load(LibrarySearcher.java:904)
+org.jruby.dist/org.jruby.runtime.load.LoadService.load(LoadService.java:367)
+org.jruby.dist/org.jruby.RubyKernel.loadCommon(RubyKernel.java:1425)
+org.jruby.dist/org.jruby.RubyKernel.load(RubyKernel.java:1402)
+org.jruby.dist/org.jruby.RubyKernel$INVOKER$s$load.call(RubyKernel$INVOKER$s$load.gen)
+org.jruby.dist/org.jruby.internal.runtime.methods.JavaMethod$JavaMethodOneOrNBlock.call(JavaMethod.java:384)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:452)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:242)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:323)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_BLOCK(Interpreter.java:120)
+org.jruby.dist/org.jruby.runtime.MixedModeIRBlockBody.commonYieldPath(MixedModeIRBlockBody.java:138)
+org.jruby.dist/org.jruby.runtime.IRBlockBody.doYield(IRBlockBody.java:177)
+org.jruby.dist/org.jruby.runtime.BlockBody.yield(BlockBody.java:116)
+org.jruby.dist/org.jruby.runtime.Block.yieldArray(Block.java:250)
+org.jruby.dist/org.jruby.RubyBasicObject.yieldUnder(RubyBasicObject.java:1887)
+org.jruby.dist/org.jruby.RubyBasicObject.instance_exec(RubyBasicObject.java:2782)
+org.jruby.dist/org.jruby.RubyBasicObject$INVOKER$i$0$0$instance_exec.call(RubyBasicObject$INVOKER$i$0$0$instance_exec.gen)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:432)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:90)
+org.jruby.dist/org.jruby.ir.instructions.CallBase.interpret(CallBase.java:551)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:375)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:91)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:183)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:170)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:457)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:257)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:268)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:346)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_BLOCK(Interpreter.java:120)
+org.jruby.dist/org.jruby.runtime.MixedModeIRBlockBody.commonYieldPath(MixedModeIRBlockBody.java:138)
+org.jruby.dist/org.jruby.runtime.IRBlockBody.doYield(IRBlockBody.java:170)
+org.jruby.dist/org.jruby.runtime.BlockBody.yield(BlockBody.java:108)
+org.jruby.dist/org.jruby.runtime.Block.yield(Block.java:195)
+org.jruby.dist/org.jruby.RubyArrayNative.each(RubyArrayNative.java:1657)
+org.jruby.dist/org.jruby.RubyArray$INVOKER$i$0$0$each.call(RubyArray$INVOKER$i$0$0$each.gen)
+org.jruby.dist/org.jruby.internal.runtime.methods.JavaMethod$JavaMethodZeroBlock.call(JavaMethod.java:498)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:432)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:90)
+org.jruby.dist/org.jruby.ir.instructions.CallBase.interpret(CallBase.java:551)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:375)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:118)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:105)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:432)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:90)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:101)
+org.jruby.dist/org.jruby.ir.instructions.CallBase.interpret(CallBase.java:548)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:375)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:85)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:150)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:137)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:220)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:442)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:193)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:355)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:85)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:150)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:137)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:220)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:442)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:193)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:355)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:85)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:150)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:137)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:220)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:442)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:193)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:355)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:118)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:105)
+org.jruby.dist/org.jruby.ir.targets.indy.InvokeSite.performIndirectCall(InvokeSite.java:896)
+org.jruby.dist/org.jruby.ir.targets.indy.InvokeSite.invoke(InvokeSite.java:800)
+java.base/java.lang.invoke.MethodHandle.invokeWithArguments(MethodHandle.java:735)
+org.jruby.dist/org.jruby.ir.Compiler$1.load(Compiler.java:114)
+org.jruby.dist/org.jruby.Ruby.runScript(Ruby.java:1237)
+org.jruby.dist/org.jruby.Ruby.runNormally(Ruby.java:1149)
+org.jruby.dist/org.jruby.Ruby.runFromMain(Ruby.java:994)
+org.jruby.dist/org.jruby.main.Main.internalRun(Main.java:289)
+org.jruby.dist/org.jruby.main.Main.run(Main.java:239)
+org.jruby.dist/org.jruby.main.Main.main(Main.java:211)
+
+2)
+Module#autoload during the autoload after the constant is assigned returns the real constant location in autoload thread and returns the autoload location in other threads for Module#const_source_location FAILED
+Expected [["/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb",
+  540],
+ ["/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/fixtures/autoload_during_autoload_after_define.rb",
+  2],
+ ["/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/fixtures/autoload_during_autoload_after_define.rb",
+  2],
+ ["/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/fixtures/autoload_during_autoload_after_define.rb",
+  2]] == [["/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb",
+  540],
+ ["/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/fixtures/autoload_during_autoload_after_define.rb",
+  2],
+ ["/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb",
+  540],
+ ["/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/fixtures/autoload_during_autoload_after_define.rb",
+  2]]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:580:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:31:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+3)
+Module#autoload after autoloading searches for the constant like the original lookup warns once in verbose mode if the constant was defined in a parent scope ERROR
+NameError: uninitialized constant ModuleSpecs::Autoload::DeclaredInCurrentDefinedInParent
+org/jruby/RubyModule.java:4796:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:750:in 'block in Autoload'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:751:in '<module:Autoload>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:744:in '<module:ModuleSpecs>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:743:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:31:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+4)
+Module#autoload after autoloading searches for the constant like the original lookup looks up in parent scope after failed autoload FAILED
+Expected to not get NameError 
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:775:in '<class:LexicalScope>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:773:in '<module:Autoload>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:768:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/autoload_spec.rb:31:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+5)
+Module#class_variables returns the correct class variables when inherit is given FAILED
+Expected [:@@sub, :@@meta, :@@cls] == [:@@sub, :@@cls, :@@meta]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/class_variables_spec.rb:31:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/class_variables_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+6)
+Module#define_method when passed a Proc object and a method is defined inside defines the nested method in the default definee where the Proc was created FAILED
+Expected #<#<Class:0x190bf8e4>:0x1859e55c>.respond_to? :nested_method_in_proc_for_define_method
+to be falsy but was true
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/define_method_spec.rb:798:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/define_method_spec.rb:780:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+7)
+Module#define_method when passed a block behaves exactly like a lambda for break ERROR
+SyntaxError: /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/define_method_spec.rb:818: Invalid break
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/define_method_spec.rb:820:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/define_method_spec.rb:805:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+8)
+Module#define_method when passed a block behaves exactly like a lambda for next ERROR
+SyntaxError: /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/define_method_spec.rb:826: Invalid next
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/define_method_spec.rb:828:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/define_method_spec.rb:805:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+9)
+Module#deprecate_constant when removing the deprecated module warns with a message FAILED
+Expected warning to match: /warning: constant .+::PUBLIC1 is deprecated/
+but got: ""
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/deprecate_constant_spec.rb:51:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/deprecate_constant_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+10)
+Module#method_added is called when using #private in a subclass FAILED
+Expected [] == [:foo]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/method_added_spec.rb:103:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/method_added_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+11)
+Module#module_function as a toggle (no arguments) in a Module body doesn't affect definitions when inside an eval even if the definitions are outside of it FAILED
+Expected true == false
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/module_function_spec.rb:350:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/module_function_spec.rb:235:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+12)
+Module#module_function as a toggle (no arguments) in a Module body when defining methods using define_method makes the initialize-related and respond_to_missing? module methods public FAILED
+Expected [:initialize_dup,
+ :initialize_copy,
+ :respond_to_missing?,
+ :initialize_clone,
+ :class_variables,
+ :<=,
+ :alias_method,
+ :prepend,
+ :public_instance_methods,
+ :class_variable_get,
+ :public_constant,
+ :define_method,
+ :singleton_class?,
+ :instance_methods,
+ :freeze,
+ :const_defined?,
+ :instance_method,
+ :to_s,
+ :constants,
+ :ancestors,
+ :private_instance_methods,
+ :===,
+ :included_modules,
+ :==,
+ :undef_method,
+ :class_eval,
+ :const_get,
+ :protected_instance_methods,
+ :attr_writer,
+ :set_temporary_name,
+ :class_variable_defined?,
+ :public_instance_method,
+ :name,
+ :inspect,
+ :private_constant,
+ :attr_accessor,
+ :used_refinements,
+ :<,
+ :attr_reader,
+ :hash,
+ :>,
+ :undefined_instance_methods,
+ :>=,
+ :remove_method,
+ :module_exec,
+ :pretty_print,
+ :protected_method_defined?,
+ :module_eval,
+ :const_missing,
+ :class_exec,
+ :const_set,
+ :private_method_defined?,
+ :autoload,
+ :public_class_method,
+ :attr,
+ :<=>,
+ :used_modules,
+ :include,
+ :public_method_defined?,
+ :refinements,
+ :target,
+ :autoload?,
+ :class_variable_set,
+ :pretty_print_cycle,
+ :include?,
+ :remove_class_variable,
+ :deprecate_constant,
+ :private_class_method,
+ :const_source_location,
+ :method_defined?].include? :initialize
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/module_function_spec.rb:427:in 'block in <main>'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/module_function_spec.rb:426:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/module_function_spec.rb:235:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+13)
+Module#name changes when the module is reachable through a constant path FAILED
+Expected "#<Module:0x20155dae>::N" == "ModuleSpecs::Anonymous::WasAnnon"
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/name_spec.rb:32:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/name_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+14)
+Module#prepend uses only new module when dupping the module FAILED
+Expected [#<Module:0x1ab28416>, #<Module:0x52efb338>, #<Module:0x64508788>] == [#<Module:0x52efb338>, #<Module:0x1ab28416>]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/prepend_spec.rb:559:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/prepend_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+15)
+Module#private without arguments does not affect method definitions when itself is inside an eval and method definitions are outside FAILED
+Expected [].include? :test1
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/shared/set_visibility.rb:143:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/private_spec.rb:5:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+16)
+Module#private without arguments within a closure sets the visibility outside the closure FAILED
+Expected [].include? :test1
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/shared/set_visibility.rb:180:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/private_spec.rb:5:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+17)
+Module#protected without arguments does not affect method definitions when itself is inside an eval and method definitions are outside FAILED
+Expected [].include? :test1
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/shared/set_visibility.rb:143:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/protected_spec.rb:5:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+18)
+Module#protected without arguments within a closure sets the visibility outside the closure FAILED
+Expected [].include? :test1
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/shared/set_visibility.rb:180:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/protected_spec.rb:5:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+19)
+Module#public on a superclass method calls the redefined method FAILED
+Expected :before_redefinition == :after_redefinition
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/public_spec.rb:9:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/public_spec.rb:5:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+20)
+Module#public without arguments does not affect method definitions when itself is inside an eval and method definitions are outside FAILED
+Expected [].include? :test1
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/shared/set_visibility.rb:143:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/public_spec.rb:5:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+21)
+Module#refine for methods accessed indirectly is honored by Kernel#public_method ERROR
+NameError: undefined method 'foo' for class '#<Class:0x1f12d5e0>'
+org/jruby/RubyKernel.java:701:in 'public_method'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/refine_spec.rb:462:in 'block in <main>'
+org/jruby/RubyModule.java:4178:in 'module_exec'
+org/jruby/RubyModule.java:3390:in 'initialize'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/refine_spec.rb:460:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/refine_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+22)
+Module#refine for methods accessed indirectly is honored by & ERROR
+TypeError: no implicit conversion of String into Proc
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/refine_spec.rb:514:in 'block in <main>'
+org/jruby/RubyModule.java:4178:in 'module_exec'
+org/jruby/RubyModule.java:3390:in 'initialize'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/refine_spec.rb:512:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/refine_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+23)
+Module#set_temporary_name discards a temporary name when an outer anonymous module gets a permanent name FAILED
+Expected "fake_name" == "ModuleSpecs::SetTemporaryNameSpec::M::N"
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/set_temporary_name_spec.rb:87:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/set_temporary_name_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+24)
+Module#set_temporary_name also updates a name of a nested module FAILED
+Expected "m::N" == nil
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/set_temporary_name_spec.rb:136:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/set_temporary_name_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+25)
+Module.used_refinements returns list of all refinements imported in the current scope FAILED
+Expected [] == [#<refinement:Integer@#<Module:0x77b27b57>>,
+ #<refinement:String@#<Module:0x13ebccd>>]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/used_refinements_spec.rb:28:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/used_refinements_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+26)
+Module.used_refinements returns refinements even not defined directly in a module refinements are imported from FAILED
+Expected [] == [#<refinement:Integer@#<Module:0x6c19769c>>]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/used_refinements_spec.rb:83:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/module/used_refinements_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+Finished in 8.117240 seconds
+
+86 files, 1064 examples, 2319 expectations, 20 failures, 6 errors, 2 tagged

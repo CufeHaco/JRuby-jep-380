@@ -1,0 +1,1001 @@
+jruby 10.1.3.0-SNAPSHOT (4.0.0) 2026-10-22 ffffffffff OpenJDK 64-Bit Server VM 25.0.4.1+1-1-24.04.4-Ubuntu on 25.0.4.1+1-1-24.04.4-Ubuntu +indy +jit [x86_64-linux]
+.....EE..E..FEFF....EE(eval at /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/heredoc_spec.rb:64):2: warning: here document identifier ends with a newline
+F/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/if_spec.rb:143: warning: literal in condition
+.EE...F../data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/method_spec.rb:1239: warning: empty expression
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/method_spec.rb:1289: warning: empty expression
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/method_spec.rb:1297: warning: empty expression
+
+raise_error is deprecated, use .should.raise instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/method_spec.rb:1438:in 'block in <main>'
+
+raise_error is deprecated, use .should.raise instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/method_spec.rb:1441:in 'block in <main>'
+EE......../data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/precedence_spec.rb:237: warning: comparison '<=' after comparison
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/precedence_spec.rb:238: warning: comparison '<=' after comparison
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/precedence_spec.rb:240: warning: comparison '<' after comparison
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/precedence_spec.rb:241: warning: comparison '<' after comparison
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/precedence_spec.rb:243: warning: comparison '>=' after comparison
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/precedence_spec.rb:244: warning: comparison '>=' after comparison
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/precedence_spec.rb:246: warning: comparison '>' after comparison
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/precedence_spec.rb:247: warning: comparison '>' after comparison
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/precedence_spec.rb:304: warning: literal in condition
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/precedence_spec.rb:427: warning: literal in condition
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/precedence_spec.rb:427: warning: literal in condition
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/precedence_spec.rb:428: warning: literal in condition
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/precedence_spec.rb:428: warning: literal in condition
+...E...F.F.../data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:100: warning: Unknown escape \y is ignored
+......E......FF./data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/fixtures/super.rb:748: warning: redefining '__send__' may cause serious problem
+........F
+
+1)
+Assignments using = given keyword arguments raises SyntaxError when given keyword arguments in index assignments ERROR
+Expected SyntaxError(/keywords are not allowed in index assignment expressions|keyword arg given in index assignment/)
+but got: SyntaxError("(eval at /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/assignments_spec.rb:98):1: keyword arg given in index\na[1, 2, 3, b: 4] = 5\n                 ^")
+org/jruby/RubyKernel.java:1448:in 'eval'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/assignments_spec.rb:98:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/assignments_spec.rb:98:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/assignments_spec.rb:5:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+2)
+Assignments using += using a #[] given keyword arguments raises SyntaxError when given keyword arguments in index assignments ERROR
+Expected SyntaxError(/keywords are not allowed in index assignment expressions|keyword arg given in index assignment/)
+but got: SyntaxError("(eval at /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/assignments_spec.rb:233):1: keyword arg given in index")
+org/jruby/RubyKernel.java:1448:in 'eval'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/assignments_spec.rb:233:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/assignments_spec.rb:233:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/assignments_spec.rb:5:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+3)
+A block yielded a single Array raises error when required keyword arguments are present ERROR
+Expected ArgumentError("missing keywords: :b, :c")
+but got: ArgumentError("missing keyword: b")
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/block_spec.rb:75:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/block_spec.rb:6:in 'm'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/block_spec.rb:75:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/block_spec.rb:76:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/block_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+4)
+A class definition raises TypeError if constant given as class name exists and is not a Module ERROR
+Expected TypeError("ClassSpecsNumber is not a class\n/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:40: previous definition of ClassSpecsNumber was here")
+but got: TypeError("ClassSpecsNumber is not a class")
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:42:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:43:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:29:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+5)
+A class definition raises TypeError if constant given as class name exists and is a Module but not a Class ERROR
+Expected TypeError("ClassSpecsModule is not a class\n/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:52: previous definition of ClassSpecsModule was here")
+but got: TypeError("ClassSpecsModule is not a class")
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:54:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:55:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:29:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+6)
+A class definition raises TypeError if the constant qualifying the class is nil ERROR
+Expected TypeError("nil is not a class/module")
+but got: TypeError("no outer class/module")
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:66:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:68:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:29:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+7)
+A class definition raises TypeError if any constant qualifying the class is not a Module ERROR
+Expected TypeError("123 is not a class/module")
+but got: TypeError("no outer class/module")
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:78:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:80:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:29:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+8)
+A class definition allows using self as the superclass if self is a class ERROR
+Expected TypeError("superclass must be an instance of Class (given an instance of MSpecEnv)")
+but got: TypeError("superclass must be a Class (#<Class:#<MSpecEnv:0x2e62e227>> given)")
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:163:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:164:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:29:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+9)
+A class definition raises a TypeError if inheriting from a metaclass ERROR
+Expected TypeError("can't make subclass of singleton class")
+but got: TypeError("can't make subclass of virtual class")
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:184:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:185:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:29:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+10)
+A class definition extending an object (sclass) raises a TypeError when trying to extend non-Class ERROR
+Expected TypeError(/superclass must be an instance of Class \(given an instance of .*\)/)
+but got: TypeError("superclass must be a Class (String given)")
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:325:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:325:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:308:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+11)
+Reopening a class does not reopen a class included in Object FAILED
+Expected "true" == "false"
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:371:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/class_spec.rb:344:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+12)
+Constant resolution within a singleton class (class << obj) uses its own namespace for each object FAILED
+Expected [1, 1] == [1, 2]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/constants_spec.rb:453:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/constants_spec.rb:445:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+13)
+Constant resolution within a singleton class (class << obj) uses its own namespace for nested modules FAILED
+Expected #<Class:0x4d5ea776>::X.equal? #<Class:0x4d5ea776>::X
+to be falsy but was true
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/constants_spec.rb:459:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/constants_spec.rb:445:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+14)
+Constant resolution within a singleton class (class << obj) allows nested modules to have proper resolution FAILED
+Expected [1, 1] == [1, 2]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/constants_spec.rb:465:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/constants_spec.rb:445:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+15)
+Module#private_constant marked constants in a module cannot be reopened as a module from scope where constant would be private FAILED
+Expected NameError but no exception was raised (nil was returned)
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/constants_spec.rb:515:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/constants_spec.rb:481:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+16)
+Module#private_constant marked constants in a module cannot be reopened as a class from scope where constant would be private FAILED
+Expected NameError but no exception was raised (nil was returned)
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/constants_spec.rb:521:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/constants_spec.rb:481:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+17)
+Module#private_constant marked constants in a class cannot be reopened as a module FAILED
+Expected NameError but no exception was raised (nil was returned)
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/constants_spec.rb:604:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/constants_spec.rb:481:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+18)
+Module#private_constant marked constants in a class cannot be reopened as a class FAILED
+Expected NameError but no exception was raised (nil was returned)
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/constants_spec.rb:610:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/constants_spec.rb:481:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+19)
+A singleton method definition raises FrozenError with the correct class name ERROR
+Expected FrozenError("can't modify frozen Object: #<Object:0x28d56028>")
+but got: FrozenError("can't modify frozen Object: #<Object:0x28d56028>: #<Object:0x28d56028>")
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/def_spec.rb:289:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/def_spec.rb:289:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/def_spec.rb:235:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+20)
+A method definition always resets the visibility to public for nested definitions at the toplevel ERROR
+NoMethodError: undefined method 'nested_method_in_toplevel_method' for an instance of Object
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/def_spec.rb:592:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/def_spec.rb:565:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+21)
+The defined? keyword when called with a method name in a void context does not execute the receiver FAILED
+Expected :defined_specs_side_effects == :not_executed
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/defined_spec.rb:259:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/defined_spec.rb:50:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+22)
+delegation with def(*) within a block that accepts anonymous rest within a method that accepts anonymous rest does not allow delegating rest FAILED
+Expected SyntaxError(/anonymous rest parameter is also used within block/)
+but no exception was raised (:m was returned)
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/delegation_spec.rb:148:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/delegation_spec.rb:132:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+23)
+delegation with def(**) within a block that accepts anonymous kwargs within a method that accepts anonymous kwargs does not allow delegating kwargs FAILED
+Expected SyntaxError(/anonymous keyword rest parameter is also used within block/)
+but no exception was raised (:m was returned)
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/delegation_spec.rb:169:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/delegation_spec.rb:153:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+24)
+delegation with def(&) within a block that accepts anonymous block within a method that accepts anonymous block does not allow delegating a block FAILED
+Expected SyntaxError(/anonymous block parameter is also used within block/)
+but no exception was raised (:m was returned)
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/delegation_spec.rb:191:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/delegation_spec.rb:174:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+25)
+The for expression iterates over a list of arrays and destructures with a splat FAILED
+Expected nil == [2]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/for_spec.rb:31:in 'block in <main>'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/for_spec.rb:28:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/for_spec.rb:7:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+26)
+The for expression iterates over a list of arrays and destructures with a splat and additional targets FAILED
+Expected nil == [2, 3]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/for_spec.rb:38:in 'block in <main>'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/for_spec.rb:35:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/for_spec.rb:7:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+27)
+The for expression iterates over a list of arrays and destructures with a multi-assignment FAILED
+Expected [1, 1, [2, 3]] == [1, 2, 3]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/for_spec.rb:49:in 'block in <main>'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/for_spec.rb:43:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/for_spec.rb:7:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+28)
+The for expression allows an attribute with safe navigation on a nil base as an iterator name ERROR
+NoMethodError: undefined method 'target=' for nil
+(eval at /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/for_spec.rb:173):1:in 'block in <main>'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+(eval at /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/for_spec.rb:173):1:in '<main>'
+org/jruby/RubyKernel.java:1448:in 'eval'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/for_spec.rb:173:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/for_spec.rb:7:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+29)
+Hash literal expands nil using ** into {} ERROR
+TypeError: no implicit conversion of nil into Hash
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/hash_spec.rb:164:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/hash_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+30)
+Hash literal raises a SyntaxError at parse time when Symbol key with invalid bytes and 'key: value' syntax used FAILED
+Expected SyntaxError(/invalid symbol/)
+but no exception was raised (#<Hash>(#pretty_inspect raised #<ArgumentError: invalid byte sequence in UTF-8>) was returned)
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/hash_spec.rb:260:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/hash_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+31)
+Heredoc string raises SyntaxError if quoted HEREDOC identifier is ending not on same line FAILED
+Expected SyntaxError
+but no exception was raised (
+"raises syntax error
+" was returned)
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/heredoc_spec.rb:65:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/heredoc_spec.rb:5:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+32)
+Heredoc string reports line numbers inside HEREDOC with method call FAILED
+Expected "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/heredoc_spec.rb:112:in 'block in <main>'".start_with? "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/heredoc_spec.rb:115"
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/heredoc_spec.rb:117:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/heredoc_spec.rb:111:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/heredoc_spec.rb:5:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+33)
+The `it` parameter raises SyntaxError when block parameters are specified explicitly FAILED
+Expected SyntaxError(/ordinary parameter is defined/)
+but no exception was raised (#<Proc:0x75da2db (eval at /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/it_parameter_spec.rb:46):1 (lambda)> was returned)
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/it_parameter_spec.rb:46:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/it_parameter_spec.rb:5:in '<main>'
+org/jruby/RubyKernel.java:1448:in 'eval'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/it_parameter_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/it_parameter_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+34)
+The `it` parameter cannot be mixed with numbered parameters FAILED
+Expected SyntaxError(/numbered parameters are not allowed when 'it' is already used|'it' is already used in/)
+but no exception was raised (#<Proc:0x7b1559f1 (eval at /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/it_parameter_spec.rb:61):1> was returned)
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/it_parameter_spec.rb:62:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/it_parameter_spec.rb:5:in '<main>'
+org/jruby/RubyKernel.java:1448:in 'eval'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/it_parameter_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/it_parameter_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+35)
+The `it` parameter does not affect binding local variables getting ERROR
+Expected NameError(/local variable 'it' is not defined for/)
+but got: NameError("local variable 'it' not defined for #<Binding:0x6371c5ec>")
+org/jruby/RubyBinding.java:149:in 'local_variable_get'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/it_parameter_spec.rb:91:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/it_parameter_spec.rb:90:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/it_parameter_spec.rb:5:in '<main>'
+org/jruby/RubyKernel.java:1448:in 'eval'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/it_parameter_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/it_parameter_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+36)
+The `it` parameter does not affect binding local variables setting ERROR
+NameError: local variable 'it' not defined for #<Binding:0x6738e8b2>
+org/jruby/RubyBinding.java:170:in 'local_variable_set'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/it_parameter_spec.rb:98:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/it_parameter_spec.rb:100:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/it_parameter_spec.rb:5:in '<main>'
+org/jruby/RubyKernel.java:1448:in 'eval'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/it_parameter_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/it_parameter_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+37)
+Keyword arguments raises ArgumentError exception when required keyword argument is not passed ERROR
+Expected ArgumentError(/missing keyword: :c/)
+but got: ArgumentError("missing keyword: c")
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/keyword_arguments_spec.rb:64:in 'm'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/keyword_arguments_spec.rb:68:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/keyword_arguments_spec.rb:68:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/keyword_arguments_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+38)
+Keyword arguments raises ArgumentError for missing keyword arguments even if there are extra ones ERROR
+Expected ArgumentError(/missing keyword: :a/)
+but got: ArgumentError("unknown keyword: :b")
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/keyword_arguments_spec.rb:73:in 'm'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/keyword_arguments_spec.rb:77:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/keyword_arguments_spec.rb:77:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/keyword_arguments_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+39)
+Magic comments in an -e argument do not cause bytes to be mangled by passing them through the wrong encoding FAILED
+Expected "[239, 191, 189, 65, 239, 191, 189, 110]" == "[167, 65, 166, 110]"
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/magic_comment_spec.rb:42:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/magic_comment_spec.rb:46:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+40)
+when passing **nil into a method that accepts keyword arguments expands nil using ** into {} ERROR
+TypeError: no implicit conversion of nil into Hash
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/method_spec.rb:1217:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/method_spec.rb:1200:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+41)
+warning about not used block argument warns when passing a block argument to a method that never uses it FAILED
+Expected warning to match: /\/data\/valen-systems-shared\/worktrees\/cufehaco\/jruby-master-baseline\/spec\/ruby\/language\/method_spec.rb:1574: warning: the block passed to 'm_that_does_not_use_block' defined at \/data\/valen-systems-shared\/worktrees\/cufehaco\/jruby-master-baseline\/spec\/ruby\/language\/method_spec.rb:1569 may be ignored/
+but got: ""
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/method_spec.rb:1575:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/method_spec.rb:1566:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+42)
+warning about not used block argument warns when passing a block argument to a method that calls #block_given? FAILED
+Expected warning to match: /\/data\/valen-systems-shared\/worktrees\/cufehaco\/jruby-master-baseline\/spec\/ruby\/language\/method_spec.rb:1610: warning: the block passed to 'm_with_block_given' defined at \/data\/valen-systems-shared\/worktrees\/cufehaco\/jruby-master-baseline\/spec\/ruby\/language\/method_spec.rb:1605 may be ignored/
+but got: ""
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/method_spec.rb:1611:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/method_spec.rb:1566:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+43)
+warning about not used block argument warns only once per call site FAILED
+Expected warning to match: /the block passed to 'm_that_does_not_use_block' defined at .+ may be ignored/
+but got: ""
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/method_spec.rb:1684:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/method_spec.rb:1566:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+44)
+warning about not used block argument can be disabled with :strict_unused_block warning category FAILED
+Expected a warning but received none
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/method_spec.rb:1697:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/method_spec.rb:1566:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+45)
+warning about not used block argument can be enabled with :strict_unused_block = true warning category in not verbose mode ERROR
+ArgumentError: unknown category: strict_unused_block
+org/jruby/common/RubyWarnings.java:336:in '[]'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/method_spec.rb:1713:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/method_spec.rb:1566:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+46)
+The module keyword does not reopen a module included in Object FAILED
+Expected "true" == "false"
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/module_spec.rb:34:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/module_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+47)
+The module keyword raises a TypeError if the constant is a Class ERROR
+Expected TypeError("Klass is not a module\n/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/module_spec.rb:65: previous definition of Klass was here")
+but got: TypeError("Klass is not a module")
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/module_spec.rb:67:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/module_spec.rb:68:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/module_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+48)
+Predefined global $& is read-only when aliased FAILED
+Expected NameError("$predefined_spec_ampersand is a read-only variable")
+but no exception was raised ("" was returned)
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:151:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:129:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+49)
+Predefined global $` is read-only when aliased FAILED
+Expected NameError("$predefined_spec_backquote is a read-only variable")
+but no exception was raised ("" was returned)
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:182:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:155:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+50)
+Predefined global $' is read-only when aliased FAILED
+Expected NameError("$predefined_spec_single_quote is a read-only variable")
+but no exception was raised ("" was returned)
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:213:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:186:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+51)
+Predefined global $+ is read-only when aliased FAILED
+Expected NameError("$predefined_spec_plus is a read-only variable")
+but no exception was raised ("" was returned)
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:244:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:217:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+52)
+Predefined global $! in bodies without ensure should be cleared when an exception is rescued even when a non-local return is present FAILED
+Expected #<StandardError: foo> == nil
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:463:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:298:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+53)
+Predefined global $-0 does not call #to_str to convert the object to a String ERROR
+Expected TypeError("value of $-0 must be String")
+but got: TypeError("value of $/ must be String")
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:823:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:823:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:758:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+54)
+Predefined global $-0 raises a TypeError if assigned an Integer ERROR
+Expected TypeError("value of $-0 must be String")
+but got: TypeError("value of $/ must be String")
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:827:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:827:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:758:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+55)
+Predefined global $-0 raises a TypeError if assigned a boolean ERROR
+Expected TypeError("value of $-0 must be String")
+but got: TypeError("value of $/ must be String")
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:831:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:831:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:758:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+56)
+Predefined global $-0 warns if assigned non-nil FAILED
+Expected warning to match: /warning: (?:non-nil )?[`']\$-0' is deprecated/
+but got: "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:835: warning: non-nil '$/' is deprecated\n"
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:835:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:758:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+57)
+Execution variable $: default $LOAD_PATH entries until sitelibdir included have @gem_prelude_index set FAILED
+Expected false == true
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:1100:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:1052:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+58)
+Global variable $0 actually sets the program name FAILED
+Expected 
+"/usr/lib/jvm/java-25-openjdk-amd64/bin/java @/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/bin/.jruby.java_opts @/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/bin/.jruby.module_opts -Xss2048k -Djffi.boot.library.path=/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/jni --enable-native-access=ALL-UNNAMED -Xshare:off -Djava.security.egd=file:/dev/urandom -XX:+AutoCreateSharedArchive -XX:SharedArchiveFile=/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/jruby-java25.0.4.1+1-1-24.04.4-Ubuntu.jsa -Xlog:cds=off -Xlog:cds+dynamic=off --enable-native-access=org.jruby.dist --sun-misc-unsafe-memory-access=allow --module-path /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/jruby.jar -Djruby.home=/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline -Djruby.lib=/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib -Djruby.script=jruby -Djruby.shell=/bin/sh org.jruby.main.Main spec/mspec/bin/mspec-run -B spec/jruby.mspec spec/ruby/language
+".include? "rubyspec-dollar0-test"
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:1266:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:1241:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+59)
+$LOAD_PATH.resolve_feature_path returns what will be loaded without actual loading, .rb file FAILED
+Expected :so == :rb
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:1533:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:1530:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+60)
+$LOAD_PATH.resolve_feature_path returns what will be loaded without actual loading, .so file FAILED
+Expected :rb == :so
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:1542:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/predefined_spec.rb:1530:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+61)
+The redo statement in a method is invalid and raises a SyntaxError FAILED
+Expected SyntaxError but no exception was raised (:m was returned)
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/redo_spec.rb:63:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/redo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+62)
+Regexps with back-references returns nil for numbered variable with too large index FAILED
+Expected "a" == nil
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/regexp/back-references_spec.rb:27:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/regexp/back-references_spec.rb:31:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/regexp/back-references_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+63)
+Literal Regexps handles a lookbehind with ss characters ERROR
+RegexpError: invalid pattern in look-behind: /(?<!dss)/i
+org/jruby/RubyRegexp.java:1068:in '=~'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/regexp_spec.rb:118:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/regexp_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+64)
+A singleton class is a subclass of the same level of Class's singleton class FAILED
+Expected #<Class:#<Class:ClassSpecs::A>>.is_a? #<Class:#<Class:Class>>
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/singleton_class_spec.rb:49:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/singleton_class_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+65)
+Class methods of a singleton class for a singleton class include class methods of the singleton class of Class FAILED
+Expected #<Class:#<Class:ClassSpecs::A>>.respond_to? :example_class_method_of_singleton_class
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/singleton_class_spec.rb:276:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/singleton_class_spec.rb:228:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+66)
+Source files encoded in UTF-16 LE with a BOM are invalid because they contain an invalid UTF-8 sequence before the encoding comment FAILED
+Expected 
+"/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/rubygems/core_ext/kernel_require.rb:139: warning: already initialized constant java.lang.constant::Constable
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/rubygems/core_ext/kernel_require.rb:139: warning: already initialized constant java.lang.invoke::TypeDescriptor
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/rubygems/core_ext/kernel_require.rb:139: warning: already initialized constant java.lang.reflect::AnnotatedElement
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/rubygems/core_ext/kernel_require.rb:139: warning: already initialized constant java.lang.reflect::Type
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/rubygems/core_ext/kernel_require.rb:139: warning: already initialized constant java.lang.reflect::GenericDeclaration
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/rubygems/core_ext/kernel_require.rb:139: warning: already initialized constant java.io::Serializable
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/rubygems/core_ext/kernel_require.rb:139: warning: already initialized constant java.lang::Class
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/rubygems/core_ext/kernel_require.rb:139: warning: already initialized constant java.lang::Object
+SyntaxError
+" =~ /invalid multibyte char/
+to be truthy but was nil
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/source_encoding_spec.rb:32:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/source_encoding_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+67)
+Source files encoded in UTF-16 BE with a BOM are invalid because they contain an invalid UTF-8 sequence before the encoding comment FAILED
+Expected 
+"/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/rubygems/core_ext/kernel_require.rb:139: warning: already initialized constant java.lang.constant::Constable
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/rubygems/core_ext/kernel_require.rb:139: warning: already initialized constant java.lang.invoke::TypeDescriptor
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/rubygems/core_ext/kernel_require.rb:139: warning: already initialized constant java.lang.reflect::AnnotatedElement
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/rubygems/core_ext/kernel_require.rb:139: warning: already initialized constant java.lang.reflect::Type
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/rubygems/core_ext/kernel_require.rb:139: warning: already initialized constant java.lang.reflect::GenericDeclaration
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/rubygems/core_ext/kernel_require.rb:139: warning: already initialized constant java.io::Serializable
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/rubygems/core_ext/kernel_require.rb:139: warning: already initialized constant java.lang::Class
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/lib/ruby/stdlib/rubygems/core_ext/kernel_require.rb:139: warning: already initialized constant java.lang::Object
+SyntaxError
+" =~ /invalid multibyte char/
+to be truthy but was nil
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/source_encoding_spec.rb:54:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/source_encoding_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+68)
+The yield call taking a single argument yielding to a lambda should not destructure an Array into multiple arguments FAILED
+Expected ArgumentError but no exception was raised ([1, 2] was returned)
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/yield_spec.rb:85:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/language/yield_spec.rb:9:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+Finished in 157.000991 seconds
+
+80 files, 2944 examples, 5564 expectations, 43 failures, 25 errors, 0 tagged

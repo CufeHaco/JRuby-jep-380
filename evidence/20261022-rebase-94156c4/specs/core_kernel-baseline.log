@@ -1,0 +1,1455 @@
+jruby 10.1.3.0-SNAPSHOT (4.0.0) 2026-10-22 ffffffffff OpenJDK 64-Bit Server VM 25.0.4.1+1-1-24.04.4-Ubuntu on 25.0.4.1+1-1-24.04.4-Ubuntu +indy +jit [x86_64-linux]
+.EE.EE..F....
+be_nil is deprecated, use .should == nil instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/autoload_spec.rb:188:in 'block in <main>'
+
+equal is deprecated, use .should.equal? instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/autoload_spec.rb:193:in 'block in <main>'
+
+equal is deprecated, use .should.equal? instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/autoload_spec.rb:201:in 'block in <main>'
+FF..EF.............E......................./data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:100: warning: parentheses after method name is interpreted as an argument list, not a decomposed argument
+..............E........F....EF.....FE...E...
+raise_error is deprecated, use .should.raise instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/system_spec.rb:151:in 'block in <main>'
+F.................
+
+1)
+Kernel#Complex raises an ArgumentError if exception: is not true or false ERROR
+Expected ArgumentError(/expected true or false/)
+but got: ArgumentError("true or false is expected as exception: 0")
+org/jruby/RubyKernel.java:383:in 'Complex'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/Complex_spec.rb:279:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/Complex_spec.rb:279:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/Complex_spec.rb:5:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+2)
+Kernel#Float for hexadecimal literals accepts a fractional part ERROR
+ArgumentError: invalid value for Integer(): "0x0.8"
+org/jruby/RubyKernel.java:564:in 'Float'
+org/jruby/RubyKernel.java:410:in 'Float'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/Float_spec.rb:280:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/Float_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+3)
+Kernel#Integer raises a TypeError when to_int returns not-an-Integer object and to_i returns nil ERROR
+Expected TypeError("can't convert MockObject into Integer (MockObject#to_i gives nil)")
+but got: TypeError("#<Class:#<MockObject:0x773f3360>>#to_i should return Integer")
+org/jruby/RubyKernel.java:619:in 'Integer'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/Integer_spec.rb:22:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/Integer_spec.rb:23:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/Integer_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+4)
+Kernel#Integer raises a TypeError if to_i returns a value that is not an Integer ERROR
+Expected TypeError("can't convert MockObject into Integer (MockObject#to_i gives String)")
+but got: TypeError("#<Class:#<MockObject:0x6adcf059>>#to_i should return Integer")
+org/jruby/RubyKernel.java:619:in 'Integer'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/Integer_spec.rb:100:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/Integer_spec.rb:101:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/Integer_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+5)
+Kernel#Integer raises a TypeError if no to_int or to_i methods exist ERROR
+Expected TypeError("can't convert MockObject into Integer")
+but got: TypeError("no implicit conversion of MockObject into Integer")
+org/jruby/RubyKernel.java:619:in 'Integer'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/Integer_spec.rb:107:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/Integer_spec.rb:108:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/Integer_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+6)
+Kernel#Integer raises a TypeError if to_int returns nil and no to_i exists ERROR
+Expected TypeError("can't convert MockObject into Integer (MockObject#to_i gives nil)")
+but got: TypeError("#<Class:#<MockObject:0x30bd39d5>>#to_i should return Integer")
+org/jruby/RubyKernel.java:619:in 'Integer'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/Integer_spec.rb:115:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/Integer_spec.rb:116:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/Integer_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+7)
+Kernel#Rational raises an ArgumentError if exception: is not true or false ERROR
+Expected ArgumentError(/expected true or false/)
+but got: ArgumentError("true or false is expected as exception: 0")
+org/jruby/RubyRational.java:369:in 'convert'
+org/jruby/RubyKernel.java:400:in 'Rational'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/Rational_spec.rb:239:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/Rational_spec.rb:239:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/Rational_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+8)
+Kernel#Rational when passed neither a Numeric nor a String raises TypeError if it neither responds to #to_r nor #to_int method ERROR
+Expected TypeError("can't convert Array into Rational")
+but got: TypeError("no implicit conversion of Array into Rational")
+org/jruby/RubyRational.java:355:in 'convert'
+org/jruby/RubyKernel.java:395:in 'Rational'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/Rational_spec.rb:117:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/Rational_spec.rb:117:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/Rational_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+9)
+Kernel#__dir__ when used in eval with a given filename returns File.dirname(filename) FAILED
+Expected "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline" == "."
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/__dir___spec.rb:21:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/__dir___spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+10)
+Kernel#__dir__ when used in eval with top level binding returns nil FAILED
+Expected "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/(eval at /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel" == nil
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/__dir___spec.rb:28:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/__dir___spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+11)
+Kernel#autoload inside a Class.new method body should define on the new anonymous class FAILED
+Expected nil == "bogus"
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/autoload_spec.rb:72:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/autoload_spec.rb:18:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+12)
+Kernel#` handles invalid UTF-8 bytes in command FAILED
+Expected 
+"testing\xEF\xBF\xBD a non UTF-8 string
+" == 
+"testing\xC2 a non UTF-8 string
+"
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/backtick_spec.rb:40:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/backtick_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+13)
+Kernel#caller_locations can be called with `nil` length ERROR
+TypeError: no implicit conversion from nil to integer
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/caller_locations_spec.rb:34:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/caller_locations_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+14)
+Kernel#caller_locations can be called with a range whose end is negative FAILED
+Expected ["/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:176:in 'block in protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:176:in 'all?'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:176:in 'protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:212:in 'block in process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:285:in 'repeat'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:204:in 'block in process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:203:in 'each'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:203:in 'process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:56:in 'describe'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/object.rb:11:in 'describe'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/caller_locations_spec.rb:4:in '<main>'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:100:in 'block in load'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:100:in 'block in files'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'instance_exec'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:100:in 'block in files'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:91:in 'each'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:91:in 'each_file'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:96:in 'files'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:64:in 'process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/commands/mspec-run.rb:84:in 'run'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/utils/script.rb:297:in 'main'",
+ "spec/mspec/bin/mspec-run:7:in '<main>'"] == []
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/caller_locations_spec.rb:59:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/caller_locations_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+15)
+Kernel#caller_locations must return nil if omitting more locations than available FAILED
+Expected [] == nil
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/caller_locations_spec.rb:64:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/caller_locations_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+16)
+Kernel#caller_locations must return the same locations when called with 1..-1 and when called with no arguments FAILED
+Expected ["/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'instance_exec'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:176:in 'block in protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:176:in 'all?'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:176:in 'protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:212:in 'block in process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:285:in 'repeat'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:204:in 'block in process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:203:in 'each'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:203:in 'process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:56:in 'describe'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/object.rb:11:in 'describe'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/caller_locations_spec.rb:4:in '<main>'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:100:in 'block in load'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:100:in 'block in files'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'instance_exec'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:100:in 'block in files'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:91:in 'each'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:91:in 'each_file'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:96:in 'files'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:64:in 'process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/commands/mspec-run.rb:84:in 'run'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/utils/script.rb:297:in 'main'",
+ "spec/mspec/bin/mspec-run:7:in '<main>'"] == []
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/caller_locations_spec.rb:82:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/caller_locations_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+17)
+Kernel#caller_locations does not include core library methods defined in Ruby FAILED
+Expected "block in tap" == "Kernel#tap"
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/caller_locations_spec.rb:122:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/caller_locations_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+18)
+Kernel#caller can be called with a range whose end is negative FAILED
+Expected ["/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:176:in 'block in protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:176:in 'all?'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:176:in 'protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:212:in 'block in process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:285:in 'repeat'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:204:in 'block in process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:203:in 'each'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:203:in 'process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:56:in 'describe'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/object.rb:11:in 'describe'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/caller_spec.rb:4:in '<main>'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:100:in 'block in load'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:100:in 'block in files'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'instance_exec'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:100:in 'block in files'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:91:in 'each'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:91:in 'each_file'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:96:in 'files'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:64:in 'process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/commands/mspec-run.rb:84:in 'run'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/utils/script.rb:297:in 'main'",
+ "spec/mspec/bin/mspec-run:7:in '<main>'"] == nil
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/caller_spec.rb:80:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/caller_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+19)
+Kernel#caller must return the same locations when called with 1..-1 and when called with no arguments FAILED
+Expected ["/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'instance_exec'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:176:in 'block in protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:176:in 'all?'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:176:in 'protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:212:in 'block in process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:285:in 'repeat'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:204:in 'block in process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:203:in 'each'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:203:in 'process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:56:in 'describe'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/object.rb:11:in 'describe'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/caller_spec.rb:4:in '<main>'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:100:in 'block in load'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:100:in 'block in files'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'instance_exec'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:100:in 'block in files'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:91:in 'each'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:91:in 'each_file'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:96:in 'files'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:64:in 'process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/commands/mspec-run.rb:84:in 'run'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/utils/script.rb:297:in 'main'",
+ "spec/mspec/bin/mspec-run:7:in '<main>'"] == nil
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/caller_spec.rb:95:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/caller_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+20)
+Kernel#caller does not include core library methods defined in Ruby FAILED
+Expected "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/caller_spec.rb:132:in 'block in tap'" =~ /\A(<internal:|\/data\/valen-systems-shared\/worktrees\/cufehaco\/jruby-master-baseline\/spec\/ruby\/core\/kernel\/caller_spec.rb:).*in 'Kernel#tap'\z/
+to be truthy but was nil
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/caller_spec.rb:134:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/caller_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+21)
+Kernel#eval raises a LocalJumpError if there is no lambda-style closure in the chain FAILED
+Expected "a,b,c," == "a,b,c,e,LocalJumpError,f"
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/eval_spec.rb:296:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/eval_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+22)
+Kernel#eval with a magic encoding comment ignores the magic encoding comment if it is after a frozen_string_literal magic comment ERROR
+TypeError: no implicit conversion of nil into String
+org/jruby/RubyModule.java:4753:in 'remove_const'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/eval_spec.rb:484:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/eval_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+23)
+Kernel#printf formatting io is specified integer formats b converts to the empty string if precision is 0 and value is 0 FAILED
+Expected "0" == ""
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:112:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+24)
+Kernel#printf formatting io is specified integer formats b pads the empty string if precision is 0 and value is 0 FAILED
+Expected " 0" == "  "
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:117:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+25)
+Kernel#printf formatting io is specified integer formats B converts to the empty string if precision is 0 and value is 0 FAILED
+Expected "0" == ""
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:112:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+26)
+Kernel#printf formatting io is specified integer formats B pads the empty string if precision is 0 and value is 0 FAILED
+Expected " 0" == "  "
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:117:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+27)
+Kernel#printf formatting io is specified integer formats o converts to the empty string if precision is 0 and value is 0 FAILED
+Expected "0" == ""
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:112:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+28)
+Kernel#printf formatting io is specified integer formats o pads the empty string if precision is 0 and value is 0 FAILED
+Expected " 0" == "  "
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:117:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+29)
+Kernel#printf formatting io is specified integer formats x converts to the empty string if precision is 0 and value is 0 FAILED
+Expected "0" == ""
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:112:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+30)
+Kernel#printf formatting io is specified integer formats x pads the empty string if precision is 0 and value is 0 FAILED
+Expected " 0" == "  "
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:117:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+31)
+Kernel#printf formatting io is specified integer formats X converts to the empty string if precision is 0 and value is 0 FAILED
+Expected "0" == ""
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:112:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+32)
+Kernel#printf formatting io is specified integer formats X pads the empty string if precision is 0 and value is 0 FAILED
+Expected " 0" == "  "
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:117:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+33)
+Kernel#printf formatting io is specified other formats c displays no characters if argument is an empty string ERROR
+ArgumentError: invalid character
+org/jruby/RubyString.java:1539:in '%'
+org/jruby/RubyKernel.java:1011:in 'sprintf'
+org/jruby/RubyKernel.java:808:in 'printf'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:50:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:316:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+34)
+Kernel#printf formatting io is specified other formats c raises TypeError if argument is nil ERROR
+Expected TypeError(/no implicit conversion of nil into Integer/)
+but got: TypeError("no implicit conversion from nil to integer")
+org/jruby/RubyString.java:1539:in '%'
+org/jruby/RubyKernel.java:1011:in 'sprintf'
+org/jruby/RubyKernel.java:808:in 'printf'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:50:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:327:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:328:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+35)
+Kernel#printf formatting io is specified other formats % raises ArgumentError if not followed by a conversion specifier ERROR
+Expected ArgumentError(/malformed format string/)
+but got: ArgumentError("illegal format character - %")
+org/jruby/RubyString.java:1539:in '%'
+org/jruby/RubyKernel.java:1011:in 'sprintf'
+org/jruby/RubyKernel.java:808:in 'printf'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:50:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:500:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:500:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+36)
+Kernel#printf formatting io is specified flags # applies to formats bBxX does nothing for zero argument when combined with zero precision FAILED
+Expected "0" == ""
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:660:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+37)
+Kernel#printf formatting io is specified flags * raises ArgumentError if absolute argument specifier is followed by a conversion specifier FAILED
+Expected ArgumentError(/malformed format string/)
+but no exception was raised ("hello %" was returned)
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:901:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+38)
+Kernel#printf formatting io is not specified integer formats b converts to the empty string if precision is 0 and value is 0 FAILED
+Expected "0" == ""
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:112:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+39)
+Kernel#printf formatting io is not specified integer formats b pads the empty string if precision is 0 and value is 0 FAILED
+Expected " 0" == "  "
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:117:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+40)
+Kernel#printf formatting io is not specified integer formats B converts to the empty string if precision is 0 and value is 0 FAILED
+Expected "0" == ""
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:112:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+41)
+Kernel#printf formatting io is not specified integer formats B pads the empty string if precision is 0 and value is 0 FAILED
+Expected " 0" == "  "
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:117:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+42)
+Kernel#printf formatting io is not specified integer formats o converts to the empty string if precision is 0 and value is 0 FAILED
+Expected "0" == ""
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:112:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+43)
+Kernel#printf formatting io is not specified integer formats o pads the empty string if precision is 0 and value is 0 FAILED
+Expected " 0" == "  "
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:117:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+44)
+Kernel#printf formatting io is not specified integer formats x converts to the empty string if precision is 0 and value is 0 FAILED
+Expected "0" == ""
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:112:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+45)
+Kernel#printf formatting io is not specified integer formats x pads the empty string if precision is 0 and value is 0 FAILED
+Expected " 0" == "  "
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:117:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+46)
+Kernel#printf formatting io is not specified integer formats X converts to the empty string if precision is 0 and value is 0 FAILED
+Expected "0" == ""
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:112:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+47)
+Kernel#printf formatting io is not specified integer formats X pads the empty string if precision is 0 and value is 0 FAILED
+Expected " 0" == "  "
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:117:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+48)
+Kernel#printf formatting io is not specified other formats c displays no characters if argument is an empty string ERROR
+ArgumentError: invalid character
+org/jruby/RubyString.java:1539:in '%'
+org/jruby/RubyKernel.java:1011:in 'sprintf'
+org/jruby/RubyKernel.java:808:in 'printf'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:60:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:316:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+49)
+Kernel#printf formatting io is not specified other formats c raises TypeError if argument is nil ERROR
+Expected TypeError(/no implicit conversion of nil into Integer/)
+but got: TypeError("no implicit conversion from nil to integer")
+org/jruby/RubyString.java:1539:in '%'
+org/jruby/RubyKernel.java:1011:in 'sprintf'
+org/jruby/RubyKernel.java:808:in 'printf'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:60:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:327:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:328:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+50)
+Kernel#printf formatting io is not specified other formats % raises ArgumentError if not followed by a conversion specifier ERROR
+Expected ArgumentError(/malformed format string/)
+but got: ArgumentError("illegal format character - %")
+org/jruby/RubyString.java:1539:in '%'
+org/jruby/RubyKernel.java:1011:in 'sprintf'
+org/jruby/RubyKernel.java:808:in 'printf'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:60:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:500:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:500:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+51)
+Kernel#printf formatting io is not specified flags # applies to formats bBxX does nothing for zero argument when combined with zero precision FAILED
+Expected "0" == ""
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:660:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+52)
+Kernel#printf formatting io is not specified flags * raises ArgumentError if absolute argument specifier is followed by a conversion specifier FAILED
+Expected ArgumentError(/malformed format string/)
+but no exception was raised ("hello %" was returned)
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:901:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/printf_spec.rb:41:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+53)
+Kernel#raise re-raises a previously rescued exception with cleaned backtrace and sets a new backtrace FAILED
+Expected ["/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/shared/kernel/raise.rb:160:in 'block in <main>'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/shared/kernel/fixtures/classes.rb:5:in 'with_raise'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/shared/kernel/raise.rb:159:in 'block in <main>'",
+ "org/jruby/RubyBasicObject.java:2782:in 'instance_exec'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:176:in 'block in protect'",
+ "org/jruby/RubyArrayNative.java:4093:in 'all?'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:176:in 'protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:212:in 'block in process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:285:in 'repeat'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:204:in 'block in process'",
+ "org/jruby/RubyArrayNative.java:1657:in 'each'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/context.rb:203:in 'process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:56:in 'describe'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/object.rb:11:in 'describe'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/raise_spec.rb:5:in '<main>'",
+ "org/jruby/RubyKernel.java:1402:in 'load'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:100:in 'block in files'",
+ "org/jruby/RubyBasicObject.java:2782:in 'instance_exec'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:100:in 'block in files'",
+ "org/jruby/RubyArrayNative.java:1657:in 'each'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:91:in 'each_file'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:96:in 'files'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/runner/mspec.rb:64:in 'process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/commands/mspec-run.rb:84:in 'run'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/mspec/lib/mspec/utils/script.rb:297:in 'main'",
+ "spec/mspec/bin/mspec-run:7:in '<main>'"].any? { ... }
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/shared/kernel/raise.rb:174:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/shared/kernel/raise.rb:173:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/raise_spec.rb:5:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+54)
+Kernel#require_relative with a relative path in an #instance_eval with a synthetic file base name loads a file base name relative to the working directory ERROR
+Errno::ENOENT: No such file or directory - /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/fixtures/code/foo.rb
+org/jruby/RubyFile.java:864:in 'realpath'
+org/jruby/RubyKernel.java:1393:in 'require_relative'
+foo.rb:1:in '(eval at foo.rb:0)'
+org/jruby/RubyBasicObject.java:2730:in 'instance_eval'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/require_relative_spec.rb:49:in 'block in <main>'
+org/jruby/RubyDir.java:441:in 'chdir'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/require_relative_spec.rb:48:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/require_relative_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+55)
+Kernel#require_relative with a relative path in an #instance_eval with a synthetic file path loads a relative path relative to the working directory plus the directory of the synthetic path ERROR
+Errno::ENOENT: No such file or directory - /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/fixtures/code/bar/foo.rb
+org/jruby/RubyFile.java:864:in 'realpath'
+org/jruby/RubyKernel.java:1393:in 'require_relative'
+bar/foo.rb:1:in '(eval at bar/foo.rb:0)'
+org/jruby/RubyBasicObject.java:2730:in 'instance_eval'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/require_relative_spec.rb:56:in 'block in <main>'
+org/jruby/RubyDir.java:441:in 'chdir'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/require_relative_spec.rb:55:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/require_relative_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+56)
+Kernel#require_relative with a relative path in an #instance_eval with a synthetic relative file path with a Windows path separator specified loads a relative path relative to the working directory ERROR
+Errno::ENOENT: No such file or directory - /data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/fixtures/code/bar\foo.rb
+org/jruby/RubyFile.java:864:in 'realpath'
+org/jruby/RubyKernel.java:1393:in 'require_relative'
+bar\foo.rb:1:in '(eval at bar\foo.rb:0)'
+org/jruby/RubyBasicObject.java:2730:in 'instance_eval'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/require_relative_spec.rb:64:in 'block in <main>'
+org/jruby/RubyDir.java:441:in 'chdir'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/require_relative_spec.rb:63:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/require_relative_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+57)
+Kernel#require_relative with a relative path ($LOADED_FEATURES) with symlinks does not canonicalize the path and stores a path with symlinks FAILED
+Expected ["/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/fixtures/code/load_fixture.rb"].include? "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/rubyspec_temp/100250/61-codesymlink/load_fixture.rb"
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/require_relative_spec.rb:238:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/require_relative_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+58)
+Kernel#require provided features are already required FAILED
+Expected ["complex",
+ "enumerator",
+ "fiber",
+ "pathname",
+ "rational",
+ "ruby2_keywords",
+ "set",
+ "thread",
+ "wait"] == ["complex",
+ "enumerator",
+ "fiber",
+ "pathname",
+ "rational",
+ "ruby2_keywords",
+ "set",
+ "thread"]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/require_spec.rb:44:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/require_spec.rb:5:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+59)
+Kernel#require does not store the missing path in a LoadError object when c-extension file exists but loading fails and passed absolute path without extension FAILED
+Expected "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/fixtures/code/a/load_fixture" == nil
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/require.rb:832:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/require.rb:831:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/require_spec.rb:5:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+60)
+Kernel#require ($LOADED_FEATURES) with symlinks does not canonicalize the path and stores a path with symlinks FAILED
+Expected ["/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/fixtures/code/load_fixture.rb"].include? "/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/rubyspec_temp/100250/68-codesymlink/load_fixture.rb"
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/require.rb:390:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/require_spec.rb:5:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+61)
+Kernel#require ($LOADED_FEATURES) with symlinks in the required feature and $LOAD_PATH canonicalizes the entry in $LOAD_PATH but not the filename passed to #require FAILED
+Expected ["/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/rubyspec_temp/100250/72-realdir/realfile.rb"] == ["/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/rubyspec_temp/100250/72-realdir/symfile.rb"]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/require.rb:438:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/require_spec.rb:5:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+62)
+Kernel#singleton_class for an IO object with a replaced singleton class looks up singleton methods from the fresh singleton class after an object instance got a new one FAILED
+Expected #<Class:#<File:0x24a7d3d3>>.equal? #<Class:#<File:0x24a7d3d3>>
+to be falsy but was true
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/singleton_class_spec.rb:67:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/singleton_class_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+63)
+Kernel#singleton_method finds a method defined in a module included in the singleton class ERROR
+NameError: undefined method 'foo' for '#<Object:0x2f4545c6>'
+org/jruby/RubyKernel.java:2424:in 'singleton_method'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/singleton_method_spec.rb:53:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/singleton_method_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+64)
+Kernel#singleton_method finds a method defined in a module prepended in the singleton class ERROR
+NameError: undefined method 'foo' for '#<Object:0x482942d8>'
+org/jruby/RubyKernel.java:2424:in 'singleton_method'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/singleton_method_spec.rb:67:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/singleton_method_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+65)
+Kernel#singleton_method finds a method defined in a module that an object is extended with ERROR
+NameError: undefined method 'foo' for '#<Object:0x2cd52eda>'
+org/jruby/RubyKernel.java:2424:in 'singleton_method'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/singleton_method_spec.rb:81:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/singleton_method_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+66)
+Kernel#sprintf integer formats b converts to the empty string if precision is 0 and value is 0 FAILED
+Expected "0" == ""
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:112:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/sprintf_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+67)
+Kernel#sprintf integer formats b pads the empty string if precision is 0 and value is 0 FAILED
+Expected " 0" == "  "
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:117:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/sprintf_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+68)
+Kernel#sprintf integer formats B converts to the empty string if precision is 0 and value is 0 FAILED
+Expected "0" == ""
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:112:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/sprintf_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+69)
+Kernel#sprintf integer formats B pads the empty string if precision is 0 and value is 0 FAILED
+Expected " 0" == "  "
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:117:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/sprintf_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+70)
+Kernel#sprintf integer formats o converts to the empty string if precision is 0 and value is 0 FAILED
+Expected "0" == ""
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:112:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/sprintf_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+71)
+Kernel#sprintf integer formats o pads the empty string if precision is 0 and value is 0 FAILED
+Expected " 0" == "  "
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:117:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/sprintf_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+72)
+Kernel#sprintf integer formats x converts to the empty string if precision is 0 and value is 0 FAILED
+Expected "0" == ""
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:112:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/sprintf_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+73)
+Kernel#sprintf integer formats x pads the empty string if precision is 0 and value is 0 FAILED
+Expected " 0" == "  "
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:117:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/sprintf_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+74)
+Kernel#sprintf integer formats X converts to the empty string if precision is 0 and value is 0 FAILED
+Expected "0" == ""
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:112:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/sprintf_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+75)
+Kernel#sprintf integer formats X pads the empty string if precision is 0 and value is 0 FAILED
+Expected " 0" == "  "
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:117:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/sprintf_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+76)
+Kernel#sprintf other formats c displays no characters if argument is an empty string ERROR
+ArgumentError: invalid character
+org/jruby/RubyString.java:1539:in '%'
+org/jruby/RubyKernel.java:1011:in 'sprintf'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/sprintf_spec.rb:18:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/sprintf_spec.rb:19:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:316:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/sprintf_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+77)
+Kernel#sprintf other formats c raises TypeError if argument is nil ERROR
+Expected TypeError(/no implicit conversion of nil into Integer/)
+but got: TypeError("no implicit conversion from nil to integer")
+org/jruby/RubyString.java:1539:in '%'
+org/jruby/RubyKernel.java:1011:in 'sprintf'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/sprintf_spec.rb:18:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/sprintf_spec.rb:19:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:327:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:328:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/sprintf_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+78)
+Kernel#sprintf other formats % raises ArgumentError if not followed by a conversion specifier ERROR
+Expected ArgumentError(/malformed format string/)
+but got: ArgumentError("illegal format character - %")
+org/jruby/RubyString.java:1539:in '%'
+org/jruby/RubyKernel.java:1011:in 'sprintf'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/sprintf_spec.rb:18:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/sprintf_spec.rb:19:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:500:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:500:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/sprintf_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+79)
+Kernel#sprintf flags # applies to formats bBxX does nothing for zero argument when combined with zero precision FAILED
+Expected "0" == ""
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:660:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/sprintf_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+80)
+Kernel#sprintf flags * raises ArgumentError if absolute argument specifier is followed by a conversion specifier FAILED
+Expected ArgumentError(/malformed format string/)
+but no exception was raised ("hello %" was returned)
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/shared/sprintf.rb:901:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/sprintf_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+81)
+Kernel#system executes with `sh` if the command is executable but not binary and there is no shebang FAILED
+Expected (STDOUT): "/data/home/CufeHaco/.local/bin:/data/home/CufeHaco/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin\n"
+
+         but got: ""
+Backtrace
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/system_spec.rb:89:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-master-baseline/spec/ruby/core/kernel/system_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+Finished in 92.367641 seconds
+
+118 files, 2239 examples, 22861 expectations, 56 failures, 25 errors, 1 tagged

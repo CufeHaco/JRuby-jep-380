@@ -1,0 +1,34 @@
+jruby 10.1.3.0-SNAPSHOT (4.0.0) 2026-10-22 ffffffffff OpenJDK 64-Bit Server VM 25.0.4.1+1-1-24.04.4-Ubuntu on 25.0.4.1+1-1-24.04.4-Ubuntu +indy +jit [x86_64-linux]
+...........FF
+
+1)
+Socket::Constants defines SCM options FAILED
+Expected Socket::Constants.const_defined? "SCM_RIGHTS", false
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/constants/constants_spec.rb:92:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/constants/constants_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+2)
+Socket::Constants defines error options FAILED
+Expected Socket::Constants.const_defined? "EAI_ADDRFAMILY", false
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/constants/constants_spec.rb:104:in 'block in <main>'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/constants/constants_spec.rb:103:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/constants/constants_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+Finished in 0.193887 seconds
+
+1 file, 13 examples, 40 expectations, 2 failures, 0 errors, 0 tagged

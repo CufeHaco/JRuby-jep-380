@@ -1154,3 +1154,24 @@ allocates nothing. Single-op requests only (the probe says ready-or-not, not whi
 
 Result: `syswrite`+`sysread` 8.5us -> 3.2us (JNR 8.0-8.8us). Blocked-reader wake cases
 (`kj-wake.rb`: raise/kill/Timeout/close/data/EOF/read_nonblock/IO.select/pipe) identical to MRI 4.0.5.
+
+## Landmine 21
+
+**Rebase onto master `94156c4` and the scope split (2026-10-22).** 303 upstream commits had added
+Fiber::Scheduler support to sockets (Sampo Kuokkanen, Albert Álef). Ten conflicts; upstream's
+scheduler `accept`, `sysaccept` fd registration, accept retry and block-form `pair` were kept and
+moved onto the JEP-380/FFM channel types (details: `PR-9040-NOTES.md` section 4).
+
+The branch `jep380-pr-9040` splits the work by changed line into five commits (general IO fixes,
+#9040, MRI compatibility, sysread poll, backtrace labels); each compiles on its own, and commit 2
+alone passes `unixsocket`/`unixserver`.
+
+Two findings while organizing:
+
+- `bin/jruby` already passes `--enable-native-access=org.jruby.dist` (since March 2025), so FFM
+  works without `-J--enable-native-access=ALL-UNNAMED`; the harness flag was never needed.
+  Embedders loading `jruby.jar` from the classpath get the JDK's restricted-method warning, as
+  jffi already causes on stock.
+- With native access denied (`--illegal-native-access=deny`, embedded), `UNIXSocket.pair(:DGRAM)`
+  leaked a Java `UnsupportedOperationException`. Now `Errno::EOPNOTSUPP`, as `Socket.pair` was.
+  Stream pairs fall back to a JEP-380 pair and named sockets are unaffected (checked).

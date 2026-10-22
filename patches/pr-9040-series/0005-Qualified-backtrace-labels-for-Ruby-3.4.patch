@@ -1,0 +1,1075 @@
+From a0ccb11268cf38e6ae1a611201976685744f277b Mon Sep 17 00:00:00 2001
+From: CufeHaco <redeagleteam2005@gmail.com>
+Date: Thu, 22 Oct 2026 16:07:08 -0400
+Subject: [PATCH 5/5] Qualified backtrace labels for Ruby 3.4+
+
+Backtraces and Thread::Backtrace::Location#label/base_label use MRI's
+qualified labels: Foo#bar, Foo.baz, block in Foo#bar, <class:Foo>,
+<main> / <top (required)>. Covers the interpreter, JIT frames (resolved
+through a weak registry from compiled script classes to their IR scopes),
+blocks, define_method (labelled as the block it came from), eval and
+Binding in compiled code, and module_function's singleton copy.
+
+core/thread/backtrace: 4 failures (master: 41); no spec in core/thread,
+kernel, exception, method, proc, module or language newly fails.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ core/src/main/java/org/jruby/Ruby.java        | 47 +++++++++++
+ core/src/main/java/org/jruby/RubyKernel.java  |  4 +-
+ core/src/main/java/org/jruby/RubyModule.java  |  1 +
+ core/src/main/java/org/jruby/RubyThread.java  |  9 +-
+ .../java/org/jruby/anno/AnnotationBinder.java |  6 +-
+ .../java/org/jruby/anno/TypePopulator.java    | 11 ++-
+ .../internal/runtime/AbstractIRMethod.java    | 30 ++++++-
+ .../runtime/methods/MixedModeIRMethod.java    | 10 +--
+ .../src/main/java/org/jruby/ir/IRClosure.java |  1 +
+ core/src/main/java/org/jruby/ir/IRMethod.java | 12 +++
+ core/src/main/java/org/jruby/ir/IRScope.java  | 83 +++++++++++++++++++
+ .../main/java/org/jruby/ir/IRScriptBody.java  | 17 ++++
+ .../org/jruby/ir/interpreter/Interpreter.java |  5 +-
+ .../jruby/ir/runtime/IRRuntimeHelpers.java    | 43 ++++++++++
+ .../java/org/jruby/ir/targets/JVMVisitor.java | 33 ++++++--
+ .../main/java/org/jruby/runtime/Helpers.java  |  1 +
+ .../java/org/jruby/runtime/IRBlockBody.java   | 15 ++++
+ .../jruby/runtime/InterpretedIRBlockBody.java |  6 +-
+ .../jruby/runtime/MixedModeIRBlockBody.java   |  2 +-
+ .../java/org/jruby/runtime/ThreadContext.java | 33 ++++++--
+ .../runtime/backtrace/BacktraceData.java      | 72 +++++++++++++++-
+ .../backtrace/RubyStackTraceElement.java      | 27 +++++-
+ .../jruby/runtime/backtrace/TraceType.java    |  2 +
+ .../java/org/jruby/util/JavaNameMangler.java  | 15 ++--
+ 24 files changed, 441 insertions(+), 44 deletions(-)
+
+diff --git a/core/src/main/java/org/jruby/Ruby.java b/core/src/main/java/org/jruby/Ruby.java
+index fb421576af..4a4f9f035a 100644
+--- a/core/src/main/java/org/jruby/Ruby.java
++++ b/core/src/main/java/org/jruby/Ruby.java
+@@ -3151,6 +3151,53 @@ public final class Ruby implements Constantizable {
+         }
+     }
+ 
++    /**
++     * Generated populators: bound Java methods with their owner, so a
++     * backtrace frame for one is labeled as Ruby 3.4+ does -- "Array#each",
++     * "Integer.sqrt" -- not just "each". A rubyName starting with "." is a
++     * singleton method. An anonymous owner gives the bare name.
++     */
++    public void addBoundMethods(RubyModule owner, int tuplesIndex, String... classNamesAndTuples) {
++        String ownerName = owner == null ? null : owner.getName();
++        if (ownerName != null && ownerName.startsWith("#<")) ownerName = null;
++
++        String[] labeled = classNamesAndTuples.clone();
++        for (int i = tuplesIndex + 1; i < labeled.length; i += 2) {
++            labeled[i] = qualifiedLabel(ownerName, labeled[i]);
++        }
++        addBoundMethods(tuplesIndex, labeled);
++    }
++
++    /** "Owner#name" / "Owner.name" (rubyName prefixed with "."), or the bare name without an owner. */
++    public static String qualifiedLabel(String ownerName, String rubyName) {
++        boolean singleton = rubyName.startsWith(".");
++        String name = singleton ? rubyName.substring(1) : rubyName;
++        if (ownerName == null) return name;
++        return ownerName + (singleton ? "." : "#") + name;
++    }
++
++    // WHY: a compiled Ruby frame is named when its class is generated, which
++    // for a whole compiled script is before its methods are defined -- so the
++    // name can't carry the Ruby 3.4+ owner label ("Foo#bar"). This maps each
++    // compiled frame (JVM class + method name) back to its IR scope, where the
++    // label is recorded at definition, so a backtrace resolves it then. Scopes
++    // are held weakly so redefined/eval'd code can still be collected.
++    private final Map<String, Map<String, java.lang.ref.WeakReference<org.jruby.ir.IRScope>>> compiledFrames = new ConcurrentHashMap<>();
++
++    public void registerCompiledFrames(String className, Map<String, org.jruby.ir.IRScope> frames) {
++        if (frames.isEmpty()) return;
++        Map<String, java.lang.ref.WeakReference<org.jruby.ir.IRScope>> refs = new HashMap<>(frames.size() * 2);
++        frames.forEach((name, scope) -> refs.put(name, new java.lang.ref.WeakReference<>(scope)));
++        compiledFrames.put(className, refs);
++    }
++
++    public org.jruby.ir.IRScope compiledFrameScope(String className, String methodName) {
++        Map<String, java.lang.ref.WeakReference<org.jruby.ir.IRScope>> refs = compiledFrames.get(className);
++        if (refs == null) return null;
++        java.lang.ref.WeakReference<org.jruby.ir.IRScope> ref = refs.get(methodName);
++        return ref == null ? null : ref.get();
++    }
++
+     public Map<String, Map<String, String>> getBoundMethods() {
+         return boundMethods;
+     }
+diff --git a/core/src/main/java/org/jruby/RubyKernel.java b/core/src/main/java/org/jruby/RubyKernel.java
+index 6af3a0f79d..69b14c3d2c 100644
+--- a/core/src/main/java/org/jruby/RubyKernel.java
++++ b/core/src/main/java/org/jruby/RubyKernel.java
+@@ -1472,8 +1472,8 @@ public class RubyKernel {
+             binding.setLine(0);
+         }
+ 
+-        // set method to current frame's, which should be caller's
+-        String frameName = context.getCompositeName();
++        // set method to current frame's label, which should be caller's (MRI labels the eval frame alike)
++        String frameName = context.getCurrentFrameLabel();
+         if (frameName != null) binding.setMethod(frameName);
+ 
+         if (bindingGiven) recv = binding.getSelf();
+diff --git a/core/src/main/java/org/jruby/RubyModule.java b/core/src/main/java/org/jruby/RubyModule.java
+index a1fc0713a0..2e3540d253 100644
+--- a/core/src/main/java/org/jruby/RubyModule.java
++++ b/core/src/main/java/org/jruby/RubyModule.java
+@@ -3937,6 +3937,7 @@ public class RubyModule extends RubyObject {
+                 DynamicMethod newMethod = deepMethodSearch(context, name.idString()).method.dup();
+                 newMethod.setImplementationClass(singleton);
+                 newMethod.setVisibility(PUBLIC);
++                org.jruby.ir.runtime.IRRuntimeHelpers.moduleFunctionBacktraceLabel(context, newMethod, this, name.idString());
+                 singleton.addMethod(context, name.idString(), newMethod);
+                 singleton.methodAdded(context, name);
+             }
+diff --git a/core/src/main/java/org/jruby/RubyThread.java b/core/src/main/java/org/jruby/RubyThread.java
+index adbfa91b7e..166702070d 100644
+--- a/core/src/main/java/org/jruby/RubyThread.java
++++ b/core/src/main/java/org/jruby/RubyThread.java
+@@ -571,7 +571,8 @@ public class RubyThread extends RubyObject implements ExecutionContext {
+ 
+         @JRubyMethod
+         public IRubyObject base_label(ThreadContext context) {
+-            if (baseLabel == null) baseLabel = newString(context, element.getMethodName());
++            // MRI: label is "Array#each", base_label just "each"
++            if (baseLabel == null) baseLabel = newString(context, RubyStackTraceElement.baseName(element.getMethodName()));
+             return baseLabel;
+         }
+ 
+@@ -584,11 +585,13 @@ public class RubyThread extends RubyObject implements ExecutionContext {
+         public IRubyObject label(ThreadContext context) {
+             if (element.getFrameType() == FrameType.BLOCK) {
+                 // NOTE: "block in " + ... logic, now, also at RubyStackTraceElement.to_s_mri
+-                if (label == null) label = newString(context, "block in " + element.getMethodName());
++                if (label == null) label = newString(context, RubyStackTraceElement.blockPrefix(element.getMethodName()) + element.getMethodName());
+                 return label;
+             }
+ 
+-            return base_label(context);
++            // the full Ruby 3.4+ label ("Array#each"); base_label strips the owner
++            if (label == null) label = newString(context, element.getMethodName());
++            return label;
+         }
+ 
+         @JRubyMethod
+diff --git a/core/src/main/java/org/jruby/anno/AnnotationBinder.java b/core/src/main/java/org/jruby/anno/AnnotationBinder.java
+index 319f3a8760..fb97588eb9 100644
+--- a/core/src/main/java/org/jruby/anno/AnnotationBinder.java
++++ b/core/src/main/java/org/jruby/anno/AnnotationBinder.java
+@@ -238,7 +238,7 @@ public class AnnotationBinder extends AbstractProcessor {
+             out.println("");
+ 
+             // addBoundMethods(int tuplesIndex, String... classNamesAndTuples)
+-            out.print("        runtime.addBoundMethods(" + classAndSubs.size() + ", ");
++            out.print("        runtime.addBoundMethods(cls, " + classAndSubs.size() + ", ");
+             out.print(classAndSubs.stream().map(s -> quote(s)).collect(Collectors.joining(", ")));
+             mappings.forEach((javaName, rubyName) -> out.print(", " + quote(javaName) + ", " + quote(rubyName) + ""));
+             out.println(");");
+@@ -300,6 +300,10 @@ public class AnnotationBinder extends AbstractProcessor {
+             CharSequence javaName = decl.getSimpleName().toString();
+             CharSequence rubyName = entry.getKey();
+ 
++            // "." marks a singleton method, so the backtrace label can be
++            // "Owner.name" rather than "Owner#name" (see Ruby#addBoundMethods)
++            if (anno.meta() && !anno.module()) rubyName = "." + rubyName;
++
+             mappings.putIfAbsent(javaName, rubyName);
+         }
+     }
+diff --git a/core/src/main/java/org/jruby/anno/TypePopulator.java b/core/src/main/java/org/jruby/anno/TypePopulator.java
+index 2b8d8f72a0..a34f70a625 100644
+--- a/core/src/main/java/org/jruby/anno/TypePopulator.java
++++ b/core/src/main/java/org/jruby/anno/TypePopulator.java
+@@ -133,27 +133,30 @@ public abstract class TypePopulator {
+                 final String name = entry.getKey();
+                 final List<JavaMethodDescriptor> methods = entry.getValue();
+                 target.defineAnnotatedMethod(context, name, methods, methodFactory);
+-                addBoundMethodsUnlessOmitted(context.runtime, name, methods);
++                addBoundMethodsUnlessOmitted(context.runtime, target, name, methods);
+             }
+ 
+             for (Map.Entry<String, List<JavaMethodDescriptor>> entry : clumper.getAnnotatedMethods().entrySet()) {
+                 final String name = entry.getKey();
+                 final List<JavaMethodDescriptor> methods = entry.getValue();
+                 target.defineAnnotatedMethod(context, name, methods, methodFactory);
+-                addBoundMethodsUnlessOmitted(context.runtime, name, methods);
++                addBoundMethodsUnlessOmitted(context.runtime, target, name, methods);
+             }
+         }
+ 
+-        private void addBoundMethodsUnlessOmitted(final Ruby runtime, final String name, final List<JavaMethodDescriptor> methods) {
++        private void addBoundMethodsUnlessOmitted(final Ruby runtime, final RubyModule target, final String name, final List<JavaMethodDescriptor> methods) {
+             final int size = methods.size();
+             final List<String> classAndSubs = this.classAndSubs;
++            String ownerName = target.getName();
++            if (ownerName.startsWith("#<")) ownerName = null;
+ 
+             for ( int i=0; i<size; i++ ) {
+                 final JavaMethodDescriptor desc = methods.get(i);
+                 if (!desc.anno.omit()) {
+                     String javaName = desc.name;
++                    String label = Ruby.qualifiedLabel(ownerName, desc.anno.meta() && !desc.anno.module() ? "." + name : name);
+                     for (int j = 0; j < classAndSubs.size(); j++) {
+-                        runtime.addBoundMethod(classAndSubs.get(j), javaName, name);
++                        runtime.addBoundMethod(classAndSubs.get(j), javaName, label);
+                     }
+                 }
+             }
+diff --git a/core/src/main/java/org/jruby/internal/runtime/AbstractIRMethod.java b/core/src/main/java/org/jruby/internal/runtime/AbstractIRMethod.java
+index a9e17763ca..03dd71802b 100644
+--- a/core/src/main/java/org/jruby/internal/runtime/AbstractIRMethod.java
++++ b/core/src/main/java/org/jruby/internal/runtime/AbstractIRMethod.java
+@@ -123,6 +123,34 @@ public abstract class AbstractIRMethod extends DynamicMethod implements IRMethod
+         return callCount < 0;
+     }
+ 
++    /**
++     * This frame's backtrace label: the scope's Ruby 3.4+ label ("Foo#bar",
++     * recorded at definition) once known, else the call name.
++     */
++    protected final String backtraceName(String callName) {
++        String label = backtraceLabel;
++        if (label != null) return label;
++
++        IRScope scope = getIRScope();
++        if (scope instanceof org.jruby.ir.IRMethod m && m.getDefinedFrom() != null) scope = m.getDefinedFrom();
++        if (scope instanceof org.jruby.ir.IRClosure) {
++            // define_method: the body is a block, labeled as one ("block in <class:C>"), as MRI
++            label = scope.getBlockBacktraceLabel(callName);
++            if (scope.isBlockFrameNameStatic()) backtraceLabel = label;
++            return label;
++        }
++
++        label = scope.getBacktraceLabel();
++        return label != null ? label : callName;
++    }
++
++    // a label for this method object only, over the scope's (module_function's singleton copy)
++    private String backtraceLabel;
++
++    public void setBacktraceLabel(String label) {
++        this.backtraceLabel = label;
++    }
++
+     public IRScope getIRScope() {
+         try {
+             if (method == null) method = staticScope.getIRScope();
+@@ -277,7 +305,7 @@ public abstract class AbstractIRMethod extends DynamicMethod implements IRMethod
+     public final ExitableReturn interpretSplit(ThreadContext context, MethodSplitState state, IRubyObject[] args, Block block) {
+         try {
+             final ExitableInterpreterContext ic = state.getInterpreterContext();
+-            ThreadContext.pushBacktrace(context, state.name, ic.getFileName(), ic.getLine());
++            ThreadContext.pushBacktrace(context, backtraceName(state.name), ic.getFileName(), ic.getLine());
+ 
+             try {
+                 preSplit(ic, context, state.self, state.name, block, state.implClass, state.scope);
+diff --git a/core/src/main/java/org/jruby/internal/runtime/methods/MixedModeIRMethod.java b/core/src/main/java/org/jruby/internal/runtime/methods/MixedModeIRMethod.java
+index 77c6c1b47c..0c8e550e55 100644
+--- a/core/src/main/java/org/jruby/internal/runtime/methods/MixedModeIRMethod.java
++++ b/core/src/main/java/org/jruby/internal/runtime/methods/MixedModeIRMethod.java
+@@ -108,7 +108,7 @@ public class MixedModeIRMethod extends AbstractIRMethod implements Compilable<Dy
+     private IRubyObject INTERPRET_METHOD(ThreadContext context, InterpreterContext ic, RubyModule implClass,
+             IRubyObject self, String name, IRubyObject[] args, Block block) {
+         try {
+-            ThreadContext.pushBacktrace(context, name, ic.getFileName(), ic.getLine());
++            ThreadContext.pushBacktrace(context, backtraceName(name), ic.getFileName(), ic.getLine());
+ 
+             if (ic.hasExplicitCallProtocol()) {
+                 return ic.getEngine().interpret(context, null, self, ic, implClass, name, args, block);
+@@ -140,7 +140,7 @@ public class MixedModeIRMethod extends AbstractIRMethod implements Compilable<Dy
+     private IRubyObject INTERPRET_METHOD(ThreadContext context, InterpreterContext ic, RubyModule implClass,
+             IRubyObject self, String name, Block block) {
+         try {
+-            ThreadContext.pushBacktrace(context, name, ic.getFileName(), ic.getLine());
++            ThreadContext.pushBacktrace(context, backtraceName(name), ic.getFileName(), ic.getLine());
+ 
+             if (ic.hasExplicitCallProtocol()) {
+                 return ic.getEngine().interpret(context, null, self, ic, implClass, name, block);
+@@ -173,7 +173,7 @@ public class MixedModeIRMethod extends AbstractIRMethod implements Compilable<Dy
+     private IRubyObject INTERPRET_METHOD(ThreadContext context, InterpreterContext ic, RubyModule implClass,
+             IRubyObject self, String name, IRubyObject arg1, Block block) {
+         try {
+-            ThreadContext.pushBacktrace(context, name, ic.getFileName(), ic.getLine());
++            ThreadContext.pushBacktrace(context, backtraceName(name), ic.getFileName(), ic.getLine());
+ 
+             if (ic.hasExplicitCallProtocol()) {
+                 return ic.getEngine().interpret(context, null, self, ic, implClass, name, arg1, block);
+@@ -206,7 +206,7 @@ public class MixedModeIRMethod extends AbstractIRMethod implements Compilable<Dy
+     private IRubyObject INTERPRET_METHOD(ThreadContext context, InterpreterContext ic, RubyModule implClass,
+             IRubyObject self, String name, IRubyObject arg1, IRubyObject arg2, Block block) {
+         try {
+-            ThreadContext.pushBacktrace(context, name, ic.getFileName(), ic.getLine());
++            ThreadContext.pushBacktrace(context, backtraceName(name), ic.getFileName(), ic.getLine());
+ 
+             if (ic.hasExplicitCallProtocol()) {
+                 return ic.getEngine().interpret(context, null, self, ic, implClass, name, arg1, arg2, block);
+@@ -239,7 +239,7 @@ public class MixedModeIRMethod extends AbstractIRMethod implements Compilable<Dy
+     private IRubyObject INTERPRET_METHOD(ThreadContext context, InterpreterContext ic, RubyModule implClass,
+             IRubyObject self, String name, IRubyObject arg1, IRubyObject arg2, IRubyObject arg3, Block block) {
+         try {
+-            ThreadContext.pushBacktrace(context, name, ic.getFileName(), ic.getLine());
++            ThreadContext.pushBacktrace(context, backtraceName(name), ic.getFileName(), ic.getLine());
+ 
+             if (ic.hasExplicitCallProtocol()) {
+                 return ic.getEngine().interpret(context, null, self, ic, implClass, name, arg1, arg2, arg3, block);
+diff --git a/core/src/main/java/org/jruby/ir/IRClosure.java b/core/src/main/java/org/jruby/ir/IRClosure.java
+index 0fcf88765f..6cd5c4234e 100644
+--- a/core/src/main/java/org/jruby/ir/IRClosure.java
++++ b/core/src/main/java/org/jruby/ir/IRClosure.java
+@@ -211,6 +211,7 @@ public class IRClosure extends IRScope {
+         LazyMethodDefinitionAST defn = new LazyMethodDefinitionAST(def);
+         IRMethod method = new IRMethod(getManager(), getLexicalParent(), defn, name, true,  getLine(), getStaticScope().duplicate(), getCoverageMode());
+         method.setSourceSpan(getStartColumn(), getEndLine(), getEndColumn());
++        method.setDefinedFrom(this); // backtraces label it as this block (MRI: "block in <class:C>")
+         return method;
+     }
+ 
+diff --git a/core/src/main/java/org/jruby/ir/IRMethod.java b/core/src/main/java/org/jruby/ir/IRMethod.java
+index 8815cb664a..f64bda1711 100644
+--- a/core/src/main/java/org/jruby/ir/IRMethod.java
++++ b/core/src/main/java/org/jruby/ir/IRMethod.java
+@@ -55,6 +55,18 @@ import java.util.Map;
+ import static org.jruby.api.Error.runtimeError;
+ 
+ public class IRMethod extends IRScope {
++    // the block this method was converted from (define_method), whose label
++    // backtraces use for it: MRI shows a define_method body as a block frame
++    private IRClosure definedFrom;
++
++    public void setDefinedFrom(IRClosure closure) {
++        this.definedFrom = closure;
++    }
++
++    public IRClosure getDefinedFrom() {
++        return definedFrom;
++    }
++
+     public final boolean isInstanceMethod;
+ 
+     // Argument description
+diff --git a/core/src/main/java/org/jruby/ir/IRScope.java b/core/src/main/java/org/jruby/ir/IRScope.java
+index 7372e50f73..253ab0ac77 100644
+--- a/core/src/main/java/org/jruby/ir/IRScope.java
++++ b/core/src/main/java/org/jruby/ir/IRScope.java
+@@ -372,6 +372,89 @@ public abstract class IRScope implements ParseResult {
+         return n;
+     }
+ 
++    // Ruby 3.4+ backtrace label of a method scope ("Foo#bar", "Foo.baz"),
++    // recorded once when the method is defined (owner known only then) and
++    // read by the interpreter's backtrace push and the JIT's frame naming --
++    // so call paths only pay a field read. A scope defined into two
++    // different owners falls back to its bare name: less qualified, never a
++    // wrong owner.
++    private volatile String backtraceLabel;
++
++    public String getBacktraceLabel() {
++        return backtraceLabel;
++    }
++
++    public void recordBacktraceLabel(String label) {
++        String current = backtraceLabel;
++        if (current == null) {
++            backtraceLabel = label;
++        } else if (!current.equals(label)) {
++            backtraceLabel = getId();
++        }
++    }
++
++    /** Label of the method a block frame belongs to ("block in " + this), or null. */
++    public String getEnclosingBacktraceLabel() {
++        IRScope top = getNearestTopLocalVariableScope();
++        return top == null ? null : top.getBacktraceLabel();
++    }
++
++    /**
++     * For a block scope, its backtrace frame name -- what follows "block ":
++     * "Foo#bar" (rendered "block in Foo#bar") or, nested, "(2 levels) in Foo#bar".
++     * The top is the enclosing method's label, "<class:C>"/"<module:M>" for a
++     * class/module body, else fallbackTop (e.g. "<main>"). Static per scope.
++     */
++    public String getBlockFrameName(String fallbackTop) {
++        int depth = 0;
++        IRScope s = this;
++        while (true) {
++            if (s instanceof IRClosure && !(s instanceof IREvalScript)) {
++                depth++;
++                s = s.getLexicalParent();
++            } else if (s instanceof IRMethod m && m.getDefinedFrom() != null) {
++                s = m.getDefinedFrom(); // a define_method body counts as its block
++            } else {
++                break;
++            }
++        }
++
++        String top;
++        if (s instanceof IRMethod) {
++            top = s.getBacktraceLabel();
++            if (top == null) top = fallbackTop;
++        } else if (s instanceof IRMetaClassBody) {
++            top = "singleton class";
++        } else if (s instanceof IRClassBody) {
++            top = "<class:" + s.getId() + ">";
++        } else if (s instanceof IRModuleBody) {
++            top = "<module:" + s.getId() + ">";
++        } else if (s instanceof IRScriptBody script) {
++            top = script.getTopLabel();
++        } else {
++            top = fallbackTop;
++        }
++
++        return depth > 1 ? "(" + depth + " levels) in " + top : top;
++    }
++
++    /** The full block label: "block in Foo#bar" / "block (2 levels) in Foo#bar". */
++    public String getBlockBacktraceLabel(String fallbackTop) {
++        String name = getBlockFrameName(fallbackTop);
++        return (name.startsWith("(") ? "block " : "block in ") + name;
++    }
++
++    /** True when getBlockFrameName doesn't depend on its fallback (so it can be cached). */
++    public boolean isBlockFrameNameStatic() {
++        IRScope s = this;
++        while (true) {
++            if (s instanceof IRClosure && !(s instanceof IREvalScript)) s = s.getLexicalParent();
++            else if (s instanceof IRMethod m && m.getDefinedFrom() != null) s = m.getDefinedFrom();
++            else break;
++        }
++        return (s instanceof IRMethod && s.getBacktraceLabel() != null) || s instanceof IRModuleBody || s instanceof IRScriptBody;
++    }
++
+     public String getId() {
+         return getName().idString();
+     }
+diff --git a/core/src/main/java/org/jruby/ir/IRScriptBody.java b/core/src/main/java/org/jruby/ir/IRScriptBody.java
+index ed2e23ead4..ab52f1624c 100644
+--- a/core/src/main/java/org/jruby/ir/IRScriptBody.java
++++ b/core/src/main/java/org/jruby/ir/IRScriptBody.java
+@@ -8,6 +8,23 @@ public class IRScriptBody extends IRScope {
+     private DynamicScope toplevelScope;
+     private String fileName;
+ 
++    private String topLabel;
++
++    /**
++     * MRI's label for this script's top-level frame: "<main>" for the main
++     * program, "<top (required)>" for a file loaded by require/load.
++     */
++    public String getTopLabel() {
++        String label = topLabel;
++        if (label == null) {
++            String main = getManager().getRuntime().getInstanceConfig().displayedFileName();
++            String file = getFile();
++            label = file == null || main == null || file.equals(main) || file.equals("-e") ? "<main>" : "<top (required)>";
++            topLabel = label;
++        }
++        return label;
++    }
++
+     public IRScriptBody(IRManager manager, String sourceName, StaticScope staticScope) {
+         super(manager, null, null, 0, staticScope);
+         this.toplevelScope = null;
+diff --git a/core/src/main/java/org/jruby/ir/interpreter/Interpreter.java b/core/src/main/java/org/jruby/ir/interpreter/Interpreter.java
+index ff393240f8..31f596b765 100644
+--- a/core/src/main/java/org/jruby/ir/interpreter/Interpreter.java
++++ b/core/src/main/java/org/jruby/ir/interpreter/Interpreter.java
+@@ -59,7 +59,7 @@ public class Interpreter extends IRTranslator<IRubyObject, IRubyObject> {
+             LOG.info("Printing simple IR for " + irScope.getId() + ":\n" + new String(baos.toByteArray()));
+         }
+ 
+-        String name = ROOT;
++        String name = irScope.getTopLabel(); // "<main>" or "<top (required)>"
+ 
+         if (IRRuntimeHelpers.isDebug()) LOG.info("Executing {}", ic);
+ 
+@@ -166,7 +166,8 @@ public class Interpreter extends IRTranslator<IRubyObject, IRubyObject> {
+         boolean hasExplicitCallProtocol =  ic.hasExplicitCallProtocol();
+ 
+         try {
+-            ThreadContext.pushBacktrace(context, id, ic.getFileName(), ic.getLine());
++            String label = body.getBacktraceLabel(); // Ruby 3.4+ "Foo#bar", recorded at definition
++            ThreadContext.pushBacktrace(context, label != null ? label : id, ic.getFileName(), ic.getLine());
+ 
+             if (!hasExplicitCallProtocol) preFrameScope(ic, context, self, frameName, block, clazz, parentScope, visibility);
+ 
+diff --git a/core/src/main/java/org/jruby/ir/runtime/IRRuntimeHelpers.java b/core/src/main/java/org/jruby/ir/runtime/IRRuntimeHelpers.java
+index 69fd8fe89e..93ac427c8b 100644
+--- a/core/src/main/java/org/jruby/ir/runtime/IRRuntimeHelpers.java
++++ b/core/src/main/java/org/jruby/ir/runtime/IRRuntimeHelpers.java
+@@ -1917,6 +1917,10 @@ public class IRRuntimeHelpers {
+ 
+         if (method.maybeUsingRefinements()) method.getStaticScope().captureParentRefinements(context);
+ 
++        // before the method object exists: with jit.threshold=0 it JITs at once,
++        // and the JIT names its frame from this label
++        recordBacktraceLabel(context, method, rubyClass, id);
++
+         DynamicMethod newMethod;
+         if (instanceConfig(context).getCompileMode() == RubyInstanceConfig.CompileMode.OFF) {
+             newMethod = new InterpretedIRMethod(method, Visibility.PUBLIC, rubyClass);
+@@ -1938,6 +1942,7 @@ public class IRRuntimeHelpers {
+ 
+         if (maybeRefined) scope.captureParentRefinements(context);
+ 
++        recordBacktraceLabel(context, scope.getIRScope(), rubyClass, id);
+         // FIXME: needs checkID and proper encoding to force hard symbol
+         rubyClass.addMethod(context, id,
+                 new CompiledIRMethod(handle, null, -1, id, line, scope, Visibility.PUBLIC, rubyClass,
+@@ -1960,12 +1965,46 @@ public class IRRuntimeHelpers {
+ 
+         if (maybeRefined) scope.captureParentRefinements(context);
+ 
++        recordBacktraceLabel(context, scope.getIRScope(), rubyClass, id);
+         rubyClass.addMethod(context, id, new CompiledIRMethod(variable, specific, specificArity, id, line, scope,
+                 Visibility.PUBLIC, rubyClass, encodedArgumentDescriptors, receivesKeywordArgs, needsToFindImplementer));
+ 
+         if (!rubyClass.isRefinement()) obj.callMethod(context, "singleton_method_added", asSymbol(context, id));
+     }
+ 
++    /**
++     * Ruby 3.4+ backtrace label for a method defined into owner: "Foo#bar",
++     * "Foo.baz" for a named module's singleton class, else the bare name
++     * (anonymous owner, an ordinary object's singleton).
++     */
++    static String backtraceLabel(ThreadContext context, RubyModule owner, String id) {
++        if (owner.isSingleton()) {
++            if (owner instanceof MetaClass meta && meta.getAttached() instanceof RubyModule attached) {
++                String name = attached.getName(context);
++                return name == null || name.startsWith("#<") ? id : name + "." + id;
++            }
++            return id;
++        }
++        String name = owner.getName(context);
++        return name == null || name.startsWith("#<") ? id : name + "#" + id;
++    }
++
++    /**
++     * module_function: the module's singleton copy of the method is labeled
++     * "M.name" (the instance copy keeps the scope's "M#name"), as MRI. The
++     * label is on the method object, since both copies share one scope; once
++     * the method is JIT-compiled both copies share a frame name ("M#name").
++     */
++    public static void moduleFunctionBacktraceLabel(ThreadContext context, DynamicMethod singletonCopy, RubyModule module, String id) {
++        if (!(singletonCopy instanceof org.jruby.internal.runtime.AbstractIRMethod irMethod)) return;
++        String name = module.getName(context);
++        if (name != null && !name.startsWith("#<")) irMethod.setBacktraceLabel(name + "." + id);
++    }
++
++    private static void recordBacktraceLabel(ThreadContext context, IRScope method, RubyModule owner, String id) {
++        if (method != null) method.recordBacktraceLabel(backtraceLabel(context, owner, id));
++    }
++
+     private static RubyClass checkClassForDef(ThreadContext context, String id, IRubyObject obj) {
+         if (obj instanceof RubyFixnum || obj instanceof RubySymbol || obj instanceof RubyFloat) {
+             throw typeError(context, str(context.runtime, "can't define singleton method \"",
+@@ -1986,6 +2025,8 @@ public class IRRuntimeHelpers {
+ 
+         if (method.maybeUsingRefinements()) method.getStaticScope().captureParentRefinements(context);
+ 
++        // before the method object exists (see defInterpretedClassMethod)
++        recordBacktraceLabel(context, method, rubyClass, method.getId());
+         DynamicMethod newMethod = instanceConfig(context).getCompileMode() == RubyInstanceConfig.CompileMode.OFF ?
+             new InterpretedIRMethod(method, newVisibility, rubyClass) : new MixedModeIRMethod(method, newVisibility, rubyClass);
+ 
+@@ -2008,6 +2049,7 @@ public class IRRuntimeHelpers {
+ 
+         DynamicMethod newMethod = new CompiledIRMethod(handle, null, -1, id, line, scope,
+                 newVisibility, clazz, encodedArgumentDescriptors, receivesKeywordArgs, needsToFindImplementer);
++        recordBacktraceLabel(context, scope.getIRScope(), clazz, id);
+ 
+         // FIXME: needs checkID and proper encoding to force hard symbol
+         Helpers.addInstanceMethod(clazz, methodName, newMethod, currVisibility, context);
+@@ -2030,6 +2072,7 @@ public class IRRuntimeHelpers {
+ 
+         DynamicMethod newMethod = new CompiledIRMethod(variable, specific, specificArity, id, line, scope,
+                 newVisibility, clazz, encodedArgumentDescriptors, receivesKeywordArgs, needsToFindImplementer);
++        recordBacktraceLabel(context, scope.getIRScope(), clazz, id);
+ 
+         // FIXME: needs checkID and proper encoding to force hard symbol
+         Helpers.addInstanceMethod(clazz, methodName, newMethod, currVisibility, context);
+diff --git a/core/src/main/java/org/jruby/ir/targets/JVMVisitor.java b/core/src/main/java/org/jruby/ir/targets/JVMVisitor.java
+index b597996bd3..916036d3a2 100644
+--- a/core/src/main/java/org/jruby/ir/targets/JVMVisitor.java
++++ b/core/src/main/java/org/jruby/ir/targets/JVMVisitor.java
+@@ -138,6 +138,15 @@ public class JVMVisitor extends IRVisitor {
+         return bytecodeMode;
+     }
+ 
++    // frame name -> scope for everything emitted into the class being built,
++    // registered with the runtime when the class is defined (Ruby#registerCompiledFrames)
++    private final Map<String, IRScope> frameScopes = new java.util.HashMap<>();
++
++    private String frameName(IRScope scope, String name) {
++        frameScopes.put(name, scope);
++        return name;
++    }
++
+     public Class compile(IRScope scope, ClassDefiningClassLoader jrubyClassLoader) {
+         file = scope.getFile();
+         JVMVisitorMethodContext context = new JVMVisitorMethodContext();
+@@ -172,6 +181,16 @@ public class JVMVisitor extends IRVisitor {
+         file = scope.getFile();
+         Class result = jrubyClassLoader.defineClass(c(JVM.scriptToClass(file)), code);
+ 
++        // Only whole-script classes: their methods are compiled before being
++        // defined, so their frame names lack the owner label. A method/block
++        // JIT runs after definition and names its frame with the label; its
++        // class name is shared by every JIT class from the same file, so
++        // registering it could resolve a frame to another method's scope.
++        if (result != null && scope instanceof IRScriptBody) {
++            scope.getManager().getRuntime().registerCompiledFrames(result.getName(), frameScopes);
++        }
++        frameScopes.clear();
++
+         if (setScopes) {
+             for (Map.Entry<String, StaticScope> entry : staticScopeMap.entrySet()) {
+                 try {
+@@ -415,7 +434,7 @@ public class JVMVisitor extends IRVisitor {
+             .appendArg("runtime", Ruby.class);
+ 
+     protected void emitScriptBody(IRScriptBody script) {
+-        String scopeName = JavaNameMangler.encodeScopeForBacktrace(script);
++        String scopeName = frameName(script, JavaNameMangler.encodeScopeForBacktrace(script));
+         String scopeField = scopeName + "_StaticScope";
+         String clsName = jvm.scriptToClass(script.getFile());
+         Signature signature = signatureFor(script, false);
+@@ -515,14 +534,14 @@ public class JVMVisitor extends IRVisitor {
+     }
+ 
+     protected void emitMethod(IRMethod method, JVMVisitorMethodContext context) {
+-        String name = JavaNameMangler.encodeNumberedScopeForBacktrace(method, methodIndex++);
++        String name = frameName(method, JavaNameMangler.encodeNumberedScopeForBacktrace(method, methodIndex++));
+ 
+         emitWithSignatures(method, context, name);
+     }
+ 
+     protected void emitMethodJIT(IRMethod method, JVMVisitorMethodContext context) {
+         String clsName = jvm.scriptToClass(method.getFile());
+-        String name = JavaNameMangler.encodeNumberedScopeForBacktrace(method, methodIndex++);
++        String name = frameName(method, JavaNameMangler.encodeNumberedScopeForBacktrace(method, methodIndex++));
+         jvm.pushscript(this, clsName, method.getFile());
+ 
+         emitWithSignatures(method, context, name);
+@@ -533,7 +552,7 @@ public class JVMVisitor extends IRVisitor {
+ 
+     protected void emitBlockJIT(IRClosure closure, JVMVisitorMethodContext context) {
+         String clsName = jvm.scriptToClass(closure.getFile());
+-        String name = JavaNameMangler.encodeNumberedScopeForBacktrace(closure, methodIndex++);
++        String name = frameName(closure, JavaNameMangler.encodeNumberedScopeForBacktrace(closure, methodIndex++));
+         jvm.pushscript(this, clsName, closure.getFile());
+ 
+         emitScope(closure, name, CLOSURE_SIGNATURE, false, true);
+@@ -575,7 +594,7 @@ public class JVMVisitor extends IRVisitor {
+     }
+ 
+     protected Handle emitModuleBodyJIT(IRModuleBody method) {
+-        String name = JavaNameMangler.encodeNumberedScopeForBacktrace(method, methodIndex++);
++        String name = frameName(method, JavaNameMangler.encodeNumberedScopeForBacktrace(method, methodIndex++));
+ 
+         String clsName = jvm.scriptToClass(method.getFile());
+         jvm.pushscript(this, clsName, method.getFile());
+@@ -605,7 +624,7 @@ public class JVMVisitor extends IRVisitor {
+ 
+     protected Handle emitClosure(IRClosure closure, boolean print) {
+         /* Compile the closure like a method */
+-        String name = JavaNameMangler.encodeNumberedScopeForBacktrace(closure, methodIndex++);
++        String name = frameName(closure, JavaNameMangler.encodeNumberedScopeForBacktrace(closure, methodIndex++));
+ 
+         emitScope(closure, name, CLOSURE_SIGNATURE, false, print);
+ 
+@@ -622,7 +641,7 @@ public class JVMVisitor extends IRVisitor {
+     }
+ 
+     protected Handle emitModuleBody(IRModuleBody method) {
+-        String name = JavaNameMangler.encodeNumberedScopeForBacktrace(method, methodIndex++);
++        String name = frameName(method, JavaNameMangler.encodeNumberedScopeForBacktrace(method, methodIndex++));
+ 
+         Signature signature = signatureFor(method, false);
+         emitScope(method, name, signature, false, true);
+diff --git a/core/src/main/java/org/jruby/runtime/Helpers.java b/core/src/main/java/org/jruby/runtime/Helpers.java
+index 88a5b87aed..b3d837ffa3 100644
+--- a/core/src/main/java/org/jruby/runtime/Helpers.java
++++ b/core/src/main/java/org/jruby/runtime/Helpers.java
+@@ -2129,6 +2129,7 @@ public class Helpers {
+         var singletonClass = containingClass.singletonClass(context);
+         singletonMethod.setImplementationClass(singletonClass);
+         singletonMethod.setVisibility(Visibility.PUBLIC);
++        org.jruby.ir.runtime.IRRuntimeHelpers.moduleFunctionBacktraceLabel(context, singletonMethod, containingClass, sym.idString());
+         singletonClass.addMethod(context, sym.idString(), singletonMethod);
+         containingClass.callMethod(context, "singleton_method_added", sym);
+     }
+diff --git a/core/src/main/java/org/jruby/runtime/IRBlockBody.java b/core/src/main/java/org/jruby/runtime/IRBlockBody.java
+index 7986996294..8d33e5193b 100644
+--- a/core/src/main/java/org/jruby/runtime/IRBlockBody.java
++++ b/core/src/main/java/org/jruby/runtime/IRBlockBody.java
+@@ -32,6 +32,21 @@ public abstract class IRBlockBody extends ContextAwareBlockBody {
+         this.lineNumber = line;
+     }
+ 
++    // this block's backtrace frame name ("A#m", "(2 levels) in A#m",
++    // "<class:C>"), computed once by a scope walk, then a field read per call
++    private String backtraceFrameName;
++
++    /** This block's Ruby 3.4+ frame name (see IRScope#getBlockFrameName). */
++    protected final String backtraceName(String frameName) {
++        String cached = backtraceFrameName;
++        if (cached != null) return cached;
++        IRScope self = scope.getIRScope();
++        if (self == null) return frameName;
++        String name = self.getBlockBacktraceLabel(frameName);
++        if (self.isBlockFrameNameStatic()) backtraceFrameName = name;
++        return name;
++    }
++
+     @Override
+     public abstract boolean canCallDirect();
+ 
+diff --git a/core/src/main/java/org/jruby/runtime/InterpretedIRBlockBody.java b/core/src/main/java/org/jruby/runtime/InterpretedIRBlockBody.java
+index abffcda824..365d1a7dc3 100644
+--- a/core/src/main/java/org/jruby/runtime/InterpretedIRBlockBody.java
++++ b/core/src/main/java/org/jruby/runtime/InterpretedIRBlockBody.java
+@@ -101,13 +101,13 @@ public class InterpretedIRBlockBody extends IRBlockBody implements Compilable<In
+     @Override
+     protected IRubyObject callDirect(ThreadContext context, Block block, IRubyObject[] args, Block blockArg) {
+         ensureInstrsReady(); // so we get debugging output
+-        return Interpreter.INTERPRET_BLOCK(context, block, null, fullInterpreterContext, args, block.getBinding().getMethod(), blockArg);
++        return Interpreter.INTERPRET_BLOCK(context, block, null, fullInterpreterContext, args, backtraceName(block.getBinding().getMethod()), blockArg);
+     }
+ 
+     @Override
+     protected IRubyObject yieldDirect(ThreadContext context, Block block, IRubyObject[] args, IRubyObject self) {
+         ensureInstrsReady(); // so we get debugging output
+-        return Interpreter.INTERPRET_BLOCK(context, block, self, fullInterpreterContext, args, block.getBinding().getMethod(), Block.NULL_BLOCK);
++        return Interpreter.INTERPRET_BLOCK(context, block, self, fullInterpreterContext, args, backtraceName(block.getBinding().getMethod()), Block.NULL_BLOCK);
+     }
+ 
+     // TODO: Duplicated in InterpretedIRBlockBody
+@@ -145,7 +145,7 @@ public class InterpretedIRBlockBody extends IRBlockBody implements Compilable<In
+         self = IRRuntimeHelpers.updateBlockState(block, self);
+ 
+         try {
+-            return Interpreter.INTERPRET_BLOCK(context, block, self, ic, args, binding.getMethod(), blockArg);
++            return Interpreter.INTERPRET_BLOCK(context, block, self, ic, args, backtraceName(binding.getMethod()), blockArg);
+         }
+         finally {
+             postYield(context, ic, binding, oldVis, prevFrame);
+diff --git a/core/src/main/java/org/jruby/runtime/MixedModeIRBlockBody.java b/core/src/main/java/org/jruby/runtime/MixedModeIRBlockBody.java
+index 6b3c15f15e..fbc37879f2 100644
+--- a/core/src/main/java/org/jruby/runtime/MixedModeIRBlockBody.java
++++ b/core/src/main/java/org/jruby/runtime/MixedModeIRBlockBody.java
+@@ -135,7 +135,7 @@ public class MixedModeIRBlockBody extends IRBlockBody implements Compilable<Comp
+         self = IRRuntimeHelpers.updateBlockState(block, self);
+ 
+         try {
+-            return Interpreter.INTERPRET_BLOCK(context, block, self, ic, args, binding.getMethod(), blockArg);
++            return Interpreter.INTERPRET_BLOCK(context, block, self, ic, args, backtraceName(binding.getMethod()), blockArg);
+         }
+         finally {
+             postYield(context, ic, binding, oldVis, prevFrame);
+diff --git a/core/src/main/java/org/jruby/runtime/ThreadContext.java b/core/src/main/java/org/jruby/runtime/ThreadContext.java
+index e7044b3e93..7779e85869 100644
+--- a/core/src/main/java/org/jruby/runtime/ThreadContext.java
++++ b/core/src/main/java/org/jruby/runtime/ThreadContext.java
+@@ -731,6 +731,19 @@ public final class ThreadContext {
+      * @see #getCalleeName()
+      * @return a representation of the current method's name and the name it was called under
+      */
++    /**
++     * The current Ruby frame's backtrace label ("C#mm", "block in C#m"): the
++     * innermost compiled frame's when there is one, else the interpreted
++     * frame's backtrace element. Kernel#eval labels its frame with this, as MRI
++     * labels an eval frame like its caller.
++     */
++    public String getCurrentFrameLabel() {
++        org.jruby.runtime.backtrace.RubyStackTraceElement compiled = org.jruby.runtime.backtrace.BacktraceData.currentCompiledFrame(runtime);
++        if (compiled != null) return compiled.getMethodName();
++        String method = backtrace[backtraceIndex].getMethod();
++        return method == null || method.isEmpty() ? getCompositeName() : method;
++    }
++
+     public String getCompositeName() {
+         return getCurrentFrame().getName();
+     }
+@@ -1207,10 +1220,20 @@ public final class ThreadContext {
+      * Return a binding representing the current call's state
+      * @return the current binding
+      */
++    // Binding creation in compiled code: compiled frames don't push backtrace
++    // elements, so take label/file/line from the innermost compiled Ruby frame
++    // when there is one (BacktraceData#currentCompiledFrame); otherwise the
++    // current element is the interpreted frame's own and is accurate.
++    private Binding newBinding(IRubyObject self, Frame frame, Visibility visibility, DynamicScope scope, BacktraceElement elt) {
++        org.jruby.runtime.backtrace.RubyStackTraceElement compiled = org.jruby.runtime.backtrace.BacktraceData.currentCompiledFrame(runtime);
++        if (compiled == null) return new Binding(self, frame, visibility, scope, elt.getMethod(), elt.getFilename(), elt.getLine());
++        return new Binding(self, frame, visibility, scope, compiled.getMethodName(), compiled.getFileName(), compiled.getLineNumber() - 1);
++    }
++
+     public Binding currentBinding() {
+         Frame frame = getCurrentFrame().capture();
+         BacktraceElement elt = backtrace[backtraceIndex];
+-        return new Binding(frame, getCurrentScope(), elt.getMethod(), elt.getFilename(), elt.getLine());
++        return newBinding(frame.getSelf(), frame, frame.getVisibility(), getCurrentScope(), elt);
+     }
+ 
+     /**
+@@ -1221,7 +1244,7 @@ public final class ThreadContext {
+     public Binding currentBinding(IRubyObject self) {
+         Frame frame = getCurrentFrame().capture();
+         BacktraceElement elt = backtrace[backtraceIndex];
+-        return new Binding(self, frame, frame.getVisibility(), getCurrentScope(), elt.getMethod(), elt.getFilename(), elt.getLine());
++        return newBinding(self, frame, frame.getVisibility(), getCurrentScope(), elt);
+     }
+ 
+     /**
+@@ -1234,7 +1257,7 @@ public final class ThreadContext {
+     public Binding currentBinding(IRubyObject self, Visibility visibility) {
+         Frame frame = getCurrentFrame().capture();
+         BacktraceElement elt = backtrace[backtraceIndex];
+-        return new Binding(self, frame, visibility, getCurrentScope(), elt.getMethod(), elt.getFilename(), elt.getLine());
++        return newBinding(self, frame, visibility, getCurrentScope(), elt);
+     }
+ 
+     /**
+@@ -1247,7 +1270,7 @@ public final class ThreadContext {
+     public Binding currentBinding(IRubyObject self, DynamicScope scope) {
+         Frame frame = getCurrentFrame().capture();
+         BacktraceElement elt = backtrace[backtraceIndex];
+-        return new Binding(self, frame, frame.getVisibility(), scope, elt.getMethod(), elt.getFilename(), elt.getLine());
++        return newBinding(self, frame, frame.getVisibility(), scope, elt);
+     }
+ 
+     /**
+@@ -1263,7 +1286,7 @@ public final class ThreadContext {
+     public Binding currentBinding(IRubyObject self, Visibility visibility, DynamicScope scope) {
+         Frame frame = getCurrentFrame().capture();
+         BacktraceElement elt = backtrace[backtraceIndex];
+-        return new Binding(self, frame, visibility, scope, elt.getMethod(), elt.getFilename(), elt.getLine());
++        return newBinding(self, frame, visibility, scope, elt);
+     }
+ 
+     /**
+diff --git a/core/src/main/java/org/jruby/runtime/backtrace/BacktraceData.java b/core/src/main/java/org/jruby/runtime/backtrace/BacktraceData.java
+index 8f2af94d88..6246cd79e2 100644
+--- a/core/src/main/java/org/jruby/runtime/backtrace/BacktraceData.java
++++ b/core/src/main/java/org/jruby/runtime/backtrace/BacktraceData.java
+@@ -18,6 +18,7 @@ public class BacktraceData implements Serializable {
+     public static final StackTraceElement[] EMPTY_STACK_TRACE = new StackTraceElement[0];
+ 
+     private RubyStackTraceElement[] backtraceElements;
++    private transient Ruby runtime; // for compiled-frame label lookup (null: bare names)
+     private final Stream<StackWalker.StackFrame> stackStream;
+     private final Stream<BacktraceElement> rubyTrace;
+     private final boolean fullTrace;
+@@ -51,6 +52,7 @@ public class BacktraceData implements Serializable {
+ 
+     public final RubyStackTraceElement[] getBacktrace(Ruby runtime) {
+         if (backtraceElements == null) {
++            this.runtime = runtime;
+             backtraceElements = constructBacktrace(runtime.getBoundMethods());
+         }
+         return backtraceElements;
+@@ -58,6 +60,7 @@ public class BacktraceData implements Serializable {
+ 
+     public final RubyStackTraceElement[] getPartialBacktrace(Ruby runtime, int level) {
+         if (backtraceElements == null) {
++            this.runtime = runtime;
+             backtraceElements = constructBacktrace(runtime.getBoundMethods(), level);
+         }
+         return backtraceElements;
+@@ -65,6 +68,7 @@ public class BacktraceData implements Serializable {
+ 
+     public final void yieldPartialBacktrace(Ruby runtime, Predicate<RubyStackTraceElement> consumer) {
+         if (backtraceElements == null) {
++            this.runtime = runtime;
+             eachBacktrace(runtime.getBoundMethods(), consumer);
+         }
+     }
+@@ -116,6 +120,7 @@ public class BacktraceData implements Serializable {
+                 if (mangledTuple != null) {
+                     FrameType type = JavaNameMangler.decodeFrameTypeFromMangledName(mangledTuple.get(1));
+                     String decodedName = JavaNameMangler.decodeMethodName(type, mangledTuple);
++                    decodedName = compiledFrameLabel(className, methodName, type, decodedName);
+ 
+                     if (decodedName != null) {
+                         // skip varargs frames if we just handled the method's regular frame
+@@ -148,7 +153,8 @@ public class BacktraceData implements Serializable {
+                         // add duplicate if masking native and previous frame was native (Kernel#caller)
+                         if (maskNative && dupFrame) {
+                             dupFrame = false;
+-                            if (!consumer.test(new RubyStackTraceElement(className, dupFrameName, filename, line, false, type))) {
++                            // the native method's own frame: a method frame, not the Ruby frame's type
++                            if (!consumer.test(new RubyStackTraceElement(className, dupFrameName, filename, line, false, FrameType.METHOD))) {
+                                 break;
+                             }
+                         }
+@@ -230,7 +236,9 @@ public class BacktraceData implements Serializable {
+                 if (maskNative && dupFrame) {
+                     dupFrame = false;
+                     // for full trace we will have two levels for interpreter, so check termination condition
+-                    if (!consumer.test(new RubyStackTraceElement(rubyElement.getClassName(), dupFrameName, rubyElement.getFileName(), rubyElement.getLineNumber(), rubyElement.isBinding(), rubyElement.getFrameType()))) {
++                    // the masked native method's frame is a method frame; giving it the
++                    // Ruby frame's type labeled e.g. sleep in a block "block in sleep"
++                    if (!consumer.test(new RubyStackTraceElement(rubyElement.getClassName(), dupFrameName, rubyElement.getFileName(), rubyElement.getLineNumber(), rubyElement.isBinding(), FrameType.METHOD))) {
+                         break;
+                     }
+                 }
+@@ -252,6 +260,66 @@ public class BacktraceData implements Serializable {
+         }
+     }
+ 
++    /**
++     * A compiled frame's Ruby 3.4+ label, from its scope (Ruby#compiledFrameScope)
++     * when the label was only known after the frame was generated; else decoded.
++     */
++    private String compiledFrameLabel(String className, String methodName, FrameType type, String decoded) {
++        if (runtime == null || (type != FrameType.METHOD && type != FrameType.BLOCK && type != FrameType.ROOT)) return decoded;
++        org.jruby.ir.IRScope scope = runtime.compiledFrameScope(className, methodName);
++        if (scope == null) return decoded;
++        if (type == FrameType.ROOT) {
++            return scope instanceof org.jruby.ir.IRScriptBody script ? script.getTopLabel() : decoded;
++        }
++        if (type == FrameType.METHOD) {
++            if (scope instanceof org.jruby.ir.IRMethod m && m.getDefinedFrom() != null) {
++                return m.getDefinedFrom().getBlockBacktraceLabel(scope.getId());
++            }
++            String label = scope.getBacktraceLabel();
++            return label != null ? label : decoded;
++        }
++        org.jruby.ir.IRScope top = scope.getNearestTopLocalVariableScope();
++        String fallback = top instanceof org.jruby.ir.IRScriptBody ? org.jruby.ir.interpreter.Interpreter.ROOT
++                : top != null ? top.getId() : decoded;
++        return scope.getBlockFrameName(fallback);
++    }
++
++    /**
++     * The label of the innermost Ruby frame on this thread's Java stack, for a
++     * Binding (and so an eval frame, which takes its label from the binding).
++     * Compiled Ruby code doesn't push backtrace elements, so the current one
++     * belongs to some older interpreted frame -- e.g. an eval in a compiled
++     * method was labeled with a stale or bare name (and binding.source_location
++     * was stale). Returns null when the
++     * innermost Ruby frame is interpreted (its backtrace element is current).
++     */
++    public static RubyStackTraceElement currentCompiledFrame(Ruby runtime) {
++        return org.jruby.runtime.ThreadContext.WALKER.walk(frames -> {
++            Iterator<StackWalker.StackFrame> it = frames.iterator();
++            while (it.hasNext()) {
++                StackWalker.StackFrame frame = it.next();
++                String className = frame.getClassName();
++                String methodName = frame.getMethodName();
++                if (FrameType.getInterpreterFrame(className, methodName) != null) return null;
++
++                List<String> tuple = JavaNameMangler.decodeMethodTuple(methodName);
++                if (tuple == null || methodName.endsWith(JavaNameMangler.VARARGS_MARKER)) continue;
++
++                FrameType type = JavaNameMangler.decodeFrameTypeFromMangledName(tuple.get(1));
++                String decoded = JavaNameMangler.decodeMethodName(type, tuple);
++                if (decoded == null) continue;
++
++                BacktraceData data = new BacktraceData(Stream.empty(), Stream.empty(), false, false, false, false, false);
++                data.runtime = runtime;
++                String label = data.compiledFrameLabel(className, methodName, type, decoded);
++                if (type == FrameType.BLOCK) label = RubyStackTraceElement.blockPrefix(label) + label;
++                // the frame's own file and line too: the stale element's are just as wrong
++                return new RubyStackTraceElement(className, label, frame.getFileName(), frame.getLineNumber(), false, type);
++            }
++            return null;
++        });
++    }
++
+     public static String getBoundMethodName(Map<String,Map<String,String>> boundMethods, String className, String methodName) {
+         Map<String, String> javaToRuby = boundMethods.get(className);
+         return javaToRuby == null ? null : javaToRuby.get(methodName);
+diff --git a/core/src/main/java/org/jruby/runtime/backtrace/RubyStackTraceElement.java b/core/src/main/java/org/jruby/runtime/backtrace/RubyStackTraceElement.java
+index 2db62a07d1..4916966601 100644
+--- a/core/src/main/java/org/jruby/runtime/backtrace/RubyStackTraceElement.java
++++ b/core/src/main/java/org/jruby/runtime/backtrace/RubyStackTraceElement.java
+@@ -68,6 +68,31 @@ public class RubyStackTraceElement implements java.io.Serializable {
+         return methodName;
+     }
+ 
++    /**
++     * The method name without its Ruby 3.4+ owner qualifier: "each" for
++     * "Array#each", "sqrt" for "Integer.sqrt", "x" for "A::B#x".
++     */
++    /** "block in " for a block frame, or "block " when its name already carries "(N levels) in ". */
++    public static String blockPrefix(String name) {
++        if (name == null) return "block in ";
++        if (name.startsWith("block ")) return "";  // interpreted frames carry the full label
++        return name.startsWith("(") && name.contains(" levels) in ") ? "block " : "block in ";
++    }
++
++    public static String baseName(String label) {
++        if (label == null) return null;
++        if (label.startsWith("block in ")) label = label.substring("block in ".length());
++        else if (label.startsWith("block (")) label = label.substring("block ".length());
++        int levels = label.indexOf(" levels) in ");
++        if (label.startsWith("(") && levels > 0) label = label.substring(levels + " levels) in ".length());
++        if (label.startsWith("<")) return label; // <main>, <class:C>, <top (required)>
++        int hash = label.lastIndexOf('#');
++        if (hash > 0) return label.substring(hash + 1);
++        int dot = label.lastIndexOf('.');
++        if (dot > 0 && dot < label.length() - 1 && Character.isUpperCase(label.charAt(0))) return label.substring(dot + 1);
++        return label;
++    }
++
+     public final FrameType getFrameType() {
+         return frameType;
+     }
+@@ -93,7 +118,7 @@ public class RubyStackTraceElement implements java.io.Serializable {
+         line.cat(CommonByteLists.COLON);
+         line.cat(ConvertBytes.longToByteListCached(element.getLineNumber()));
+         line.cat(CommonByteLists.BACKTRACE_IN);
+-        if (element.getFrameType() == FrameType.BLOCK) line.catString("block in ");
++        if (element.getFrameType() == FrameType.BLOCK) line.catString(blockPrefix(element.getMethodName()));
+         line.cat(methodSym.getBytes());
+         line.cat('\'');
+ 
+diff --git a/core/src/main/java/org/jruby/runtime/backtrace/TraceType.java b/core/src/main/java/org/jruby/runtime/backtrace/TraceType.java
+index df91879994..5120843f26 100644
+--- a/core/src/main/java/org/jruby/runtime/backtrace/TraceType.java
++++ b/core/src/main/java/org/jruby/runtime/backtrace/TraceType.java
+@@ -692,6 +692,8 @@ public class TraceType {
+ 
+             // method name
+             String methodName = runtime == null ? frame.getMethodName() : runtime.newSymbol(frame.getMethodName()).idString();
++            // same block label whether the frame was interpreted or compiled
++            if (frame.getFrameType() == FrameType.BLOCK) methodName = RubyStackTraceElement.blockPrefix(methodName) + methodName;
+             for (int j = 0; j < longestMethod - methodName.length(); j++) {
+                 buffer.append(' ');
+             }
+diff --git a/core/src/main/java/org/jruby/util/JavaNameMangler.java b/core/src/main/java/org/jruby/util/JavaNameMangler.java
+index 26f91e2b66..0d94352625 100644
+--- a/core/src/main/java/org/jruby/util/JavaNameMangler.java
++++ b/core/src/main/java/org/jruby/util/JavaNameMangler.java
+@@ -297,15 +297,16 @@ public class JavaNameMangler {
+         String base;
+ 
+         if (scope instanceof IRMethod) {
+-            base = RUBY_MARKER + DELIMITER + METHOD_MARKER + DELIMITER + mangleMethodNameInternal(scope.getId());
++            // the Ruby 3.4+ label ("Foo#bar") when the method was defined before
++            // being compiled (always, for the JIT); AOT-compiled scripts keep the id
++            // a define_method body (converted from a block) is labeled as that block
++            IRClosure definedFrom = ((IRMethod) scope).getDefinedFrom();
++            String label = definedFrom != null ? definedFrom.getBlockBacktraceLabel(scope.getId()) : scope.getBacktraceLabel();
++            base = RUBY_MARKER + DELIMITER + METHOD_MARKER + DELIMITER + mangleMethodNameInternal(label != null ? label : scope.getId());
+         } else if (scope instanceof IRClosure) {
+             IRScope ancestorScope = scope.getNearestTopLocalVariableScope();
+-            String name;
+-            if (ancestorScope instanceof IRScriptBody) {
+-                name = Interpreter.ROOT;
+-            } else {
+-                name = ancestorScope.getId();
+-            }
++            String fallback = ancestorScope instanceof IRScriptBody ? Interpreter.ROOT : ancestorScope.getId();
++            String name = scope.getBlockFrameName(fallback);
+             base = RUBY_MARKER + DELIMITER + BLOCK_MARKER + DELIMITER + mangleMethodNameInternal(name);
+         } else if (scope instanceof IRMetaClassBody) {
+             base = RUBY_MARKER + DELIMITER + METACLASS_MARKER;
+-- 
+2.43.0
+

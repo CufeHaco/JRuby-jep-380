@@ -1,0 +1,757 @@
+jruby 10.1.3.0-SNAPSHOT (4.0.0) 2026-10-22 ffffffffff OpenJDK 64-Bit Server VM 25.0.4.1+1-1-24.04.4-Ubuntu on 25.0.4.1+1-1-24.04.4-Ubuntu +indy +jit [x86_64-linux]
+..............F..F...E...........E..F.....E..F..............F.......FE...E....................F.......FE.EEEE
+
+1)
+TCPSocket.gethostbyname using IPv6 the returned Array includes the IP address as the 1st value FAILED
+Expected "0:0:0:0:0:0:0:1" == "::1"
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/gethostbyname_spec.rb:105:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/gethostbyname_spec.rb:57:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/gethostbyname_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+2)
+TCPSocket.gethostbyname using IPv6 the returned Array includes the IP address as the 4th value FAILED
+Expected "0:0:0:0:0:0:0:1" == "::1"
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/gethostbyname_spec.rb:117:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/gethostbyname_spec.rb:57:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/gethostbyname_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+3)
+TCPSocket#initialize raises IO::TimeoutError with :open_timeout when no server is listening on the given address ERROR
+Expected IO::TimeoutError
+but got: Errno::ECONNREFUSED
+org/jruby/ext/socket/RubyTCPSocket.java:208:in 'initialize'
+org/jruby/ext/socket/RubyTCPSocket.java:150:in 'initialize'
+org/jruby/ext/socket/RubyTCPSocket.java:169:in 'initialize'
+org/jruby/RubyIO.java:964:in 'new'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/shared/new.rb:28:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/shared/new.rb:29:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/initialize_spec.rb:5:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+4)
+TCPSocket#initialize using IPv4 when a server is listening on the given address raises SocketError when the port number is a non numeric String ERROR
+Java::JavaLang::RuntimeException: getservbyname_r failed
+org.jruby.dist/jnr.netdb.NativeServicesDB$LinuxServicesDB.getServiceByName(NativeServicesDB.java:220)
+org.jruby.dist/jnr.netdb.Service.getServiceByName(Service.java:54)
+org.jruby.dist/org.jruby.ext.socket.SocketUtils.getservbyname(SocketUtils.java:121)
+org.jruby.dist/org.jruby.ext.socket.RubySocket.getservbyname(RubySocket.java:283)
+org.jruby.dist/org.jruby.ext.socket.SocketUtils.getPortFrom(SocketUtils.java:543)
+org.jruby.dist/org.jruby.ext.socket.RubyTCPSocket.initialize(RubyTCPSocket.java:139)
+org.jruby.dist/org.jruby.ext.socket.RubyTCPSocket$INVOKER$i$initialize.call(RubyTCPSocket$INVOKER$i$initialize.gen)
+org.jruby.dist/org.jruby.internal.runtime.methods.JavaMethod$JavaMethodN.call(JavaMethod.java:733)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:88)
+org.jruby.dist/org.jruby.RubyClass.newInstance(RubyClass.java:1115)
+org.jruby.dist/org.jruby.RubyIO.newInstance(RubyIO.java:964)
+org.jruby.dist/org.jruby.RubyIO$INVOKER$s$0$0$newInstance.call(RubyIO$INVOKER$s$0$0$newInstance.gen)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:240)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:236)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:462)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:291)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:333)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_BLOCK(Interpreter.java:120)
+org.jruby.dist/org.jruby.runtime.MixedModeIRBlockBody.commonYieldPath(MixedModeIRBlockBody.java:138)
+org.jruby.dist/org.jruby.runtime.IRBlockBody.call(IRBlockBody.java:68)
+org.jruby.dist/org.jruby.runtime.Block.call(Block.java:154)
+org.jruby.dist/org.jruby.RubyProc.call(RubyProc.java:349)
+org.jruby.dist/org.jruby.RubyProc$INVOKER$i$call.call(RubyProc$INVOKER$i$call.gen)
+org.jruby.dist/org.jruby.internal.runtime.methods.JavaMethod$JavaMethodZeroOrNBlock.call(JavaMethod.java:310)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:191)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:355)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:91)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:183)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:170)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:228)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:240)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:323)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:91)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:183)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:170)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:228)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:452)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:242)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:323)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_BLOCK(Interpreter.java:120)
+org.jruby.dist/org.jruby.runtime.MixedModeIRBlockBody.commonYieldPath(MixedModeIRBlockBody.java:138)
+org.jruby.dist/org.jruby.runtime.IRBlockBody.doYield(IRBlockBody.java:177)
+org.jruby.dist/org.jruby.runtime.BlockBody.yield(BlockBody.java:116)
+org.jruby.dist/org.jruby.runtime.Block.yieldArray(Block.java:250)
+org.jruby.dist/org.jruby.RubyBasicObject.yieldUnder(RubyBasicObject.java:1887)
+org.jruby.dist/org.jruby.RubyBasicObject.instance_exec(RubyBasicObject.java:2782)
+org.jruby.dist/org.jruby.runtime.CompiledIRBlockBody.yieldDirect(CompiledIRBlockBody.java:151)
+org.jruby.dist/org.jruby.runtime.BlockBody.yield(BlockBody.java:106)
+org.jruby.dist/org.jruby.runtime.Block.yield(Block.java:195)
+org.jruby.dist/org.jruby.RubyArrayNative.all_pCommon(RubyArrayNative.java:4109)
+org.jruby.dist/org.jruby.RubyArrayNative.all_p(RubyArrayNative.java:4093)
+org.jruby.dist/org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:139)
+org.jruby.dist/org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:178)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:200)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:236)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:289)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:333)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_BLOCK(Interpreter.java:120)
+org.jruby.dist/org.jruby.runtime.MixedModeIRBlockBody.commonYieldPath(MixedModeIRBlockBody.java:138)
+org.jruby.dist/org.jruby.runtime.IRBlockBody.yieldSpecific(IRBlockBody.java:78)
+org.jruby.dist/org.jruby.runtime.Block.yieldSpecific(Block.java:164)
+org.jruby.dist/org.jruby.ir.runtime.IRRuntimeHelpers.yieldSpecific(IRRuntimeHelpers.java:530)
+org.jruby.dist/org.jruby.ir.instructions.YieldInstr.interpret(YieldInstr.java:85)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.processOtherOp(StartupInterpreterEngine.java:155)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:98)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:118)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:105)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:88)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:101)
+org.jruby.dist/org.jruby.ir.instructions.CallBase.interpret(CallBase.java:548)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:375)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_BLOCK(Interpreter.java:120)
+org.jruby.dist/org.jruby.runtime.MixedModeIRBlockBody.commonYieldPath(MixedModeIRBlockBody.java:138)
+org.jruby.dist/org.jruby.runtime.IRBlockBody.doYield(IRBlockBody.java:170)
+org.jruby.dist/org.jruby.runtime.BlockBody.yield(BlockBody.java:108)
+org.jruby.dist/org.jruby.runtime.Block.yield(Block.java:195)
+org.jruby.dist/org.jruby.RubyArrayNative.each(RubyArrayNative.java:1657)
+org.jruby.dist/org.jruby.RubyArray$INVOKER$i$0$0$each.call(RubyArray$INVOKER$i$0$0$each.gen)
+org.jruby.dist/org.jruby.internal.runtime.methods.JavaMethod$JavaMethodZeroBlock.call(JavaMethod.java:498)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:88)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:101)
+org.jruby.dist/org.jruby.ir.instructions.CallBase.interpret(CallBase.java:548)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:375)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:85)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:150)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:137)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:220)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:191)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:355)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_BLOCK(Interpreter.java:120)
+org.jruby.dist/org.jruby.runtime.MixedModeIRBlockBody.commonYieldPath(MixedModeIRBlockBody.java:138)
+org.jruby.dist/org.jruby.runtime.IRBlockBody.doYield(IRBlockBody.java:170)
+org.jruby.dist/org.jruby.runtime.BlockBody.yield(BlockBody.java:108)
+org.jruby.dist/org.jruby.runtime.Block.yield(Block.java:195)
+org.jruby.dist/org.jruby.RubyArrayNative.each(RubyArrayNative.java:1657)
+org.jruby.dist/org.jruby.RubyArray$INVOKER$i$0$0$each.call(RubyArray$INVOKER$i$0$0$each.gen)
+org.jruby.dist/org.jruby.internal.runtime.methods.JavaMethod$JavaMethodZeroBlock.call(JavaMethod.java:498)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:88)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:101)
+org.jruby.dist/org.jruby.ir.instructions.CallBase.interpret(CallBase.java:548)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:375)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:85)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:150)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:137)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:220)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:442)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:193)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:355)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_BLOCK(Interpreter.java:120)
+org.jruby.dist/org.jruby.runtime.MixedModeIRBlockBody.commonYieldPath(MixedModeIRBlockBody.java:138)
+org.jruby.dist/org.jruby.runtime.IRBlockBody.doYield(IRBlockBody.java:170)
+org.jruby.dist/org.jruby.runtime.BlockBody.yield(BlockBody.java:108)
+org.jruby.dist/org.jruby.runtime.Block.yield(Block.java:195)
+org.jruby.dist/org.jruby.RubyArrayNative.each(RubyArrayNative.java:1657)
+org.jruby.dist/org.jruby.RubyArray$INVOKER$i$0$0$each.call(RubyArray$INVOKER$i$0$0$each.gen)
+org.jruby.dist/org.jruby.internal.runtime.methods.JavaMethod$JavaMethodZeroBlock.call(JavaMethod.java:498)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:88)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:101)
+org.jruby.dist/org.jruby.ir.instructions.CallBase.interpret(CallBase.java:548)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:375)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:85)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:150)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:137)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:220)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:442)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:193)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:355)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:118)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:105)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:88)
+org.jruby.dist/org.jruby.ir.instructions.CallBase.interpret(CallBase.java:551)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:375)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:91)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:183)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:170)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:457)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:257)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:268)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:346)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_ROOT(Interpreter.java:100)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.execute(Interpreter.java:85)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.execute(Interpreter.java:35)
+org.jruby.dist/org.jruby.ir.IRTranslator.execute(IRTranslator.java:42)
+org.jruby.dist/org.jruby.Ruby.runInterpreter(Ruby.java:1250)
+org.jruby.dist/org.jruby.Ruby.loadFile(Ruby.java:3034)
+org.jruby.dist/org.jruby.runtime.load.LibrarySearcher$ResourceLibrary.load(LibrarySearcher.java:946)
+org.jruby.dist/org.jruby.runtime.load.LibrarySearcher$FoundLibrary.load(LibrarySearcher.java:904)
+org.jruby.dist/org.jruby.runtime.load.LoadService.load(LoadService.java:367)
+org.jruby.dist/org.jruby.RubyKernel.loadCommon(RubyKernel.java:1425)
+org.jruby.dist/org.jruby.RubyKernel.load(RubyKernel.java:1402)
+org.jruby.dist/org.jruby.RubyKernel$INVOKER$s$load.call(RubyKernel$INVOKER$s$load.gen)
+org.jruby.dist/org.jruby.internal.runtime.methods.JavaMethod$JavaMethodOneOrNBlock.call(JavaMethod.java:384)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:240)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:323)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_BLOCK(Interpreter.java:120)
+org.jruby.dist/org.jruby.runtime.MixedModeIRBlockBody.commonYieldPath(MixedModeIRBlockBody.java:138)
+org.jruby.dist/org.jruby.runtime.IRBlockBody.doYield(IRBlockBody.java:177)
+org.jruby.dist/org.jruby.runtime.BlockBody.yield(BlockBody.java:116)
+org.jruby.dist/org.jruby.runtime.Block.yieldArray(Block.java:250)
+org.jruby.dist/org.jruby.RubyBasicObject.yieldUnder(RubyBasicObject.java:1887)
+org.jruby.dist/org.jruby.RubyBasicObject.instance_exec(RubyBasicObject.java:2782)
+org.jruby.dist/org.jruby.RubyBasicObject$INVOKER$i$0$0$instance_exec.call(RubyBasicObject$INVOKER$i$0$0$instance_exec.gen)
+org.jruby.dist/org.jruby.ir.targets.indy.InvokeSite.performIndirectCall(InvokeSite.java:896)
+org.jruby.dist/org.jruby.ir.targets.indy.InvokeSite.invoke(InvokeSite.java:800)
+org.jruby.dist/org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:167)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:167)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:457)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:257)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:268)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:346)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_BLOCK(Interpreter.java:120)
+org.jruby.dist/org.jruby.runtime.MixedModeIRBlockBody.commonYieldPath(MixedModeIRBlockBody.java:138)
+org.jruby.dist/org.jruby.runtime.IRBlockBody.doYield(IRBlockBody.java:170)
+org.jruby.dist/org.jruby.runtime.BlockBody.yield(BlockBody.java:108)
+org.jruby.dist/org.jruby.runtime.Block.yield(Block.java:195)
+org.jruby.dist/org.jruby.RubyArrayNative.each(RubyArrayNative.java:1657)
+org.jruby.dist/org.jruby.RubyArray$INVOKER$i$0$0$each.call(RubyArray$INVOKER$i$0$0$each.gen)
+org.jruby.dist/org.jruby.internal.runtime.methods.JavaMethod$JavaMethodZeroBlock.call(JavaMethod.java:498)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:432)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:90)
+org.jruby.dist/org.jruby.ir.instructions.CallBase.interpret(CallBase.java:551)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:375)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:118)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:105)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:432)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:90)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:101)
+org.jruby.dist/org.jruby.ir.instructions.CallBase.interpret(CallBase.java:548)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:375)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:85)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:150)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:137)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:220)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:442)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:193)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:355)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:85)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:150)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:137)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:220)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:442)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:193)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:355)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:85)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:150)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:137)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:220)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:442)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:193)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:355)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:118)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:105)
+org.jruby.dist/org.jruby.ir.targets.indy.InvokeSite.performIndirectCall(InvokeSite.java:896)
+org.jruby.dist/org.jruby.ir.targets.indy.InvokeSite.invoke(InvokeSite.java:800)
+java.base/java.lang.invoke.MethodHandle.invokeWithArguments(MethodHandle.java:735)
+org.jruby.dist/org.jruby.ir.Compiler$1.load(Compiler.java:114)
+org.jruby.dist/org.jruby.Ruby.runScript(Ruby.java:1237)
+org.jruby.dist/org.jruby.Ruby.runNormally(Ruby.java:1149)
+org.jruby.dist/org.jruby.Ruby.runFromMain(Ruby.java:994)
+org.jruby.dist/org.jruby.main.Main.internalRun(Main.java:289)
+org.jruby.dist/org.jruby.main.Main.run(Main.java:239)
+org.jruby.dist/org.jruby.main.Main.main(Main.java:211)
+
+5)
+TCPSocket#initialize using IPv4 when a server is listening on the given address creates a socket which is set to nonblocking FAILED
+Expected #<TCPSocket:fd 12>.nonblock?
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/initialize_spec.rb:79:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/initialize_spec.rb:30:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+6)
+TCPSocket#initialize using IPv6 when a server is listening on the given address raises SocketError when the port number is a non numeric String ERROR
+Java::JavaLang::RuntimeException: getservbyname_r failed
+org.jruby.dist/jnr.netdb.NativeServicesDB$LinuxServicesDB.getServiceByName(NativeServicesDB.java:220)
+org.jruby.dist/jnr.netdb.Service.getServiceByName(Service.java:54)
+org.jruby.dist/org.jruby.ext.socket.SocketUtils.getservbyname(SocketUtils.java:121)
+org.jruby.dist/org.jruby.ext.socket.RubySocket.getservbyname(RubySocket.java:283)
+org.jruby.dist/org.jruby.ext.socket.SocketUtils.getPortFrom(SocketUtils.java:543)
+org.jruby.dist/org.jruby.ext.socket.RubyTCPSocket.initialize(RubyTCPSocket.java:139)
+org.jruby.dist/org.jruby.ext.socket.RubyTCPSocket$INVOKER$i$initialize.call(RubyTCPSocket$INVOKER$i$initialize.gen)
+org.jruby.dist/org.jruby.internal.runtime.methods.JavaMethod$JavaMethodN.call(JavaMethod.java:733)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:88)
+org.jruby.dist/org.jruby.RubyClass.newInstance(RubyClass.java:1115)
+org.jruby.dist/org.jruby.RubyIO.newInstance(RubyIO.java:964)
+org.jruby.dist/org.jruby.RubyIO$INVOKER$s$0$0$newInstance.call(RubyIO$INVOKER$s$0$0$newInstance.gen)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:240)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:236)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:289)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:333)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_BLOCK(Interpreter.java:120)
+org.jruby.dist/org.jruby.runtime.MixedModeIRBlockBody.commonYieldPath(MixedModeIRBlockBody.java:138)
+org.jruby.dist/org.jruby.runtime.IRBlockBody.call(IRBlockBody.java:68)
+org.jruby.dist/org.jruby.runtime.Block.call(Block.java:154)
+org.jruby.dist/org.jruby.RubyProc.call(RubyProc.java:349)
+org.jruby.dist/org.jruby.RubyProc$INVOKER$i$call.call(RubyProc$INVOKER$i$call.gen)
+org.jruby.dist/org.jruby.internal.runtime.methods.JavaMethod$JavaMethodZeroOrNBlock.call(JavaMethod.java:310)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:191)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:355)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:91)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:183)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:170)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:228)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:240)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:323)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:91)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:183)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:170)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:228)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:240)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:323)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_BLOCK(Interpreter.java:120)
+org.jruby.dist/org.jruby.runtime.MixedModeIRBlockBody.commonYieldPath(MixedModeIRBlockBody.java:138)
+org.jruby.dist/org.jruby.runtime.IRBlockBody.doYield(IRBlockBody.java:177)
+org.jruby.dist/org.jruby.runtime.BlockBody.yield(BlockBody.java:116)
+org.jruby.dist/org.jruby.runtime.Block.yieldArray(Block.java:250)
+org.jruby.dist/org.jruby.RubyBasicObject.yieldUnder(RubyBasicObject.java:1887)
+org.jruby.dist/org.jruby.RubyBasicObject.instance_exec(RubyBasicObject.java:2782)
+org.jruby.dist/org.jruby.runtime.CompiledIRBlockBody.yieldDirect(CompiledIRBlockBody.java:151)
+org.jruby.dist/org.jruby.runtime.BlockBody.yield(BlockBody.java:106)
+org.jruby.dist/org.jruby.runtime.Block.yield(Block.java:195)
+org.jruby.dist/org.jruby.RubyArrayNative.all_pCommon(RubyArrayNative.java:4109)
+org.jruby.dist/org.jruby.RubyArrayNative.all_p(RubyArrayNative.java:4093)
+org.jruby.dist/org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:139)
+org.jruby.dist/org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:178)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:200)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:236)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:289)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:333)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_BLOCK(Interpreter.java:120)
+org.jruby.dist/org.jruby.runtime.MixedModeIRBlockBody.commonYieldPath(MixedModeIRBlockBody.java:138)
+org.jruby.dist/org.jruby.runtime.IRBlockBody.yieldSpecific(IRBlockBody.java:78)
+org.jruby.dist/org.jruby.runtime.Block.yieldSpecific(Block.java:164)
+org.jruby.dist/org.jruby.ir.runtime.IRRuntimeHelpers.yieldSpecific(IRRuntimeHelpers.java:530)
+org.jruby.dist/org.jruby.ir.instructions.YieldInstr.interpret(YieldInstr.java:85)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.processOtherOp(StartupInterpreterEngine.java:155)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:98)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:118)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:105)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:88)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:101)
+org.jruby.dist/org.jruby.ir.instructions.CallBase.interpret(CallBase.java:548)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:375)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_BLOCK(Interpreter.java:120)
+org.jruby.dist/org.jruby.runtime.MixedModeIRBlockBody.commonYieldPath(MixedModeIRBlockBody.java:138)
+org.jruby.dist/org.jruby.runtime.IRBlockBody.doYield(IRBlockBody.java:170)
+org.jruby.dist/org.jruby.runtime.BlockBody.yield(BlockBody.java:108)
+org.jruby.dist/org.jruby.runtime.Block.yield(Block.java:195)
+org.jruby.dist/org.jruby.RubyArrayNative.each(RubyArrayNative.java:1657)
+org.jruby.dist/org.jruby.RubyArray$INVOKER$i$0$0$each.call(RubyArray$INVOKER$i$0$0$each.gen)
+org.jruby.dist/org.jruby.internal.runtime.methods.JavaMethod$JavaMethodZeroBlock.call(JavaMethod.java:498)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:88)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:101)
+org.jruby.dist/org.jruby.ir.instructions.CallBase.interpret(CallBase.java:548)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:375)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:85)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:150)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:137)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:220)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:442)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:193)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:355)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_BLOCK(Interpreter.java:120)
+org.jruby.dist/org.jruby.runtime.MixedModeIRBlockBody.commonYieldPath(MixedModeIRBlockBody.java:138)
+org.jruby.dist/org.jruby.runtime.IRBlockBody.doYield(IRBlockBody.java:170)
+org.jruby.dist/org.jruby.runtime.BlockBody.yield(BlockBody.java:108)
+org.jruby.dist/org.jruby.runtime.Block.yield(Block.java:195)
+org.jruby.dist/org.jruby.RubyArrayNative.each(RubyArrayNative.java:1657)
+org.jruby.dist/org.jruby.RubyArray$INVOKER$i$0$0$each.call(RubyArray$INVOKER$i$0$0$each.gen)
+org.jruby.dist/org.jruby.internal.runtime.methods.JavaMethod$JavaMethodZeroBlock.call(JavaMethod.java:498)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:88)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:101)
+org.jruby.dist/org.jruby.ir.instructions.CallBase.interpret(CallBase.java:548)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:375)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:85)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:150)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:137)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:220)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:442)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:193)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:355)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_BLOCK(Interpreter.java:120)
+org.jruby.dist/org.jruby.runtime.MixedModeIRBlockBody.commonYieldPath(MixedModeIRBlockBody.java:138)
+org.jruby.dist/org.jruby.runtime.IRBlockBody.doYield(IRBlockBody.java:170)
+org.jruby.dist/org.jruby.runtime.BlockBody.yield(BlockBody.java:108)
+org.jruby.dist/org.jruby.runtime.Block.yield(Block.java:195)
+org.jruby.dist/org.jruby.RubyArrayNative.each(RubyArrayNative.java:1657)
+org.jruby.dist/org.jruby.RubyArray$INVOKER$i$0$0$each.call(RubyArray$INVOKER$i$0$0$each.gen)
+org.jruby.dist/org.jruby.internal.runtime.methods.JavaMethod$JavaMethodZeroBlock.call(JavaMethod.java:498)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:88)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:101)
+org.jruby.dist/org.jruby.ir.instructions.CallBase.interpret(CallBase.java:548)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:375)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:85)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:150)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:137)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:220)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:442)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:193)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:355)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:118)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:105)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:88)
+org.jruby.dist/org.jruby.ir.instructions.CallBase.interpret(CallBase.java:551)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:375)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:91)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:183)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:170)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:457)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:257)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:268)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:346)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_ROOT(Interpreter.java:100)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.execute(Interpreter.java:85)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.execute(Interpreter.java:35)
+org.jruby.dist/org.jruby.ir.IRTranslator.execute(IRTranslator.java:42)
+org.jruby.dist/org.jruby.Ruby.runInterpreter(Ruby.java:1250)
+org.jruby.dist/org.jruby.Ruby.loadFile(Ruby.java:3034)
+org.jruby.dist/org.jruby.runtime.load.LibrarySearcher$ResourceLibrary.load(LibrarySearcher.java:946)
+org.jruby.dist/org.jruby.runtime.load.LibrarySearcher$FoundLibrary.load(LibrarySearcher.java:904)
+org.jruby.dist/org.jruby.runtime.load.LoadService.load(LoadService.java:367)
+org.jruby.dist/org.jruby.RubyKernel.loadCommon(RubyKernel.java:1425)
+org.jruby.dist/org.jruby.RubyKernel.load(RubyKernel.java:1402)
+org.jruby.dist/org.jruby.RubyKernel$INVOKER$s$load.call(RubyKernel$INVOKER$s$load.gen)
+org.jruby.dist/org.jruby.internal.runtime.methods.JavaMethod$JavaMethodOneOrNBlock.call(JavaMethod.java:384)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:240)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:323)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_BLOCK(Interpreter.java:120)
+org.jruby.dist/org.jruby.runtime.MixedModeIRBlockBody.commonYieldPath(MixedModeIRBlockBody.java:138)
+org.jruby.dist/org.jruby.runtime.IRBlockBody.doYield(IRBlockBody.java:177)
+org.jruby.dist/org.jruby.runtime.BlockBody.yield(BlockBody.java:116)
+org.jruby.dist/org.jruby.runtime.Block.yieldArray(Block.java:250)
+org.jruby.dist/org.jruby.RubyBasicObject.yieldUnder(RubyBasicObject.java:1887)
+org.jruby.dist/org.jruby.RubyBasicObject.instance_exec(RubyBasicObject.java:2782)
+org.jruby.dist/org.jruby.RubyBasicObject$INVOKER$i$0$0$instance_exec.call(RubyBasicObject$INVOKER$i$0$0$instance_exec.gen)
+org.jruby.dist/org.jruby.ir.targets.indy.InvokeSite.performIndirectCall(InvokeSite.java:896)
+org.jruby.dist/org.jruby.ir.targets.indy.InvokeSite.invoke(InvokeSite.java:800)
+org.jruby.dist/org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:167)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:167)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:457)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:257)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:268)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:346)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.Interpreter.INTERPRET_BLOCK(Interpreter.java:120)
+org.jruby.dist/org.jruby.runtime.MixedModeIRBlockBody.commonYieldPath(MixedModeIRBlockBody.java:138)
+org.jruby.dist/org.jruby.runtime.IRBlockBody.doYield(IRBlockBody.java:170)
+org.jruby.dist/org.jruby.runtime.BlockBody.yield(BlockBody.java:108)
+org.jruby.dist/org.jruby.runtime.Block.yield(Block.java:195)
+org.jruby.dist/org.jruby.RubyArrayNative.each(RubyArrayNative.java:1657)
+org.jruby.dist/org.jruby.RubyArray$INVOKER$i$0$0$each.call(RubyArray$INVOKER$i$0$0$each.gen)
+org.jruby.dist/org.jruby.internal.runtime.methods.JavaMethod$JavaMethodZeroBlock.call(JavaMethod.java:498)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:432)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:90)
+org.jruby.dist/org.jruby.ir.instructions.CallBase.interpret(CallBase.java:551)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:375)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:118)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:105)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:432)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:90)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:101)
+org.jruby.dist/org.jruby.ir.instructions.CallBase.interpret(CallBase.java:548)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:375)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:85)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:150)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:137)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:220)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:442)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:193)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:355)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:85)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:150)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:137)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:220)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:442)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:193)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:355)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:85)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:150)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:137)
+org.jruby.dist/org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:220)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.cacheAndCall(CachingCallSite.java:442)
+org.jruby.dist/org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:193)
+org.jruby.dist/org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:355)
+org.jruby.dist/org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:66)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:118)
+org.jruby.dist/org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:105)
+org.jruby.dist/org.jruby.ir.targets.indy.InvokeSite.performIndirectCall(InvokeSite.java:896)
+org.jruby.dist/org.jruby.ir.targets.indy.InvokeSite.invoke(InvokeSite.java:800)
+java.base/java.lang.invoke.MethodHandle.invokeWithArguments(MethodHandle.java:735)
+org.jruby.dist/org.jruby.ir.Compiler$1.load(Compiler.java:114)
+org.jruby.dist/org.jruby.Ruby.runScript(Ruby.java:1237)
+org.jruby.dist/org.jruby.Ruby.runNormally(Ruby.java:1149)
+org.jruby.dist/org.jruby.Ruby.runFromMain(Ruby.java:994)
+org.jruby.dist/org.jruby.main.Main.internalRun(Main.java:289)
+org.jruby.dist/org.jruby.main.Main.run(Main.java:239)
+org.jruby.dist/org.jruby.main.Main.main(Main.java:211)
+
+7)
+TCPSocket#initialize using IPv6 when a server is listening on the given address creates a socket which is set to nonblocking FAILED
+Expected #<TCPSocket:fd 12>.nonblock?
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/initialize_spec.rb:79:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/initialize_spec.rb:30:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+8)
+TCPSocket#local_address using IPv4 using an explicit hostname the returned Addrinfo uses 0 as the protocol FAILED
+Expected 6 == 0
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/local_address_spec.rb:52:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/local_address_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+9)
+TCPSocket#local_address using IPv6 using an explicit hostname the returned Addrinfo uses 0 as the protocol FAILED
+Expected 6 == 0
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/local_address_spec.rb:52:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/local_address_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+10)
+An exception occurred during: before :each
+TCPSocket#local_address using IPv6 using an implicit hostname the returned Addrinfo uses the correct IP address ERROR
+Errno::ECONNREFUSED: Connection refused - connect(2) for nil port 33045
+org/jruby/ext/socket/RubyTCPSocket.java:208:in 'initialize'
+org/jruby/ext/socket/RubyTCPSocket.java:141:in 'initialize'
+org/jruby/RubyIO.java:964:in 'new'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/local_address_spec.rb:59:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/local_address_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+11)
+TCPSocket.open raises IO::TimeoutError with :open_timeout when no server is listening on the given address ERROR
+Expected IO::TimeoutError
+but got: Errno::ECONNREFUSED
+org/jruby/ext/socket/RubyTCPSocket.java:208:in 'initialize'
+org/jruby/ext/socket/RubyTCPSocket.java:150:in 'initialize'
+org/jruby/ext/socket/RubyTCPSocket.java:169:in 'initialize'
+org/jruby/RubyIO.java:1282:in 'open'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/shared/new.rb:28:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/shared/new.rb:29:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/open_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+12)
+TCPSocket#remote_address using IPv4 using an explicit hostname the returned Addrinfo uses 0 as the protocol FAILED
+Expected 6 == 0
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/remote_address_spec.rb:51:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/remote_address_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+13)
+TCPSocket#remote_address using IPv6 using an explicit hostname the returned Addrinfo uses 0 as the protocol FAILED
+Expected 6 == 0
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/remote_address_spec.rb:51:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/remote_address_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+14)
+An exception occurred during: before :each
+TCPSocket#remote_address using IPv6 using an implicit hostname the returned Addrinfo uses the correct IP address ERROR
+Errno::ECONNREFUSED: Connection refused - connect(2) for nil port 38545
+org/jruby/ext/socket/RubyTCPSocket.java:208:in 'initialize'
+org/jruby/ext/socket/RubyTCPSocket.java:141:in 'initialize'
+org/jruby/RubyIO.java:964:in 'new'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/remote_address_spec.rb:58:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/remote_address_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+15)
+TCPSocket#setsockopt using symbols sets the TCP nodelay to 1 ERROR
+SocketError: invalid socket level: IPPROTO_TCP
+org/jruby/ext/socket/RubyBasicSocket.java:541:in 'setsockopt'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/setsockopt_spec.rb:24:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/setsockopt_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+16)
+TCPSocket#setsockopt using symbols without prefix sets the TCP nodelay to 1 ERROR
+SocketError: invalid socket option: NODELAY
+org/jruby/ext/socket/RubyBasicSocket.java:542:in 'setsockopt'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/setsockopt_spec.rb:29:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/setsockopt_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+17)
+TCPSocket#setsockopt using strings sets the TCP nodelay to 1 ERROR
+SocketError: invalid socket level: IPPROTO_TCP
+org/jruby/ext/socket/RubyBasicSocket.java:541:in 'setsockopt'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/setsockopt_spec.rb:36:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/setsockopt_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+18)
+TCPSocket#setsockopt using strings without prefix sets the TCP nodelay to 1 ERROR
+SocketError: invalid socket option: NODELAY
+org/jruby/ext/socket/RubyBasicSocket.java:542:in 'setsockopt'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/setsockopt_spec.rb:41:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4093:in 'all?'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-jep380-rebase/spec/ruby/library/socket/tcpsocket/setsockopt_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1402:in 'load'
+org/jruby/RubyBasicObject.java:2782:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1657:in 'each'
+
+Finished in 270.859811 seconds
+
+9 files, 107 examples, 127 expectations, 8 failures, 10 errors, 0 tagged

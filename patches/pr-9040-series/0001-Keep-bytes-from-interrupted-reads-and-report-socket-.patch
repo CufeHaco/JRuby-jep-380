@@ -1,0 +1,330 @@
+From 7ba0c9251b0f99c1f7741c643d77294ef89c7e14 Mon Sep 17 00:00:00 2001
+From: CufeHaco <redeagleteam2005@gmail.com>
+Date: Thu, 22 Oct 2026 16:37:26 -0400
+Subject: [PATCH 1/5] Keep bytes from interrupted reads and report socket EOF
+ to recv_nonblock
+
+Two IO bugs found while testing #9040. Neither depends on it; both
+reproduce on stock JRuby with TCPSocket.
+
+Thread#kill or Thread#raise can abandon IO#read(n), readpartial,
+read_nonblock or sysread after a native read has already consumed bytes
+from the fd. Those bytes vanished, and later reads saw the stream with a
+hole in it. OpenFile#salvagePartialRead pushes them into rbuf, the buffer
+every later read drains first. pread is left alone: its bytes come from
+an explicit offset and do not belong in the sequential stream.
+
+BasicSocket#recv_nonblock folded "no data yet" and EOF into one null, so
+it raised EAGAIN forever once the peer had shut down (MRI returns nil).
+readChannel now keeps the raw count and NONBLOCK_EOF marks EOF. On a
+DatagramChannel, a zero-length datagram is data ("" in MRI), not
+EAGAIN, and read_nonblock reads it as EOF as MRI does.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ core/src/main/java/org/jruby/RubyIO.java      | 24 +++++-
+ .../org/jruby/ext/socket/RubyBasicSocket.java | 64 ++++++++++-----
+ .../main/java/org/jruby/util/io/OpenFile.java | 80 ++++++++++++++++---
+ 3 files changed, 134 insertions(+), 34 deletions(-)
+
+diff --git a/core/src/main/java/org/jruby/RubyIO.java b/core/src/main/java/org/jruby/RubyIO.java
+index 2c201037eb..7c8ed034fa 100644
+--- a/core/src/main/java/org/jruby/RubyIO.java
++++ b/core/src/main/java/org/jruby/RubyIO.java
+@@ -3423,7 +3423,14 @@ public class RubyIO extends RubyObject implements IOEncodable, Closeable, Flusha
+         OpenFile fptr = getOpenFileChecked();
+ 
+         final boolean locked = fptr.lock();
+-        int n;
++        int n = -1;
++        // ByteList whose backing array a successful OpenFile.readInternal call
++        // below has ALREADY, irreversibly, filled from the real fd -- tracked
++        // across the catch below so it can be salvaged into rbuf if a
++        // Thread#kill/Thread#raise abandons this method before `str` is
++        // handed back to the caller. See OpenFile#salvagePartialRead's doc
++        // comment for the full WHY.
++        ByteList readInto = null;
+         try {
+             fptr.checkByteReadable(context);
+ 
+@@ -3449,6 +3456,7 @@ public class RubyIO extends RubyObject implements IOEncodable, Closeable, Flusha
+                     //                arg.len = len;
+                     //                rb_str_locktmp_ensure(str, read_internal_call, (VALUE)&arg);
+                     //                n = arg.len;
++                    readInto = strByteList;
+                     n = OpenFile.readInternal(context, fptr, fptr.fd(), strByteList.unsafeBytes(), strByteList.begin(), len);
+                     if (n < 0) {
+                         Errno e = fptr.errno();
+@@ -3463,6 +3471,11 @@ public class RubyIO extends RubyObject implements IOEncodable, Closeable, Flusha
+                     break;
+                 }
+             }
++        } catch (RuntimeException re) {
++            if (n > 0 && readInto != null) {
++                fptr.salvagePartialRead(readInto.unsafeBytes(), readInto.begin(), n);
++            }
++            throw re;
+         }
+         finally {
+             if ( locked ) fptr.unlock();
+@@ -3493,7 +3506,8 @@ public class RubyIO extends RubyObject implements IOEncodable, Closeable, Flusha
+ 
+         final OpenFile fptr = getOpenFileChecked();
+ 
+-        final int n;
++        int n = -1;
++        ByteList readInto = null; // see OpenFile#salvagePartialRead's doc comment
+         boolean locked = fptr.lock();
+         try {
+             fptr.checkByteReadable(context);
+@@ -3515,11 +3529,17 @@ public class RubyIO extends RubyObject implements IOEncodable, Closeable, Flusha
+             fptr.checkClosed();
+ 
+             ByteList strByteList = str.getByteList();
++            readInto = strByteList;
+             n = OpenFile.readInternal(context, fptr, fptr.fd(), strByteList.unsafeBytes(), strByteList.begin(), length);
+ 
+             if (n == -1) {
+                 throw runtime.newErrnoFromErrno(fptr.errno(), fptr.getPath());
+             }
++        } catch (RuntimeException re) {
++            if (n > 0 && readInto != null) {
++                fptr.salvagePartialRead(readInto.unsafeBytes(), readInto.begin(), n);
++            }
++            throw re;
+         }
+         finally {
+             if (locked) fptr.unlock();
+diff --git a/core/src/main/java/org/jruby/ext/socket/RubyBasicSocket.java b/core/src/main/java/org/jruby/ext/socket/RubyBasicSocket.java
+index 4abdce69c5..f031020578 100644
+--- a/core/src/main/java/org/jruby/ext/socket/RubyBasicSocket.java
++++ b/core/src/main/java/org/jruby/ext/socket/RubyBasicSocket.java
+@@ -291,27 +291,33 @@ public class RubyBasicSocket extends RubyIO {
+         Channel channel = getChannel();
+ 
+         if (channel instanceof DatagramChannel) {
++            DatagramChannel dgram = (DatagramChannel) channel;
++            boolean wasBlocking = dgram.isBlocking();
+             try {
+-                DatagramChannel dgram = (DatagramChannel) channel;
+-
+                 getOpenFile().setBlocking(runtime, false);
+ 
+-                dgram.receive(buffer);
+-
+-                if (buffer.position() == 0) {
++                // receive() returns null only when no datagram was waiting; a
++                // zero-length datagram is real data ("" in MRI), not EAGAIN.
++                if (dgram.receive(buffer) == null) {
+                     bytes = null;
+                 } else {
+                     flipBuffer(buffer);
+                     bytes = new ByteList(buffer.array(), buffer.position(), buffer.limit());
+                 }
+             } catch (Exception e) {
+-                if (exception) throwErrorFromException(runtime, e);
+-                return context.nil;
++                // exception: false only silences "would block" (null above)
++                throwErrorFromException(runtime, e);
++                return context.nil; // not reached
++            } finally {
++                // MRI uses recvfrom(MSG_DONTWAIT): the IO's own mode is untouched
++                if (wasBlocking) getOpenFile().setBlocking(runtime, true);
+             }
+         } else {
+             bytes = doReadNonblock(context, buffer, exception);
+         }
+ 
++        if (bytes == NONBLOCK_EOF) return context.nil; // MRI: nil once the peer has shut down
++
+         return handleReturnBytes(context, bytes, str, "recvfrom(2)", exception);
+     }
+ 
+@@ -385,17 +391,22 @@ public class RubyBasicSocket extends RubyIO {
+ 
+             getOpenFile().setBlocking(context.runtime, false);
+ 
+-            dgram.receive(buffer);
+-
+-            if (buffer.position() == 0) {
++            if (dgram.receive(buffer) == null) {
+                 bytes = null;
++            } else if (buffer.position() == 0) {
++                // MRI's read_nonblock reads a zero-length datagram as EOF
++                if (!exception) return context.nil;
++                throw context.runtime.newEOFError();
+             } else {
+                 flipBuffer(buffer);
+                 bytes = new ByteList(buffer.array(), buffer.position(), buffer.limit());
+             }
++        } catch (RaiseException re) {
++            throw re;
+         } catch (Exception ex) {
+-            if (exception) throwErrorFromException(context.runtime, ex);
+-            return context.nil;
++            // exception: false only silences "would block" (null above)
++            throwErrorFromException(context.runtime, ex);
++            return context.nil; // not reached
+         } finally {
+             if (Platform.IS_LINUX) {
+                 // unset nonblocking to emulate recv(... MSG_DONTWAIT) leaving it blocking
+@@ -765,6 +776,18 @@ public class RubyBasicSocket extends RubyIO {
+     }
+ 
+     protected ByteList doRead(ThreadContext context, final ByteBuffer buffer) {
++        return readChannel(context, buffer) <= 0 ? null : new ByteList(buffer.array(), 0, buffer.position(), false);
++    }
++
++    /**
++     * doReadNonblock's result at EOF (peer has shut down), as opposed to null
++     * for "no data yet". doRead folds both into null, which made recv_nonblock
++     * raise EAGAIN at EOF forever instead of returning nil.
++     */
++    private static final ByteList NONBLOCK_EOF = new ByteList(0);
++
++    /** One read into buffer: bytes read, 0 if a non-blocking channel has nothing yet, -1 at EOF. */
++    private int readChannel(ThreadContext context, final ByteBuffer buffer) {
+         OpenFile fptr;
+ 
+         fptr = getOpenFileInitialized();
+@@ -773,13 +796,10 @@ public class RubyBasicSocket extends RubyIO {
+         try {
+             context.getThread().beforeBlockingCall(context);
+ 
+-            int read = openFile.readChannel().read(buffer);
+-            if (read <= 0) return null;
+-
+-            return new ByteList(buffer.array(), 0, buffer.position(), false);
++            return openFile.readChannel().read(buffer);
+         } catch (Exception e) {
+             throwErrorFromException(context.runtime, e);
+-            return null; // not reached
++            return -1; // not reached
+         } finally {
+             context.getThread().afterBlockingCall();
+         }
+@@ -801,14 +821,18 @@ public class RubyBasicSocket extends RubyIO {
+                 selectable.configureBlocking(false);
+ 
+                 try {
+-                    return doRead(context, buffer);
++                    int read = readChannel(context, buffer);
++                    if (read < 0) return NONBLOCK_EOF;
++                    return read == 0 ? null : new ByteList(buffer.array(), 0, buffer.position(), false);
+                 }
+                 finally {
+                     selectable.configureBlocking(oldBlocking);
+                 }
+             } catch (Exception e) {
+-                if (exception) throwErrorFromException(context.runtime, e);
+-                return null;
++                // exception: false only silences "would block" (read == 0 above);
++                // e.g. ENOTCONN on an unconnected socket must still raise (MRI)
++                throwErrorFromException(context.runtime, e);
++                return null; // not reached
+             }
+         }
+     }
+diff --git a/core/src/main/java/org/jruby/util/io/OpenFile.java b/core/src/main/java/org/jruby/util/io/OpenFile.java
+index b478cfd879..eb011ac39e 100644
+--- a/core/src/main/java/org/jruby/util/io/OpenFile.java
++++ b/core/src/main/java/org/jruby/util/io/OpenFile.java
+@@ -2038,20 +2038,31 @@ public class OpenFile implements Finalizable {
+         try {
+             if (!READ_DATA_PENDING()) {
+                 outer:
+-                while (n > 0) {
+-                    again:
+-                    while (true) {
+-                        c = readInternal(context, this, fd, ptrBytes, ptr + offset, n);
+-                        if (c == 0) break outer;
+-                        if (c < 0) {
+-                            if (waitReadable(context, fd))
+-                                continue again;
+-                            return -1;
++                try {
++                    while (n > 0) {
++                        again:
++                        while (true) {
++                            c = readInternal(context, this, fd, ptrBytes, ptr + offset, n);
++                            if (c == 0) break outer;
++                            if (c < 0) {
++                                if (waitReadable(context, fd))
++                                    continue again;
++                                return -1;
++                            }
++                            break;
+                         }
+-                        break;
++                        offset += c;
++                        if ((n -= c) <= 0) break outer;
+                     }
+-                    offset += c;
+-                    if ((n -= c) <= 0) break outer;
++                } catch (RuntimeException re) {
++                    // See salvagePartialRead's doc comment for the full WHY.
++                    // readInternal has ALREADY, irreversibly, consumed `offset`
++                    // bytes from the real fd straight into ptrBytes by the time
++                    // a Thread#kill/Thread#raise abandons this loop between
++                    // iterations -- preserve them before the kill/raise
++                    // continues, or they silently corrupt a later read instead.
++                    salvagePartialRead(ptrBytes, ptr, offset);
++                    throw re;
+                 }
+                 return len - n;
+             }
+@@ -2073,6 +2084,51 @@ public class OpenFile implements Finalizable {
+         return len - n;
+     }
+ 
++    /**
++     * Preserve bytes already, irreversibly, read from the real fd into a
++     * caller-local buffer, when the Ruby-level call that was going to return
++     * them is being abandoned by a propagating RuntimeException (in
++     * practice: Thread#kill/Thread#raise -- ThreadKill/RaiseException, see
++     * org.jruby.exceptions -- landing between one successful native read and
++     * this method actually handing the bytes back to Ruby).
++     *
++     * Without this, those bytes silently vanish from the Ruby-visible
++     * stream -- they were already consumed from the kernel, so they are not
++     * sitting in the fd waiting to be re-read either -- while any bytes NOT
++     * yet read remain in the kernel and get delivered to whoever reads this
++     * IO object next, corrupting that later, logically unrelated read with
++     * leftover mid-stream data. Confirmed on plain TCPSocket, stock JRuby,
++     * nothing channel-type- or method-specific about it: a large-transfer,
++     * randomly-timed Thread#kill stress test loses exactly one
++     * readpartial-sized chunk; ioBufread (IO#read(length)) has the identical
++     * shape for its own accumulating retry loop. Every caller that reads
++     * directly from the real fd into a throwaway buffer (not rbuf itself)
++     * needs this -- see ioBufread, RubyIO#getPartialCommon (readpartial/
++     * read_nonblock), RubyIO#sysread.
++     *
++     * Deliberately NOT used by pread/IO::Buffer#pread call sites: those read
++     * at an explicit, non-sequential offset, so stashing their bytes into
++     * rbuf (which represents the NEXT sequential bytes) would actively
++     * corrupt a later ordinary read with data from the wrong place in the
++     * file/stream -- worse than the data loss this fixes.
++     *
++     * Only intervenes if rbuf is currently empty: if something else
++     * concurrently filled it while we were blocked, don't clobber it --
++     * reading the same IO from two threads at once has no ordering
++     * guarantee to begin with, so this is "don't make that case worse," not
++     * a claim of full correctness under that pathological race.
++     */
++    public void salvagePartialRead(byte[] bytes, int off, int len) {
++        if (len <= 0 || rbuf.len != 0) return;
++        if (rbuf.ptr == null || rbuf.capa < len) {
++            rbuf.capa = Math.max(len, IO_RBUF_CAPA_FOR());
++            rbuf.ptr = new byte[rbuf.capa];
++        }
++        System.arraycopy(bytes, off, rbuf.ptr, 0, len);
++        rbuf.off = 0;
++        rbuf.len = len;
++    }
++
+     // io_fread with target buffer
+     public int fread(ThreadContext context, byte[] buffer, int offset, int size) {
+         size = ioBufread(context, buffer, offset, size);
+-- 
+2.43.0
+

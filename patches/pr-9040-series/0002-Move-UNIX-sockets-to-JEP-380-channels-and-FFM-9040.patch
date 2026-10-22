@@ -1,0 +1,3406 @@
+From 64185271c3b144ac5d8fc9bbee755d6ba3cafa40 Mon Sep 17 00:00:00 2001
+From: CufeHaco <redeagleteam2005@gmail.com>
+Date: Thu, 22 Oct 2026 16:37:38 -0400
+Subject: [PATCH 2/5] Move UNIX sockets to JEP-380 channels and FFM (#9040)
+
+UNIXSocket, UNIXServer and Socket.new(:UNIX) now open the JDK's
+unix-domain SocketChannel/ServerSocketChannel (JEP 380) instead of
+jnr-unixsocket. What java.nio cannot do goes through FFM
+(java.lang.foreign) downcalls in UnixDomainNative: socketpair(2) for
+UNIXSocket.pair and Socket.socketpair (stream and datagram), raw
+datagram sockets for Socket.new(:UNIX, :DGRAM), sendmsg/recvmsg with
+SCM_RIGHTS for send_io/recv_io, getsockname/getpeername, fcntl and
+poll. errno is captured with Linker.Option.captureCallState.
+
+- UnixFdChannel wraps a raw fd (pair, for_fd, received fds, datagram
+  sockets) and replaces jnr's fromFD.
+- Named sockets read and write through UnixSocketNativeChannel: a plain
+  blocking read(2)/write(2) on the real fd, as jnr did. The JDK
+  channel's own read() closes the channel when the thread is
+  interrupted, which broke Thread#raise/Timeout around reads.
+- ChannelFD treats JEP-380 channels as native descriptors, so a
+  blocking read skips the pre-read select.
+- SocketType, FilenoUtil, PosixShim and the address helpers in
+  BasicSocket/UNIXSocket/UNIXServer learn the new channel and address
+  types; UnixDomainSocketAddress and jnr's UnixSocketAddress are both
+  accepted.
+- Fiber scheduler accept (master) runs on the new ServerSocketChannel.
+
+Without --enable-native-access the FFM pieces fail closed: a stream pair falls
+back to a temporary-path JEP-380 pair; datagram pairs and sockets need
+native access.
+
+Out of scope, carried here because the code above needs it: the
+sendmsg_nonblock NotImplemented stub is replaced by waitFd (Ruby's
+socket.rb defines sendmsg_nonblock in the next commit), and
+Socket#connect's jnr branch goes with the EISCONN check that replaced it.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ .../org/jruby/ext/socket/RubyBasicSocket.java | 121 ++-
+ .../java/org/jruby/ext/socket/RubySocket.java | 144 ++-
+ .../org/jruby/ext/socket/RubyUDPSocket.java   |  40 +-
+ .../org/jruby/ext/socket/RubyUNIXServer.java  |  89 +-
+ .../org/jruby/ext/socket/RubyUNIXSocket.java  | 289 +++---
+ .../java/org/jruby/ext/socket/SocketType.java |  31 +
+ .../java/org/jruby/ext/socket/UnixDomain.java | 339 +++++++
+ .../jruby/ext/socket/UnixDomainContext.java   | 155 +++
+ .../jruby/ext/socket/UnixDomainNative.java    | 901 ++++++++++++++++++
+ .../org/jruby/ext/socket/UnixFdChannel.java   | 389 ++++++++
+ .../ext/socket/UnixSocketNativeChannel.java   |  87 ++
+ .../main/java/org/jruby/runtime/Helpers.java  |   4 +
+ .../java/org/jruby/util/io/ChannelFD.java     |  51 +-
+ .../java/org/jruby/util/io/FilenoUtil.java    |   7 +-
+ .../main/java/org/jruby/util/io/OpenFile.java |  26 +
+ .../java/org/jruby/util/io/PosixShim.java     |  20 +-
+ 16 files changed, 2462 insertions(+), 231 deletions(-)
+ create mode 100644 core/src/main/java/org/jruby/ext/socket/UnixDomain.java
+ create mode 100644 core/src/main/java/org/jruby/ext/socket/UnixDomainContext.java
+ create mode 100644 core/src/main/java/org/jruby/ext/socket/UnixDomainNative.java
+ create mode 100644 core/src/main/java/org/jruby/ext/socket/UnixFdChannel.java
+ create mode 100644 core/src/main/java/org/jruby/ext/socket/UnixSocketNativeChannel.java
+
+diff --git a/core/src/main/java/org/jruby/ext/socket/RubyBasicSocket.java b/core/src/main/java/org/jruby/ext/socket/RubyBasicSocket.java
+index f031020578..7397f0b428 100644
+--- a/core/src/main/java/org/jruby/ext/socket/RubyBasicSocket.java
++++ b/core/src/main/java/org/jruby/ext/socket/RubyBasicSocket.java
+@@ -47,6 +47,10 @@ import org.jruby.RubyArray;
+ import org.jruby.RubyBasicObject;
+ import org.jruby.RubyBoolean;
+ import org.jruby.RubyClass;
++import org.jruby.RubyThread;
++import org.jruby.runtime.Visibility;
++import jnr.constants.platform.Sock;
++import org.jruby.RubyArray;
+ import org.jruby.RubyFixnum;
+ import org.jruby.RubyHash;
+ import org.jruby.RubyIO;
+@@ -55,6 +59,7 @@ import org.jruby.RubyString;
+ import org.jruby.RubySymbol;
+ import org.jruby.anno.JRubyClass;
+ import org.jruby.anno.JRubyMethod;
++import org.jruby.exceptions.RaiseException;
+ import org.jruby.api.Access;
+ import org.jruby.api.Convert;
+ import org.jruby.ast.util.ArgsUtil;
+@@ -82,6 +87,7 @@ import java.nio.ByteBuffer;
+ import java.nio.ByteOrder;
+ import java.nio.channels.Channel;
+ import java.nio.channels.DatagramChannel;
++import java.nio.channels.NetworkChannel;
+ import java.nio.channels.SelectableChannel;
+ 
+ import static jnr.constants.platform.TCP.TCP_INFO;
+@@ -91,6 +97,7 @@ import static jnr.constants.platform.TCP.TCP_KEEPINTVL;
+ import static jnr.constants.platform.TCP.TCP_NODELAY;
+ import static org.jruby.api.Convert.asFixnum;
+ import static org.jruby.api.Convert.toInt;
++import static org.jruby.api.Convert.toLong;
+ import static org.jruby.api.Create.*;
+ import static org.jruby.api.Define.defineClass;
+ import static org.jruby.api.Error.argumentError;
+@@ -187,6 +194,29 @@ public class RubyBasicSocket extends RubyIO {
+                 written = ((DatagramChannel) channel).send(mesgBytes, sockaddr);
+ 
+                 return asFixnum(context, written);
++            } else if (channel instanceof UnixFdChannel ufc && sockaddr != null) {
++                // raw Socket.new(:UNIX, :DGRAM) fd -- see RubySocket#initChannelFD.
++                // sockaddr here is jnr.unixsocket.UnixSocketAddress, same as
++                // doBind (Sockaddr's UNIX address parsing predates this PR).
++                String destPath = sockaddr instanceof UnixSocketAddress usa ? usa.path() : null;
++                if (destPath == null) throw context.runtime.newErrnoENOPROTOOPTError();
++                try {
++                    long n = UnixDomainNative.sendTo(ufc.fd(), mesgByteList.unsafeBytes(),
++                            mesgByteList.begin(), mesgByteList.realSize(), destPath);
++                    return asFixnum(context, (int) n);
++                } catch (UnixDomainNative.NativeException ne) {
++                    throw context.runtime.newErrnoFromInt(ne.errno, "sendto(2)");
++                }
++            } else if (channel instanceof UnixFdChannel ufc && ufc.sockType() == UnixDomainNative.SOCK_DGRAM) {
++                // Same for a connected unix dgram socket (UNIXSocket.pair(:DGRAM)):
++                // a real send(2), which unlike write(2) sends a zero-length datagram.
++                try {
++                    long n = UnixDomainNative.sendTo(ufc.fd(), mesgByteList.unsafeBytes(),
++                            mesgByteList.begin(), mesgByteList.realSize(), null);
++                    return asFixnum(context, (int) n);
++                } catch (UnixDomainNative.NativeException ne) {
++                    throw context.runtime.newErrnoFromInt(ne.errno, "send(2)");
++                }
+             } else {
+                 return syswrite(context, _mesg);
+             }
+@@ -653,7 +683,7 @@ public class RubyBasicSocket extends RubyIO {
+ 
+         return sock != null ?
+                 Sockaddr.pack_sockaddr_in(context, sock) :
+-                Sockaddr.pack_sockaddr_un(context, getUnixRemoteSocket(context).path());
++                Sockaddr.pack_sockaddr_un(context, UnixDomain.pathOf(getUnixRemoteSocket(context)));
+     }
+ 
+     @JRubyMethod(name = "getpeereid", notImplemented = true)
+@@ -670,8 +700,8 @@ public class RubyBasicSocket extends RubyIO {
+             return new Addrinfo(context.runtime, Access.getClass(context, "Addrinfo"), address, socketType.getSocketType(), socketType);
+         }
+ 
+-        UnixSocketAddress unix = getUnixSocketAddress();
+-        return Addrinfo.unix(context, Access.getClass(context, "Addrinfo"), newString(context, unix.path()));
++        SocketAddress unix = getUnixSocketAddress();
++        return Addrinfo.unix(context, Access.getClass(context, "Addrinfo"), newString(context, UnixDomain.pathOf(unix)));
+     }
+ 
+     @JRubyMethod
+@@ -683,11 +713,11 @@ public class RubyBasicSocket extends RubyIO {
+             return new Addrinfo(context.runtime, Access.getClass(context, "Addrinfo"), address, socketType.getSocketType(), socketType);
+         }
+ 
+-        UnixSocketAddress unix = getUnixRemoteSocket(context);
++        SocketAddress unix = getUnixRemoteSocket(context);
+ 
+          if (unix == null) throw context.runtime.newErrnoENOTCONNError();
+ 
+-        return Addrinfo.unix(context, Access.getClass(context, "Addrinfo"), newString(context, unix.path()));
++        return Addrinfo.unix(context, Access.getClass(context, "Addrinfo"), newString(context, UnixDomain.pathOf(unix)));
+     }
+ 
+     @JRubyMethod(optional = 1, checkArity = false)
+@@ -760,9 +790,47 @@ public class RubyBasicSocket extends RubyIO {
+         throw context.runtime.newNotImplementedError("sendmsg is not implemented");
+     }
+ 
+-    @JRubyMethod(rest = true, notImplemented = true)
+-    public IRubyObject sendmsg_nonblock(ThreadContext context, IRubyObject[] args) {
+-        throw context.runtime.newNotImplementedError("sendmsg_nonblock is not implemented");
++    /**
++     * Interruptible wait for an FFM socket call that got EAGAIN: poll(2) on
++     * the real fd, run as a RubyThread task, so the thread shows as "sleep"
++     * and Thread#kill/raise/Timeout wake it (executeTask's pollThreadEvents
++     * raises them). OpenFile#waitReadable can't be used here -- for a
++     * channel in blocking mode it returns at once, so the caller spun.
++     * poll(2) can't be woken from Java, so it waits in slices backing off from
++     * 1ms to 100ms, the same governor shape as Kestowv's Wave and
++     * UnixFdChannel's SCRATCH: readiness is never delayed (poll returns the
++     * moment the fd is ready), an idle wait costs ~10 wakeups/s, and an
++     * interrupt is seen within one slice.
++     */
++    final void waitFd(ThreadContext context, int fd, short events) {
++        if (!UnixDomainNative.hasPoll()) {
++            if (events == UnixDomainNative.POLLOUT) getOpenFileChecked().waitWritable(context);
++            else getOpenFileChecked().waitReadable(context);
++            return;
++        }
++        try {
++            context.getThread().executeTask(context, fd, new RubyThread.Task<Integer, Integer>() {
++                private volatile boolean woken;
++
++                @Override
++                public Integer run(ThreadContext ctx, Integer f) {
++                    int slice = 1;
++                    while (!woken) {
++                        int rc = UnixDomainNative.poll(f, events, slice);
++                        if (rc != 0) return rc;
++                        slice = Math.min(slice * 2, 100);
++                    }
++                    return 0;
++                }
++
++                @Override
++                public void wakeup(RubyThread thread, Integer f) {
++                    woken = true;
++                }
++            });
++        } catch (InterruptedException ie) {
++            // executeTask's own pollThreadEvents raises any pending kill/raise
++        }
+     }
+ 
+     @JRubyMethod(rest = true, notImplemented = true)
+@@ -808,6 +876,28 @@ public class RubyBasicSocket extends RubyIO {
+     protected final ByteList doReadNonblock(ThreadContext context, final ByteBuffer buffer, boolean exception) {
+         Channel channel = getChannel();
+ 
++        // UnixFdChannel (pair()/for_fd/rawSocket) isn't a SelectableChannel,
++        // so the generic path below would unconditionally treat it as
++        // "doesn't support nonblocking" -- confirmed by testing: it raised
++        // EAGAIN even when data was genuinely available, every time, not a
++        // real would-block signal. recvFromNonBlocking does a real
++        // single-attempt recvfrom(2) with the fd actually toggled into
++        // OS-level O_NONBLOCK; works the same for a pair() stream socket
++        // (recvfrom(2) on a connected stream socket is just a read,
++        // ignoring the sender info) or a raw dgram one.
++        if (channel instanceof UnixFdChannel ufc) {
++            try {
++                UnixDomain.DgramReceived result = UnixDomain.recvFromNonBlocking(context, ufc.fd(), buffer.remaining());
++                if (result == null) return null;
++                // recvfrom(2) returning 0 is EOF on a stream socket, but a real
++                // zero-length datagram on a dgram one.
++                if (result.data.isEmpty() && ufc.sockType() != UnixDomainNative.SOCK_DGRAM) return NONBLOCK_EOF;
++                return result.data.getByteList();
++            } catch (RuntimeException re) {
++                throw re; // EAGAIN is result == null above; anything else is a real error
++            }
++        }
++
+         if ( ! (channel instanceof SelectableChannel) ) {
+             throw context.runtime.newErrnoEAGAINReadableError(channel.getClass().getName() + " does not support nonblocking");
+         }
+@@ -869,20 +959,19 @@ public class RubyBasicSocket extends RubyIO {
+         return socketAddress instanceof InetSocketAddress sock ? sock : null;
+     }
+ 
+-    protected UnixSocketAddress getUnixSocketAddress() {
++    protected SocketAddress getUnixSocketAddress() {
+         SocketAddress socketAddress = getSocketAddress();
+-        if (socketAddress instanceof UnixSocketAddress) return (UnixSocketAddress) socketAddress;
+-        return null;
++        return UnixDomain.isUnixAddress(socketAddress) ? socketAddress : null;
+     }
+ 
+     @Deprecated(since = "10.0.0.0")
+-    protected UnixSocketAddress getUnixRemoteSocket() {
++    protected SocketAddress getUnixRemoteSocket() {
+         return getUnixRemoteSocket(getCurrentContext());
+     }
+ 
+-    protected UnixSocketAddress getUnixRemoteSocket(ThreadContext context) {
++    protected SocketAddress getUnixRemoteSocket(ThreadContext context) {
+         SocketAddress socketAddress = getRemoteSocket(context);
+-        return socketAddress instanceof UnixSocketAddress sock ? sock : null;
++        return UnixDomain.isUnixAddress(socketAddress) ? socketAddress : null;
+     }
+ 
+     protected SocketAddress getSocketAddress() {
+@@ -911,9 +1000,9 @@ public class RubyBasicSocket extends RubyIO {
+             return Sockaddr.pack_sockaddr_in(context, getInetSocketAddress());
+         }
+ 
+-        UnixSocketAddress unix = getUnixSocketAddress();
++        SocketAddress unix = getUnixSocketAddress();
+         if (unix != null) {
+-            return Sockaddr.pack_sockaddr_un(context, unix.path());
++            return Sockaddr.pack_sockaddr_un(context, UnixDomain.pathOf(unix));
+         }
+ 
+         return Sockaddr.pack_sockaddr_in(context, 0, "0.0.0.0");
+diff --git a/core/src/main/java/org/jruby/ext/socket/RubySocket.java b/core/src/main/java/org/jruby/ext/socket/RubySocket.java
+index 7ed5280855..5919e3e6f8 100644
+--- a/core/src/main/java/org/jruby/ext/socket/RubySocket.java
++++ b/core/src/main/java/org/jruby/ext/socket/RubySocket.java
+@@ -45,10 +45,11 @@ import jnr.constants.platform.TCP;
+ import jnr.constants.platform.InterfaceInfo;
+ import jnr.netdb.Protocol;
+ import jnr.unixsocket.UnixSocketAddress;
+-import jnr.unixsocket.UnixSocketChannel;
+ import org.jruby.Ruby;
+ import org.jruby.RubyBoolean;
+ import org.jruby.RubyClass;
++import org.jruby.RubyString;
++import org.jruby.RubySymbol;
+ import org.jruby.RubyFixnum;
+ import org.jruby.RubyModule;
+ import org.jruby.anno.JRubyClass;
+@@ -58,16 +59,20 @@ import org.jruby.api.Convert;
+ import org.jruby.api.Create;
+ import org.jruby.exceptions.RaiseException;
+ import org.jruby.runtime.Arity;
++import org.jruby.ast.util.ArgsUtil;
+ import org.jruby.runtime.Helpers;
+ import org.jruby.runtime.Block;
+ import org.jruby.runtime.ThreadContext;
++import org.jruby.platform.Platform;
+ import org.jruby.runtime.Visibility;
+ import org.jruby.runtime.builtin.IRubyObject;
+ import org.jruby.util.io.ChannelFD;
++import org.jruby.util.io.OpenFile;
+ import org.jruby.util.io.Sockaddr;
+ 
+ import java.io.IOException;
+ import java.net.DatagramSocket;
++import java.net.InetAddress;
+ import java.net.InetSocketAddress;
+ import java.net.InterfaceAddress;
+ import java.net.NetworkInterface;
+@@ -83,13 +88,17 @@ import java.nio.channels.DatagramChannel;
+ import java.nio.channels.SelectableChannel;
+ import java.nio.channels.SelectionKey;
+ import java.nio.channels.SocketChannel;
++import java.nio.channels.NetworkChannel;
++import java.nio.channels.ServerSocketChannel;
+ import java.util.Enumeration;
+ import java.util.regex.Pattern;
+ 
+ import static org.jruby.api.Convert.asFixnum;
++import static org.jruby.api.Convert.toInt;
+ import static org.jruby.api.Create.*;
+ import static org.jruby.api.Define.defineClass;
+ import static org.jruby.api.Error.argumentError;
++import static org.jruby.api.Error.typeError;
+ 
+ @JRubyClass(name="Socket", parent="BasicSocket", include="Socket::Constants")
+ public class RubySocket extends RubyBasicSocket {
+@@ -347,29 +356,24 @@ public class RubySocket extends RubyBasicSocket {
+         Sock s = SocketUtils.sockFromArg(context, type);
+         if (s == null) s = Sock.SOCK_STREAM;
+ 
+-        if (af != AddressFamily.AF_UNIX || s != Sock.SOCK_STREAM) {
+-            throw context.runtime.newErrnoEOPNOTSUPPError("Socket.socketpair only supports streaming UNIX sockets");
++        // socketpair(2) is AF_UNIX-only on Linux; stream and datagram pairs via
++        // FFM (UnixDomain#pair), replacing JNR's stream-only UnixSocketChannel.pair()
++        if (af != AddressFamily.AF_UNIX || (s != Sock.SOCK_STREAM && s != Sock.SOCK_DGRAM)) {
++            throw context.runtime.newErrnoEOPNOTSUPPError("socketpair(2)");
+         }
+ 
+         final Ruby runtime = context.runtime;
+ 
+-        // TODO: type and protocol
+-
+-        UnixSocketChannel[] sp;
+         final RubyClass socketClass = Access.getClass(context, "Socket");
+         RubySocket sock0 = new RubySocket(runtime, socketClass);
+         RubySocket sock1 = new RubySocket(runtime, socketClass);
+ 
+         try {
+-            sp = UnixSocketChannel.pair();
+-
+-            ChannelFD fd0 = newChannelFD(runtime, sp[0]);
+-            sock0.initFieldsFromDescriptor(runtime, fd0);
+-            sock0.initSocket(fd0);
+-
+-            ChannelFD fd1 = newChannelFD(runtime, sp[1]);
+-            sock1.initFieldsFromDescriptor(runtime, fd1);
+-            sock1.initSocket(fd1);
++            Channel[] sp = UnixDomain.pair(s.intValue());
++            sock0.initUnixPairSocket(runtime, sp[0], s);
++            sock1.initUnixPairSocket(runtime, sp[1], s);
++        } catch (UnsupportedOperationException uoe) {
++            throw runtime.newErrnoEOPNOTSUPPError("socketpair(2)");
+         } catch (IOException ioe) {
+             throw runtime.newIOErrorFromException(ioe);
+         }
+@@ -377,10 +381,24 @@ public class RubySocket extends RubyBasicSocket {
+         return yieldPair(context, sock0, sock1, block);
+     }
+ 
++    private void initUnixPairSocket(Ruby runtime, Channel channel, Sock type) {
++        soDomain = AddressFamily.AF_UNIX;
++        soType = type;
++        soProtocolFamily = ProtocolFamily.PF_UNIX;
++        initSocket(newChannelFD(runtime, channel));
++    }
++
+     private void initFieldsFromDescriptor(Ruby runtime, ChannelFD fd) {
+         Channel mainChannel = fd.ch;
+ 
+-        if (mainChannel instanceof SocketChannel) {
++        if (UnixDomain.isUnixChannel(mainChannel)) {
++            // JEP-380 unix SocketChannel or FFM UnixFdChannel
++            soDomain = AddressFamily.AF_UNIX;
++            soType = mainChannel instanceof UnixFdChannel ufc && ufc.sockType() == UnixDomainNative.SOCK_DGRAM ?
++                    Sock.SOCK_DGRAM : Sock.SOCK_STREAM;
++            soProtocolFamily = ProtocolFamily.PF_UNIX;
++
++        } else if (mainChannel instanceof SocketChannel) {
+             // ok, it's a socket...set values accordingly
+             // just using AF_INET since we can't tell from SocketChannel...
+             soDomain = AddressFamily.AF_INET;
+@@ -388,11 +406,6 @@ public class RubySocket extends RubyBasicSocket {
+             soProtocolFamily = ProtocolFamily.PF_INET;
+             soProtocol = Protocol.getProtocolByName("tcp");
+ 
+-        } else if (mainChannel instanceof UnixSocketChannel) {
+-            soDomain = AddressFamily.AF_UNIX;
+-            soType = Sock.SOCK_STREAM;
+-            soProtocolFamily = ProtocolFamily.PF_UNIX;
+-
+         } else if (mainChannel instanceof DatagramChannel) {
+             // datagram, set accordingly
+             // again, AF_INET
+@@ -433,19 +446,38 @@ public class RubySocket extends RubyBasicSocket {
+                 case SOCK_STREAM:
+                     if ( soProtocolFamily == ProtocolFamily.PF_UNIX ||
+                          soProtocolFamily == ProtocolFamily.PF_LOCAL ) {
+-                        channel = UnixSocketChannel.open();
++                        // JEP-380, as UNIXSocket/UNIXServer: this was the last
++                        // JNR UnixSocketChannel.open() (bind was a no-op on it)
++                        channel = SocketChannel.open(java.net.StandardProtocolFamily.UNIX);
+                     }
+                     else if ( soProtocolFamily == ProtocolFamily.PF_INET ||
+                               soProtocolFamily == ProtocolFamily.PF_INET6 ||
+                               soProtocolFamily == ProtocolFamily.PF_UNSPEC ) {
+-                        channel = SocketChannel.open();
++                        java.net.ProtocolFamily family = javaFamily();
++                        channel = family == null ? SocketChannel.open() : SocketChannel.open(family);
+                     }
+                     else {
+                         throw argumentError(runtime.getCurrentContext(), "unsupported protocol family '" + soProtocolFamily + "'");
+                     }
+                     break;
+                 case SOCK_DGRAM:
+-                    channel = DatagramChannel.open();
++                    if ( soProtocolFamily == ProtocolFamily.PF_UNIX ||
++                         soProtocolFamily == ProtocolFamily.PF_LOCAL ) {
++                        // JEP-380 has no Unix-domain DatagramChannel at all
++                        // (DatagramChannel.open(ProtocolFamily) rejects UNIX
++                        // outright) -- raw socket(2) via FFM, wrapped the
++                        // same way pair()/for_fd fds are (see
++                        // UnixDomainNative#rawSocket's doc comment).
++                        try {
++                            int fd = UnixDomainNative.rawSocket(UnixDomainNative.AF_UNIX, UnixDomainNative.SOCK_DGRAM, 0);
++                            channel = UnixDomainNative.channelFromFd(fd);
++                        } catch (UnixDomainNative.NativeException ne) {
++                            throw sockerr(runtime, "initialize: " + ne.getMessage(), ne);
++                        }
++                    } else {
++                        java.net.ProtocolFamily family = javaFamily();
++                        channel = family == null ? DatagramChannel.open() : DatagramChannel.open(family);
++                    }
+                     break;
+                 default:
+                     throw argumentError(runtime.getCurrentContext(), "unsupported socket type '" + soType + "'");
+@@ -458,7 +490,23 @@ public class RubySocket extends RubyBasicSocket {
+         }
+     }
+ 
++    /**
++     * The JDK family to open an inet channel with. A no-arg open() is a
++     * dual-stack IPv6 socket, so an AF_INET socket bound to 0.0.0.0 reported
++     * itself as [::] (AF_INET6) -- wrong local_address/connect_address. MRI's
++     * socket(AF_INET, ...) is IPv4-only, which an INET-family channel matches.
++     */
++    private java.net.ProtocolFamily javaFamily() {
++        if (soProtocolFamily == ProtocolFamily.PF_INET) return java.net.StandardProtocolFamily.INET;
++        if (soProtocolFamily == ProtocolFamily.PF_INET6) return java.net.StandardProtocolFamily.INET6;
++        return null;
++    }
++
+     private void setProtocol(ThreadContext context, IRubyObject protocol) {
++        if (protocol instanceof RubySymbol || protocol instanceof RubyString) {
++            // MRI takes the protocol as an Integer only (Socket.new(:INET, :STREAM, :TCP) is a TypeError)
++            throw typeError(context, "no implicit conversion of " + protocol.getMetaClass().getRealClass().getName(context) + " into Integer");
++        }
+         soProtocol = SocketUtils.protocolFromArg(context, protocol);
+     }
+ 
+@@ -518,19 +566,16 @@ public class RubySocket extends RubyBasicSocket {
+                 try {
+                     selectable.configureBlocking(false);
+ 
++                    boolean firstAttempt = true;
+                     while (true) {
+                         boolean result = true;
+-                        if (channel instanceof UnixSocketChannel unix) {
+-                            if (unix.isConnectionPending()) {
+-                                // connection initiated but not finished
+-                                result = unix.finishConnect();
+-                            } else {
+-                                result = unix.connect(addr);
+-                            }
+-                        } else if (channel instanceof SocketChannel) {
++                        if (channel instanceof SocketChannel) {
+                             SocketChannel socket = (SocketChannel) channel;
+ 
+                             if (socket.isConnected()) {
++                                // connected before this call: connect(2) says EISCONN (MRI);
++                                // connected by a pending connect this call finished: done
++                                if (firstAttempt) throw new AlreadyConnectedException();
+                                 return true;
+                             } else if (socket.isConnectionPending()) {
+                                 // connection initiated but not finished
+@@ -545,6 +590,7 @@ public class RubySocket extends RubyBasicSocket {
+                         }
+ 
+                         if (!blocking || result) return result;
++                        firstAttempt = false;
+ 
+                         while (!context.getThread().select(channel, this, SelectionKey.OP_CONNECT)) {
+                             context.blockingThreadPoll();
+@@ -587,12 +633,23 @@ public class RubySocket extends RubyBasicSocket {
+         Channel channel = getChannel();
+ 
+         try {
+-            if (channel instanceof SocketChannel) {
+-                Socket socket = ((SocketChannel) channel).socket();
+-                socket.bind(iaddr);
++            if (channel instanceof SocketChannel sc) {
++                // SocketChannel#bind, not socket().bind: socket() is
++                // unsupported on a JEP-380 unix channel
++                sc.bind(jdkAddress(iaddr));
+             }
+-            else if (channel instanceof UnixSocketChannel) {
+-                // do nothing
++            else if (channel instanceof UnixFdChannel ufc) {
++                // raw Socket.new(:UNIX, :DGRAM) fd (see initChannelFD) --
++                // iaddr here is jnr.unixsocket.UnixSocketAddress (Sockaddr's
++                // UNIX parsing predates this PR and wasn't in scope to
++                // replace), not JEP-380's UnixDomainSocketAddress.
++                String path = iaddr instanceof UnixSocketAddress usa ? usa.path() : null;
++                if (path == null) throw runtime.newErrnoENOPROTOOPTError();
++                try {
++                    UnixDomainNative.bindPath(ufc.fd(), path);
++                } catch (UnixDomainNative.NativeException ne) {
++                    throw sockerr(runtime, "bind(2): " + ne.getMessage(), ne);
++                }
+             }
+             else if (channel instanceof DatagramChannel) {
+                 DatagramSocket socket = ((DatagramChannel) channel).socket();
+@@ -652,13 +709,22 @@ public class RubySocket extends RubyBasicSocket {
+         return str;
+     }
+ 
++    /**
++     * Sockaddr/Addrinfo give unix addresses as JNR's UnixSocketAddress; a
++     * JEP-380 channel needs java.net.UnixDomainSocketAddress.
++     */
++    static SocketAddress jdkAddress(SocketAddress address) {
++        if (address instanceof UnixSocketAddress unix) return java.net.UnixDomainSocketAddress.of(unix.path());
++        return address;
++    }
++
+     private SocketAddress addressForChannel(ThreadContext context, IRubyObject arg) {
+-        if (arg instanceof Addrinfo) return ((Addrinfo) arg).getSocketAddress();
++        if (arg instanceof Addrinfo) return jdkAddress(((Addrinfo) arg).getSocketAddress());
+ 
+         switch (soProtocolFamily) {
+             case PF_UNIX:
+             case PF_LOCAL:
+-                return Sockaddr.addressFromSockaddr_un(context, arg);
++                return jdkAddress(Sockaddr.addressFromSockaddr_un(context, arg));
+ 
+             case PF_INET:
+             case PF_INET6:
+diff --git a/core/src/main/java/org/jruby/ext/socket/RubyUDPSocket.java b/core/src/main/java/org/jruby/ext/socket/RubyUDPSocket.java
+index 5b57a86ca4..d68ede0fad 100644
+--- a/core/src/main/java/org/jruby/ext/socket/RubyUDPSocket.java
++++ b/core/src/main/java/org/jruby/ext/socket/RubyUDPSocket.java
+@@ -79,6 +79,7 @@ import static org.jruby.api.Access.getModule;
+ import static org.jruby.api.Convert.asFixnum;
+ import static org.jruby.api.Convert.toInt;
+ import static org.jruby.api.Create.newArray;
++import static org.jruby.api.Create.newEmptyString;
+ import static org.jruby.api.Create.newString;
+ import static org.jruby.api.Define.defineClass;
+ import static org.jruby.runtime.Helpers.extractExceptionOnlyArg;
+@@ -272,6 +273,28 @@ public class RubyUDPSocket extends RubyIPSocket {
+ 
+     private static IRubyObject recvfrom_nonblock(RubyBasicSocket socket, ThreadContext context,
+                                                  IRubyObject length, IRubyObject flags, IRubyObject str, boolean exception) {
++        // Socket.new(:UNIX, :DGRAM): same (DatagramChannel) cast crash as
++        // the blocking #recvfrom fix above, in doReceiveNonblockTuple a few
++        // lines down -- confirmed with a direct repro before fixing.
++        if (socket.getChannel() instanceof UnixFdChannel ufc) {
++            UnixDomain.DgramReceived result = UnixDomain.recvFromNonBlocking(context, ufc.fd(), toInt(context, length));
++            if (result == null) {
++                if (!exception) return Convert.asSymbol(context, "wait_readable");
++                throw context.runtime.newErrnoEAGAINReadableError("recvfrom(2)");
++            }
++            IRubyObject data = result.data;
++            if (str != null && !str.isNil()) {
++                str = str.convertToString();
++                org.jcodings.Encoding enc = ((RubyString) str).getEncoding(); // the buffer keeps its encoding (MRI)
++                ((RubyString) str).setValue(result.data.getByteList());
++                ((RubyString) str).setEncoding(enc);
++                data = str;
++            }
++            RubyString path = result.srcPath.isEmpty() ? newEmptyString(context) : newString(context, result.srcPath);
++            IRubyObject addressArray = newArray(context, newString(context, "AF_UNIX"), path);
++            return newArray(context, data, addressArray);
++        }
++
+         try {
+             ReceiveTuple tuple = doReceiveNonblockTuple(socket, context.runtime, toInt(context, length));
+ 
+@@ -465,10 +488,25 @@ public class RubyUDPSocket extends RubyIPSocket {
+     public static IRubyObject recvfrom(RubyBasicSocket socket, ThreadContext context, IRubyObject length) {
+         final Ruby runtime = context.runtime;
+ 
++        // Socket.new(:UNIX, :DGRAM) (see RubySocket_unixDgram.java): its
++        // channel is a plain UnixFdChannel, not a DatagramChannel -- the
++        // hard (DatagramChannel) cast in doReceive/doReceiveTuple below
++        // would ClassCastException. UnixFdChannel only ever occurs here for
++        // the SOCK_DGRAM branch of RubySocket#initChannelFD (SOCK_STREAM
++        // uses a real JNR UnixSocketChannel), so no socket-type check is
++        // needed the way RubyUNIXSocket#recvfrom needs one.
++        if (socket.getChannel() instanceof UnixFdChannel ufc) {
++            UnixDomain.DgramReceived result = UnixDomain.recvFromBlocking(
++                    context, socket.getOpenFileChecked(), ufc.fd(), toInt(context, length));
++            RubyString path = result.srcPath.isEmpty() ? newEmptyString(context) : newString(context, result.srcPath);
++            IRubyObject address = newArray(context, newString(context, "AF_UNIX"), path);
++            return newArray(context, result.data, address);
++        }
++
+         try {
+             ReceiveTuple tuple = doReceiveTuple(socket, runtime, false, toInt(context, length));
+ 
+-            IRubyObject addressArray = socket.addrFor(context, tuple.sender, false);
++            IRubyObject addressArray = socket.addrFor(context, tuple.sender, !socket.doNotReverseLookup(context));
+ 
+             return newArray(context, tuple.result, addressArray);
+         }
+diff --git a/core/src/main/java/org/jruby/ext/socket/RubyUNIXServer.java b/core/src/main/java/org/jruby/ext/socket/RubyUNIXServer.java
+index d8b028f9c7..17e1986cd7 100644
+--- a/core/src/main/java/org/jruby/ext/socket/RubyUNIXServer.java
++++ b/core/src/main/java/org/jruby/ext/socket/RubyUNIXServer.java
+@@ -29,9 +29,6 @@
+ package org.jruby.ext.socket;
+ 
+ 
+-import jnr.unixsocket.UnixServerSocketChannel;
+-import jnr.unixsocket.UnixSocketAddress;
+-import jnr.unixsocket.UnixSocketChannel;
+ import org.jruby.FiberScheduler;
+ import org.jruby.Ruby;
+ import org.jruby.RubyClass;
+@@ -46,8 +43,11 @@ import org.jruby.runtime.builtin.IRubyObject;
+ 
+ import java.io.IOException;
+ import java.net.SocketAddress;
++import java.nio.channels.Channel;
+ import java.nio.channels.SelectableChannel;
+ import java.nio.channels.SelectionKey;
++import java.nio.channels.ServerSocketChannel;
++import java.nio.channels.SocketChannel;
+ 
+ import static org.jruby.api.Convert.asFixnum;
+ import static org.jruby.api.Convert.asSymbol;
+@@ -74,7 +74,7 @@ public class RubyUNIXServer extends RubyUNIXSocket {
+ 
+     @JRubyMethod
+     public IRubyObject accept(ThreadContext context) {
+-        UnixSocketChannel socketChannel = acceptChannel(context);
++        SocketChannel socketChannel = acceptChannel(context);
+ 
+         RubyUNIXSocket sock = (RubyUNIXSocket)(Helpers.invoke(context, Access.getClass(context, "UNIXSocket"), "allocate"));
+ 
+@@ -83,52 +83,44 @@ public class RubyUNIXServer extends RubyUNIXSocket {
+         return sock;
+     }
+ 
+-    private UnixSocketChannel acceptChannel(ThreadContext context) {
++    private SocketChannel acceptChannel(ThreadContext context) {
+         IRubyObject scheduler = FiberScheduler.current(context);
+         if (scheduler != null) return schedulerAcceptChannel(context, scheduler);
+ 
+         try {
+-
+-            while (true) { // select loop to allow interrupting
++            while (true) {
+                 boolean ready = context.getThread().select(this, SelectionKey.OP_ACCEPT);
+-
+                 if (!ready) {
+-                    // we were woken up without being selected...poll for thread events and go back to sleep
+                     context.pollThreadEvents();
+-
+                 } else {
+-                    UnixSocketChannel socketChannel = asUnixServer().accept();
++                    SocketChannel socketChannel = UnixDomain.accept(asUnixServer());
+                     // null when another thread made the channel nonblocking and took the connection first
+                     if (socketChannel == null) continue;
+ 
+                     return socketChannel;
+                 }
+             }
+-
+         } catch (IOException ioe) {
+             throw context.runtime.newIOErrorFromException(ioe);
+         }
+     }
+ 
+     // MRI: rsock_s_accept, which retries a nonblocking accept(2) whenever io_wait reports the server readable
+-    private UnixSocketChannel schedulerAcceptChannel(ThreadContext context, IRubyObject scheduler) {
++    private SocketChannel schedulerAcceptChannel(ThreadContext context, IRubyObject scheduler) {
+         while (true) {
+-            SelectableChannel selectable = (SelectableChannel) getChannel();
+-            UnixSocketChannel socketChannel;
++            ServerSocketChannel server = asUnixServer();
++            SocketChannel socketChannel;
+ 
+-            synchronized (selectable.blockingLock()) {
+-                boolean oldBlocking = selectable.isBlocking();
++            synchronized (server.blockingLock()) {
++                boolean oldBlocking = server.isBlocking();
+ 
+                 try {
+-                    selectable.configureBlocking(false);
+-                    socketChannel = ((UnixServerSocketChannel) selectable).accept();
++                    server.configureBlocking(false);
++                    socketChannel = UnixDomain.accept(server);
+                 } catch (IOException ioe) {
+-                    if (!"accept failed: Resource temporarily unavailable".equals(ioe.getMessage())) {
+-                        throw context.runtime.newIOErrorFromException(ioe);
+-                    }
+-                    socketChannel = null;
++                    throw context.runtime.newIOErrorFromException(ioe);
+                 } finally {
+-                    try {selectable.configureBlocking(oldBlocking);} catch (IOException ioe) {}
++                    try {server.configureBlocking(oldBlocking);} catch (IOException ioe) {}
+                 }
+             }
+ 
+@@ -150,38 +142,31 @@ public class RubyUNIXServer extends RubyUNIXSocket {
+     }
+ 
+     public IRubyObject accept_nonblock(ThreadContext context, Ruby runtime, boolean ex) {
+-        SelectableChannel selectable = (SelectableChannel)getChannel();
+-
++        SelectableChannel selectable = (SelectableChannel) getChannel();
+         synchronized (selectable.blockingLock()) {
+             boolean oldBlocking = selectable.isBlocking();
+-
+             try {
+                 selectable.configureBlocking(false);
+-
+                 try {
+-                    UnixSocketChannel socketChannel = ((UnixServerSocketChannel) selectable).accept();
+-
++                    java.nio.channels.SocketChannel socketChannel = ((java.nio.channels.ServerSocketChannel) selectable).accept();
+                     if (socketChannel == null) {
+                         if (!ex) return asSymbol(context, "wait_readable");
+                         throw runtime.newErrnoEAGAINReadableError("accept(2) would block");
+                     }
+-
+-                    RubyUNIXSocket sock = (RubyUNIXSocket)(Helpers.invoke(context, Access.getClass(context, "UNIXSocket"), "allocate"));
+-
++                    socketChannel.configureBlocking(true);
++                    RubyUNIXSocket sock = (RubyUNIXSocket) Helpers.invoke(
++                            context, Access.getClass(context, "UNIXSocket"), "allocate");
+                     sock.init_sock(context.runtime, socketChannel, "");
+-
+                     return sock;
+-
+                 } finally {
+                     selectable.configureBlocking(oldBlocking);
+                 }
+-
+             } catch (IOException ioe) {
+-                if (ioe.getMessage().equals("accept failed: Resource temporarily unavailable")) {
++                if (ioe.getMessage() != null
++                        && ioe.getMessage().contains("Resource temporarily unavailable")) {
+                     if (!ex) return asSymbol(context, "wait_readable");
+                     throw runtime.newErrnoEAGAINReadableError("accept");
+                 }
+-
+                 throw context.runtime.newIOErrorFromException(ioe);
+             }
+         }
+@@ -198,14 +183,16 @@ public class RubyUNIXServer extends RubyUNIXSocket {
+         return asFixnum(context, newChannelFD(context.runtime, acceptChannel(context)).bestFileno());
+     }
+ 
+-    @JRubyMethod
+-    public IRubyObject path(ThreadContext context) {
+-        return newString(context, openFile.getPath());
+-    }
++    // path() is inherited from RubyUNIXSocket: openFile.getPath() is null
++    // for a server built via for_fd (no path was ever bound to it here),
++    // and RubyUNIXSocket#path already falls back through
++    // UnixDomain.localAddress / UnixDomainNative.pathOf / "" for exactly
++    // that case -- this override used to call newString on that null
++    // directly and NPE.
+ 
+     @JRubyMethod
+     public IRubyObject addr(ThreadContext context) {
+-        return newArray(context, newString(context, "AF_UNIX"), newString(context, openFile.getPath()));
++        return newArray(context, newString(context, "AF_UNIX"), path(context));
+     }
+ 
+     @JRubyMethod
+@@ -214,18 +201,18 @@ public class RubyUNIXServer extends RubyUNIXSocket {
+     }
+ 
+     @Override
+-    protected UnixSocketAddress getUnixSocketAddress() {
+-        SocketAddress socketAddress = ((UnixServerSocketChannel)getChannel()).getLocalSocketAddress();
+-        return socketAddress instanceof UnixSocketAddress address ? address : null;
++    protected SocketAddress getUnixSocketAddress() {
++        Channel channel = getChannel();
++        SocketAddress socketAddress = SocketType.forChannel(channel).getLocalSocketAddress(channel);
++        return UnixDomain.isUnixAddress(socketAddress) ? socketAddress : null;
+     }
+ 
+     @Override
+-    protected UnixSocketAddress getUnixRemoteSocket(ThreadContext context) {
+-        SocketAddress socketAddress = ((UnixServerSocketChannel)getChannel()).getLocalSocketAddress();
+-        return socketAddress instanceof UnixSocketAddress address ? address : null;
++    protected SocketAddress getUnixRemoteSocket(ThreadContext context) {
++        return getUnixSocketAddress();
+     }
+ 
+-    private UnixServerSocketChannel asUnixServer() {
+-        return (UnixServerSocketChannel)getChannel();
++    private java.nio.channels.ServerSocketChannel asUnixServer() {
++        return (java.nio.channels.ServerSocketChannel) getChannel();
+     }
+ }// RubyUNIXServer
+diff --git a/core/src/main/java/org/jruby/ext/socket/RubyUNIXSocket.java b/core/src/main/java/org/jruby/ext/socket/RubyUNIXSocket.java
+index 00b25bb677..d7ecf6eef0 100644
+--- a/core/src/main/java/org/jruby/ext/socket/RubyUNIXSocket.java
++++ b/core/src/main/java/org/jruby/ext/socket/RubyUNIXSocket.java
+@@ -28,6 +28,7 @@
+ 
+ package org.jruby.ext.socket;
+ 
++import jnr.constants.platform.Sock;
+ import jnr.constants.platform.Fcntl;
+ import jnr.constants.platform.OpenFlags;
+ import jnr.constants.platform.SocketLevel;
+@@ -69,6 +70,8 @@ import java.io.IOException;
+ import java.nio.ByteBuffer;
+ import java.nio.ByteOrder;
+ import java.nio.channels.Channel;
++import java.nio.channels.ServerSocketChannel;
++import java.nio.channels.SocketChannel;
+ 
+ import static com.headius.backport9.buffer.Buffers.flipBuffer;
+ import static org.jruby.api.Access.fixnumClass;
+@@ -96,10 +99,13 @@ public class RubyUNIXSocket extends RubyBasicSocket {
+     @JRubyMethod(meta = true)
+     public static IRubyObject for_fd(ThreadContext context, IRubyObject recv, IRubyObject _fileno) {
+         int fileno = toInt(context, _fileno);
++        RubyClass klass = (RubyClass) recv;
++        RubyUNIXSocket unixSocket = (RubyUNIXSocket) Helpers.invoke(context, klass, "allocate");
+ 
+-        RubyClass klass = (RubyClass)recv;
+-        RubyUNIXSocket unixSocket = (RubyUNIXSocket)(Helpers.invoke(context, klass, "allocate"));
+-        UnixSocketChannel channel = UnixSocketChannel.fromFD(fileno);
++        if (FilenoUtil.isFake(fileno)) {
++            throw typeError(context, "file descriptor is not native");
++        }
++        Channel channel = UnixDomainNative.channelFromFd(fileno);
+         unixSocket.init_sock(context.runtime, channel);
+         return unixSocket;
+     }
+@@ -113,6 +119,25 @@ public class RubyUNIXSocket extends RubyBasicSocket {
+ 
+     @JRubyMethod
+     public IRubyObject path(ThreadContext context) {
++        String stored = openFile.getPath();
++        if (stored != null) return newString(context, stored);
++
++        Channel ch = getChannel();
++        try {
++            String p = UnixDomain.pathOf(UnixDomain.localAddress(ch));
++            if (!p.isEmpty()) return newString(context, p);
++        } catch (Exception ignored) {
++        }
++        if (UnixDomainNative.hasGetsockname()) {
++            try {
++                int fd = UnixDomain.fileno(ch);
++                if (!FilenoUtil.isFake(fd)) {
++                    String p = UnixDomainNative.pathOf(fd);
++                    if (!p.isEmpty()) return newString(context, p);
++                }
++            } catch (Exception ignored) {
++            }
++        }
+         return newEmptyString(context);
+     }
+ 
+@@ -123,63 +148,92 @@ public class RubyUNIXSocket extends RubyBasicSocket {
+ 
+     @JRubyMethod
+     public IRubyObject peeraddr(ThreadContext context) {
+-        final String _path = getUnixRemoteSocket(context).path();
+-        final RubyString path = _path == null ? newEmptyString(context) : newString(context, _path);
++        final String _path = UnixDomain.pathOf(getUnixRemoteSocket(context));
++        final RubyString path = _path.isEmpty() ? newEmptyString(context) : newString(context, _path);
+         return newArray(context, newString(context, "AF_UNIX"), path);
+     }
+ 
+-    @JRubyMethod(name = "recvfrom", required = 1, optional = 1, checkArity = false)
++    @JRubyMethod(name = "recvfrom", required = 1, optional = 2, checkArity = false)
+     public IRubyObject recvfrom(ThreadContext context, IRubyObject[] args) {
+-        int argc = Arity.checkArgumentCount(context, args, 1, 2);
++        int argc = Arity.checkArgumentCount(context, args, 1, 3);
+         IRubyObject _length = args[0];
+-        IRubyObject _flags = argc == 2 ? args[1] : context.nil;
++        IRubyObject _flags = argc >= 2 ? args[1] : context.nil;
++        IRubyObject _buf = argc == 3 ? args[2] : context.nil;
+         int flags = _flags.isNil() ? 0 : toInt(context, _flags); // TODO
+ 
+-        return newArray(context, recv(context, _length), peeraddr(context));
++        IRubyObject received;
++        IRubyObject address;
++
++        // Only a real SOCK_DGRAM fd (UNIXSocket.for_fd wrapping a raw
++        // Socket.new(:UNIX, :DGRAM)) takes the native recvfrom(2) path: on
++        // Linux, AF_UNIX SOCK_STREAM sockets don't reliably populate
++        // recvfrom's source address the way SOCK_DGRAM does, so leave every
++        // existing stream case (pair/accept/connect) on the established
++        // recv()+peeraddr() path completely unchanged. Only a UnixFdChannel
++        // is ever a dgram candidate (pair()/for_fd/rawSocket all wrap one,
++        // and it's always a genuine native fd, never fake) -- checking
++        // instanceof first also skips UnixDomain.fileno()'s reflective
++        // lookup entirely for the common (non-UnixFdChannel) case.
++        // ufc.sockType() caches its getsockopt(SO_TYPE) result: a socket's
++        // type can't change after socket(2) creation, so this avoids one
++        // syscall (~1.2us measured) on every single recvfrom call instead
++        // of paying it once per channel.
++        if (getChannel() instanceof UnixFdChannel ufc && ufc.sockType() == UnixDomainNative.SOCK_DGRAM) {
++            UnixDomain.DgramReceived result = UnixDomain.recvFromBlocking(
++                    context, getOpenFileChecked(), ufc.fd(), toInt(context, _length));
++            received = result.data;
++            RubyString path = result.srcPath.isEmpty() ? newEmptyString(context) : newString(context, result.srcPath);
++            address = newArray(context, newString(context, "AF_UNIX"), path);
++        } else {
++            received = recv(context, _length);
++            address = peeraddr(context);
++        }
++
++        IRubyObject data = received;
++        if (!_buf.isNil() && received instanceof RubyString receivedStr) {
++            // outbuf keeps its own encoding (e.g. IO#read(len, buf) does the
++            // same) -- setValue replaces the byte content only, then restore
++            // the caller's original encoding over it.
++            RubyString buf = (RubyString) _buf;
++            org.jcodings.Encoding keepEncoding = buf.getEncoding();
++            buf.setValue(receivedStr.getByteList());
++            buf.setEncoding(keepEncoding);
++            data = buf;
++        }
++
++        return newArray(context, data, address);
+     }
+ 
+     @JRubyMethod
+     public IRubyObject send_io(ThreadContext context, IRubyObject arg) {
+-        final POSIX posix = context.runtime.getPosix();
+         OpenFile fptr = getOpenFileChecked();
+         int fd;
+ 
+         if (arg.callMethod(context, "kind_of?", ioClass(context)).isTrue()) {
+-          fd = ((RubyIO) arg).getOpenFileChecked().getFileno();
++            fd = ((RubyIO) arg).getOpenFileChecked().getFileno();
+         } else if (arg.callMethod(context, "kind_of?", fixnumClass(context)).isTrue()) {
+-          fd = ((RubyFixnum) arg).asInt(context);
++            fd = ((RubyFixnum) arg).asInt(context);
+         } else {
+-          throw typeError(context, "neither IO nor file descriptor");
++            throw typeError(context, "neither IO nor file descriptor");
+         }
+ 
+         if (FilenoUtil.isFake(fd)) throw typeError(context, "file descriptor is not native");
+ 
+-        byte[] dataBytes = new byte[1];
+-        dataBytes[0] = 0;
+-
+-        MsgHdr outMessage = posix.allocateMsgHdr();
+-
+-        ByteBuffer[] outIov = new ByteBuffer[1];
+-        outIov[0] = ByteBuffer.allocateDirect(dataBytes.length);
+-        outIov[0].put(dataBytes);
+-        flipBuffer(outIov[0]);
+-
+-        outMessage.setIov(outIov);
+-
+-        CmsgHdr outControl = outMessage.allocateControl(4);
+-        outControl.setLevel(SocketLevel.SOL_SOCKET.intValue());
+-        outControl.setType(0x01);
+-
+-        ByteBuffer fdBuf = ByteBuffer.allocateDirect(4);
+-        fdBuf.order(ByteOrder.nativeOrder());
+-        fdBuf.putInt(0, fd);
+-        outControl.setData(fdBuf);
++        int sockFd = fptr.getFileno();
++        if (FilenoUtil.isFake(sockFd)) throw typeError(context, "file descriptor is not native");
+ 
++        final int passFd = fd;
+         boolean locked = fptr.lock();
+         try {
+-            while (posix.sendmsg(fptr.getFileno(), outMessage, 0) == -1) {
+-                if (!fptr.waitWritable(context)) {
+-                    throw context.runtime.newErrnoFromInt(posix.errno(), "sendmsg(2)");
++            while (true) {
++                try {
++                    UnixDomainContext.blocking(context, sockFd, "sendmsg",
++                            () -> UnixDomainNative.sendIo(sockFd, passFd));
++                    break;
++                } catch (Exception e) {
++                    int errno = UnixDomainContext.lastErrno(context);
++                    if (errno == UnixDomainNative.EAGAIN && fptr.waitWritable(context)) continue;
++                    throw context.runtime.newErrnoFromInt(errno, "sendmsg(2)");
+                 }
+             }
+         } finally {
+@@ -192,71 +246,62 @@ public class RubyUNIXSocket extends RubyBasicSocket {
+     @JRubyMethod(optional = 2, checkArity = false)
+     public IRubyObject recv_io(ThreadContext context, IRubyObject[] args) {
+         int argc = Arity.checkArgumentCount(context, args, 0, 2);
+-        final POSIX posix = context.runtime.getPosix();
+         OpenFile fptr = getOpenFileChecked();
+         IRubyObject klass = argc > 0 ? args[0] : ioClass(context);
+         IRubyObject mode = argc > 1 ? args[1] : context.nil;
+-        MsgHdr inMessage = posix.allocateMsgHdr();
+-        ByteBuffer[] inIov = new ByteBuffer[1];
+-        inIov[0] = ByteBuffer.allocateDirect(1);
+-
+-        inMessage.setIov(inIov);
+ 
+-        CmsgHdr inControl = inMessage.allocateControl(4);
+-        inControl.setLevel(SocketLevel.SOL_SOCKET.intValue());
+-        inControl.setType(0x01);
+-
+-        ByteBuffer fdBuf = ByteBuffer.allocateDirect(4);
+-        fdBuf.order(ByteOrder.nativeOrder());
+-        fdBuf.putInt(0, -1);
+-        inControl.setData(fdBuf);
++        int sockFd = fptr.getFileno();
++        if (FilenoUtil.isFake(sockFd)) throw typeError(context, "file descriptor is not native");
+ 
++        int receivedFd;
+         boolean locked = fptr.lock();
+         try {
+-            while (posix.recvmsg(fptr.getFileno(), inMessage, 0) == -1) {
+-                if (!fptr.waitReadable(context)) {
+-                    throw context.runtime.newErrnoFromInt(posix.errno(), "recvmsg(2)");
++            while (true) {
++                try {
++                    receivedFd = UnixDomainContext.blocking(context, sockFd, "recvmsg",
++                            () -> UnixDomainNative.recvIo(sockFd));
++                    break;
++                } catch (Exception e) {
++                    int errno = UnixDomainContext.lastErrno(context);
++                    if (errno == UnixDomainNative.EAGAIN && fptr.waitReadable(context)) continue;
++                    throw context.runtime.newErrnoFromInt(errno, "recvmsg(2)");
+                 }
+             }
+         } finally {
+             if (locked) fptr.unlock();
+         }
+ 
+-
+-        ByteBuffer inFdBuf = inMessage.getControls()[0].getData();
+-        inFdBuf.order(ByteOrder.nativeOrder());
+-
+-        IRubyObject fd = asFixnum(context, inFdBuf.getInt());
++        IRubyObject fdObj = asFixnum(context, receivedFd);
+ 
+         if (klass.isNil()) {
+-            return fd;
++            return fdObj;
++        } else if (mode.isNil()) {
++            return Helpers.invoke(context, klass, "for_fd", fdObj);
+         } else {
+-            if (mode.isNil()) {
+-              return Helpers.invoke(context, klass, "for_fd", fd);
+-            } else {
+-              return Helpers.invoke(context, klass, "for_fd", fd, mode);
+-            }
++            return Helpers.invoke(context, klass, "for_fd", fdObj, mode);
+         }
+     }
+ 
+     @JRubyMethod(name = {"socketpair", "pair"}, optional = 2, checkArity = false, meta = true)
+     public static IRubyObject socketpair(ThreadContext context, IRubyObject recv, IRubyObject[] args, Block block) {
+         Arity.checkArgumentCount(context, args, 0, 2);
+-
+         final Ruby runtime = context.runtime;
++        // UNIXSocket.pair(type = :STREAM, protocol = 0): the type was ignored
++        // (always a stream pair); SOCK_DGRAM now gives a real datagram pair
++        Sock type = args.length > 0 ? SocketUtils.sockFromArg(context, args[0]) : Sock.SOCK_STREAM;
++        if (type == null) type = Sock.SOCK_STREAM;
++        if (type != Sock.SOCK_STREAM && type != Sock.SOCK_DGRAM) throw runtime.newErrnoEOPNOTSUPPError("socketpair(2)");
+ 
+-        // TODO: type and protocol
+-
+-        UnixSocketChannel[] sp;
+-        final RubyClass UNIXSocket = Access.getClass(context, "UNIXSocket");
+-        RubyUNIXSocket sock = (RubyUNIXSocket)(Helpers.invoke(context, UNIXSocket, "allocate"));
+-        RubyUNIXSocket sock2 = (RubyUNIXSocket)(Helpers.invoke(context, UNIXSocket, "allocate"));
++        RubyClass UNIXSocket = Access.getClass(context, "UNIXSocket");
++        RubyUNIXSocket sock = (RubyUNIXSocket) Helpers.invoke(context, UNIXSocket, "allocate");
++        RubyUNIXSocket sock2 = (RubyUNIXSocket) Helpers.invoke(context, UNIXSocket, "allocate");
+ 
+         try {
+-            sp = UnixSocketChannel.pair();
+-
++            Channel[] sp = UnixDomain.pair(type.intValue());
+             sock.init_sock(runtime, sp[0], "");
+             sock2.init_sock(runtime, sp[1], "");
++        } catch (UnsupportedOperationException uoe) {
++            throw runtime.newErrnoEOPNOTSUPPError("socketpair(2)"); // a datagram pair without native access
+         } catch (IOException ioe) {
+             throw runtime.newIOErrorFromException(ioe);
+         }
+@@ -264,29 +309,6 @@ public class RubyUNIXSocket extends RubyBasicSocket {
+         return yieldPair(context, sock, sock2, block);
+     }
+ 
+-    @Override
+-    public IRubyObject setsockopt(ThreadContext context, IRubyObject _level, IRubyObject _opt, IRubyObject val) {
+-        SocketLevel level = SocketUtils.levelFromArg(context, _level);
+-        SocketOption opt = SocketUtils.optionFromArg(context, _opt);
+-
+-        switch(level) {
+-            case SOL_SOCKET:
+-                switch(opt) {
+-                    case SO_KEEPALIVE: {
+-                        // TODO: socket options
+-                    }
+-                    break;
+-                    default:
+-                        throw context.runtime.newErrnoENOPROTOOPTError();
+-                }
+-                break;
+-            default:
+-                throw context.runtime.newErrnoENOPROTOOPTError();
+-        }
+-
+-        return asFixnum(context, 0);
+-    }
+-
+     protected static void rb_sys_fail(Ruby runtime, String message) {
+         final int n = LastError.getLastError(jnr.ffi.Runtime.getSystemRuntime());
+ 
+@@ -305,46 +327,29 @@ public class RubyUNIXSocket extends RubyBasicSocket {
+         ByteList path = strPath.getByteList();
+         String fpath = Helpers.decodeByteList(context.runtime, path);
+ 
+-        int maxSize = 103; // Max size from Darwin, lowest common value we know of
+-        if (fpath.length() > 103) throw argumentError(context, "too long unix socket path (max: " + maxSize + "bytes)");
++        UnixDomain.checkPath(context, fpath);
+ 
+-        Closeable closeable = null;
++        java.io.Closeable closeable = null;
+         try {
+             if (server) {
+-                UnixServerSocketChannel channel = UnixServerSocketChannel.open();
+-                UnixServerSocket socket = channel.socket();
++                ServerSocketChannel channel = UnixDomain.bind(fpath);
+                 closeable = channel;
+-
+-                // TODO: listen backlog
+-
+-                socket.bind(new UnixSocketAddress(new File(fpath)));
+-
+                 init_sock(context.runtime, channel, fpath);
+-
+             } else {
+-                File fpathFile = new File(fpath);
+-
++                java.io.File fpathFile = new java.io.File(fpath);
+                 if (!fpathFile.exists()) {
+                     throw context.runtime.newErrnoENOENTError("unix socket");
+                 }
+-
+-                UnixSocketChannel channel = UnixSocketChannel.open();
++                SocketChannel channel = UnixDomain.connect(fpath);
+                 closeable = channel;
+-
+-                channel.connect(new UnixSocketAddress(fpathFile));
+-
+                 init_sock(context.runtime, channel);
+-
+             }
+-
+-            // initialized cleanly, clear closeable
+             closeable = null;
+-
+         } catch (IOException ioe) {
+             throw context.runtime.newIOErrorFromException(ioe);
+         } finally {
+             if (closeable != null) {
+-                try {closeable.close();} catch (IOException ioe2) {}
++                try { closeable.close(); } catch (IOException ioe2) {}
+             }
+         }
+     }
+@@ -364,6 +369,52 @@ public class RubyUNIXSocket extends RubyBasicSocket {
+         openFile.setMode(modes.getOpenFileFlags());
+         openFile.setSync(true);
+         openFile.setPath(path);
++
++        // see rsock_init_sock in MRI; sockets are initialized to binary
++        // (matches RubyBasicSocket#initSocket, which this class doesn't
++        // go through since it builds its own OpenFile above)
++        setAscii8bitBinmode();
++
++        // MRI runs every fd non-blocking internally (rb_thread_io_blocking_region)
++        // and emulates Ruby-level blocking on top; JRuby's own OpenFile/fptr
++        // wait machinery does the same for real SelectableChannels (TCP/UDP).
++        // UnixFdChannel (pair()/for_fd/SCM_RIGHTS) is NOT selectable -- it's a
++        // plain FFM ByteChannel with no select-based retry path -- so marking
++        // it non-blocking here just breaks the EAGAIN/wait_readable machinery
++        // into a CPU-spinning busy loop instead of a real blocking read(2).
++        //
++        // A JEP-380 unix-domain SocketChannel IS selectable, so naively this
++        // would flip it non-blocking too (both the fptr.nonblock flag AND the
++        // real channel's OS mode, via setBlocking) -- but don't flip the real
++        // channel's mode. ChannelFD now routes this channel's actual
++        // read/write through UnixSocketNativeChannel's raw FFM read(2)/
++        // write(2) instead of sun.nio.ch.SocketChannelImpl's own
++        // interruptible ones (see ChannelFD_jepUnixNativeChannel.java),
++        // specifically so that path can use a genuinely blocking fd without
++        // the AbstractInterruptibleChannel close-on-interrupt hazard that
++        // bit the first two attempts at this (INTERPRETER.md Landmine 12/13):
++        // flipping the real channel non-blocking here would undo that by
++        // forcing the connect-path select() back into the hot loop
++        // (OpenFile#waitReadable has no chNative guard, by design).
++        //
++        // The fptr.nonblock FLAG is a different matter: IO#nonblock? must
++        // still report true here (spec/ruby/library/socket/unixsocket/
++        // initialize_spec.rb's "sets the socket to nonblock", the same MRI
++        // rationale this comment opened with -- every fd is non-blocking
++        // internally, which this socket's real fd now ISN'T, but Ruby-level
++        // code neither knows nor should care). setNonblockFlag sets just the
++        // bookkeeping flag, not the real channel mode -- safe for
++        // performRead/performWrite's own nonblock branch too, since
++        // UnixSocketNativeChannel already translates real EOF to -1 (the
++        // ReadableByteChannel contract), so it never produces the literal 0
++        // return that branch treats as EAGAIN.
++        if (channel instanceof java.nio.channels.SelectableChannel) {
++            if (UnixDomain.isUnixChannel(channel)) {
++                openFile.setNonblockFlag(true);
++            } else {
++                openFile.setBlocking(runtime, false);
++            }
++        }
+     }
+ 
+     protected void init_sock(Ruby runtime, Channel channel) {
+diff --git a/core/src/main/java/org/jruby/ext/socket/SocketType.java b/core/src/main/java/org/jruby/ext/socket/SocketType.java
+index 740c0f2aa5..a03ce2c198 100644
+--- a/core/src/main/java/org/jruby/ext/socket/SocketType.java
++++ b/core/src/main/java/org/jruby/ext/socket/SocketType.java
+@@ -249,9 +249,40 @@ public enum SocketType {
+         }
+     },
+ 
++    UNIX_NIO(Sock.SOCK_STREAM) {
++        public SocketAddress getRemoteSocketAddress(Channel channel) {
++            try {
++                return UnixDomain.remoteAddress(channel);
++            } catch (IOException ioe) {
++                return null;
++            }
++        }
++
++        public SocketAddress getLocalSocketAddress(Channel channel) {
++            try {
++                return UnixDomain.localAddress(channel);
++            } catch (IOException ioe) {
++                return null;
++            }
++        }
++
++        public void shutdownInput(Channel channel) throws IOException {
++            if (channel instanceof SocketChannel sc) sc.shutdownInput();
++            else if (channel instanceof UnixFdChannel ufc) UnixDomainNative.shutdown(ufc.fd(), UnixDomainNative.SHUT_RD);
++        }
++
++        public void shutdownOutput(Channel channel) throws IOException {
++            if (channel instanceof SocketChannel sc) sc.shutdownOutput();
++            else if (channel instanceof UnixFdChannel ufc) UnixDomainNative.shutdown(ufc.fd(), UnixDomainNative.SHUT_WR);
++        }
++    },
++
+     UNKNOWN(Sock.SOCK_STREAM);
+ 
+     public static SocketType forChannel(Channel channel) {
++        if (UnixDomain.isUnixChannel(channel)) {
++            return UNIX_NIO;
++        }
+         if (channel instanceof SocketChannel) {
+             return SOCKET;
+ 
+diff --git a/core/src/main/java/org/jruby/ext/socket/UnixDomain.java b/core/src/main/java/org/jruby/ext/socket/UnixDomain.java
+new file mode 100644
+index 0000000000..7a83e6a56c
+--- /dev/null
++++ b/core/src/main/java/org/jruby/ext/socket/UnixDomain.java
+@@ -0,0 +1,339 @@
++package org.jruby.ext.socket;
++
++import org.jruby.Ruby;
++import org.jruby.RubyString;
++import org.jruby.runtime.ThreadContext;
++import org.jruby.util.ByteList;
++import org.jruby.util.io.FilenoUtil;
++import org.jruby.util.io.OpenFile;
++
++import java.io.IOException;
++import java.lang.foreign.Arena;
++import java.lang.foreign.MemorySegment;
++import java.lang.foreign.ValueLayout;
++import java.net.ProtocolFamily;
++import java.net.SocketAddress;
++import java.net.StandardProtocolFamily;
++import java.net.UnixDomainSocketAddress;
++import java.nio.channels.Channel;
++import java.nio.channels.NetworkChannel;
++import java.nio.channels.ServerSocketChannel;
++import java.nio.channels.SocketChannel;
++import java.nio.file.Files;
++import java.nio.file.Path;
++import java.util.concurrent.atomic.AtomicInteger;
++
++/**
++ * JEP-380 Unix-domain backend for JRuby's MRI UNIXSocket/UNIXServer.
++ *
++ * This is the interpreter path for jruby/jruby#9040. It does not introduce a
++ * second IO stack. Callers open a JDK {@link SocketChannel} /
++ * {@link ServerSocketChannel} and pass that {@link Channel} to
++ * {@code RubyUNIXSocket.init_sock}, which already wraps it in {@code OpenFile}.
++ *
++ * Capability word (boot-once):
++ * <pre>
++ *   bit 0  JEP-380 classes present (always on JRuby 10 / JDK 21)
++ *   bit 1  channel fileno unwraps via SelChImpl (send_io can stay POSIX)
++ *   bit 2  socketpair via temp JEP-380 pair
++ * </pre>
++ *
++ * Ancillary messages ({@code send_io}/{@code recv_io}) stay on the existing
++ * POSIX {@code sendmsg} path in {@link RubyUNIXSocket}. JDK Unix channels
++ * implement {@code sun.nio.ch.SelChImpl}, so {@link FilenoUtil} already
++ * recovers a real fd. FFM is the IPC connection side — see UnixDomainNative.
++ *
++ * @author Troy Mallory (CufeHaco) - JEP-380/FFM unix socket support (jruby/jruby#9040)
++ */
++public final class UnixDomain {
++    public static final int BIT_JEP380 = 1 << 0;
++    public static final int BIT_FILENO = 1 << 1;
++    public static final int BIT_PAIR   = 1 << 2;
++
++    static final ProtocolFamily UNIX = StandardProtocolFamily.UNIX;
++
++    private static final int MAX_PATH = 103;
++    private static final AtomicInteger PAIR_SEQ = new AtomicInteger();
++
++    private static final int BITS;
++    static {
++        int bits = BIT_JEP380 | BIT_PAIR;
++        try {
++            SocketChannel probe = SocketChannel.open(UNIX);
++            try {
++                if (!FilenoUtil.isFake(FilenoUtil.filenoFrom(probe))) {
++                    bits |= BIT_FILENO;
++                }
++            } finally {
++                probe.close();
++            }
++        } catch (Throwable t) {
++            // leave FILENO off
++        }
++        BITS = bits;
++    }
++
++    private UnixDomain() {}
++
++    public static int bits() { return BITS; }
++    public static boolean hasJep380() { return (BITS & BIT_JEP380) != 0; }
++    public static boolean hasNativeFileno() { return (BITS & BIT_FILENO) != 0; }
++
++    public static boolean isUnixChannel(Channel channel) {
++        if (channel instanceof UnixFdChannel) return true;
++        try {
++            if (channel instanceof SocketChannel sc) {
++                SocketAddress local = sc.getLocalAddress();
++                SocketAddress remote = sc.getRemoteAddress();
++                return local instanceof UnixDomainSocketAddress
++                        || remote instanceof UnixDomainSocketAddress;
++            }
++            if (channel instanceof ServerSocketChannel ssc) {
++                return ssc.getLocalAddress() instanceof UnixDomainSocketAddress;
++            }
++        } catch (IOException ignored) {
++        }
++        return false;
++    }
++
++    public static String pathOf(SocketAddress addr) {
++        if (addr instanceof UnixDomainSocketAddress u) {
++            Path p = u.getPath();
++            return p == null ? "" : p.toString();
++        }
++        if (addr instanceof jnr.unixsocket.UnixSocketAddress jnr) {
++            String p = jnr.path();
++            return p == null ? "" : p;
++        }
++        return "";
++    }
++
++    /**
++     * True for both unix address flavors a socket can still carry: JEP-380's
++     * {@link UnixDomainSocketAddress}, and JNR's UnixSocketAddress from the two
++     * call sites this patch deliberately leaves on JNR --
++     * Socket.new(:UNIX, :STREAM) and Socket.socketpair (RubySocket's
++     * UnixSocketChannel.open()/pair()). Dropping the JNR case broke
++     * remote_address/getpeername/local_address/getsockname on those sockets.
++     */
++    public static boolean isUnixAddress(SocketAddress addr) {
++        return addr instanceof UnixDomainSocketAddress
++                || addr instanceof jnr.unixsocket.UnixSocketAddress;
++    }
++
++    public static SocketAddress localAddress(Channel channel) throws IOException {
++        // UnixFdChannel (UNIXSocket.pair/for_fd) is a connected socket with
++        // no path -- MRI reports that as ["AF_UNIX", ""], not ENOTCONN, so
++        // this must return a real (if empty) address, not null.
++        if (channel instanceof UnixFdChannel) return UnixDomainSocketAddress.of("");
++        if (channel instanceof NetworkChannel net) return net.getLocalAddress();
++        return null;
++    }
++
++    public static SocketAddress remoteAddress(Channel channel) throws IOException {
++        if (channel instanceof UnixFdChannel ufc) {
++            // pair()/socketpair()/for_fd on an already-connected fd are all
++            // genuinely connected at the kernel level (just unnamed) --
++            // getpeername(2) succeeds for those. A raw Socket.new(:UNIX,
++            // :DGRAM) that was only bound, never connect()'d, is not --
++            // getpeername(2) is the one kernel-verified way to tell these
++            // apart, rather than assuming every UnixFdChannel is connected
++            // (true for the first two, wrong for the third). Falls back to
++            // the old always-connected assumption if FFM/getpeername isn't
++            // available at all (native access disabled).
++            if (!UnixDomainNative.hasGetpeername()) return UnixDomainSocketAddress.of("");
++            try {
++                return UnixDomainSocketAddress.of(UnixDomainNative.peerPathOf(ufc.fd()));
++            } catch (UnixDomainNative.NativeException ne) {
++                if (ne.errno == UnixDomainNative.ENOTCONN) return null;
++                return UnixDomainSocketAddress.of(""); // unexpected failure: don't regress prior behavior
++            }
++        }
++        if (channel instanceof SocketChannel sc) return sc.getRemoteAddress();
++        return null;
++    }
++
++    public static SocketChannel connect(String path) throws IOException {
++        UnixDomainSocketAddress addr = UnixDomainSocketAddress.of(path);
++        SocketChannel ch = SocketChannel.open(UNIX);
++        ch.configureBlocking(true);
++        ch.connect(addr);
++        return ch;
++    }
++
++    public static ServerSocketChannel bind(String path) throws IOException {
++        UnixDomainSocketAddress addr = UnixDomainSocketAddress.of(path);
++        ServerSocketChannel ch = ServerSocketChannel.open(UNIX);
++        ch.configureBlocking(true);
++        ch.bind(addr);
++        return ch;
++    }
++
++    public static SocketChannel accept(ServerSocketChannel server) throws IOException {
++        SocketChannel ch = server.accept();
++        if (ch != null) ch.configureBlocking(true);
++        return ch;
++    }
++
++    /**
++     * Connected unnamed pair for UNIXSocket.pair / the IPC stack.
++     * FFM socketpair(2) first (no temp inode). JEP-380 temp-path pair if FFM
++     * is off. Channel wrap of a raw fd uses jnr fromFD as an adapter only.
++     */
++    public static Channel[] pair() throws IOException {
++        return pair(UnixDomainNative.SOCK_STREAM);
++    }
++
++    /**
++     * A connected pair of unix sockets of the given type (SOCK_STREAM or
++     * SOCK_DGRAM) -- UNIXSocket.pair and Socket.socketpair. Only a stream
++     * pair has the JEP-380 temp-path fallback; JEP-380 has no unix datagrams.
++     */
++    public static Channel[] pair(int type) throws IOException {
++        if (type != UnixDomainNative.SOCK_STREAM && !UnixDomainNative.hasPair()) {
++            throw new UnsupportedOperationException("datagram socketpair needs native access");
++        }
++        if (UnixDomainNative.hasPair()) {
++            int[] fds = null;
++            try {
++                fds = UnixDomainNative.pair(type);
++                return new Channel[] {
++                    UnixDomainNative.channelFromFd(fds[0]),
++                    UnixDomainNative.channelFromFd(fds[1])
++                };
++            } catch (Exception e) {
++                if (fds != null) {
++                    UnixDomainNative.close(fds[0]);
++                    UnixDomainNative.close(fds[1]);
++                }
++                if (type != UnixDomainNative.SOCK_STREAM) throw new IOException(e.getMessage(), e);
++            }
++        }
++        return pairViaTempPath();
++    }
++
++    static SocketChannel[] pairViaTempPath() throws IOException {
++        Path tmp = Files.createTempFile("jruby-unixpair-", ".sock");
++        Files.deleteIfExists(tmp);
++        ServerSocketChannel server = ServerSocketChannel.open(UNIX);
++        try {
++            server.bind(UnixDomainSocketAddress.of(tmp));
++            SocketChannel a = SocketChannel.open(UNIX);
++            a.configureBlocking(true);
++            a.connect(UnixDomainSocketAddress.of(tmp));
++            SocketChannel b = server.accept();
++            b.configureBlocking(true);
++            return new SocketChannel[] { a, b };
++        } finally {
++            try { server.close(); } catch (IOException ignored) {}
++            Files.deleteIfExists(tmp);
++        }
++    }
++
++    public static void checkPath(ThreadContext context, String path) {
++        if (path.length() > MAX_PATH) {
++            throw org.jruby.api.Error.argumentError(context,
++                    "too long unix socket path (max: " + MAX_PATH + "bytes)");
++        }
++    }
++
++    public static int fileno(Channel channel) {
++        return FilenoUtil.filenoFrom(channel);
++    }
++
++    /** One received datagram: payload plus sender path ("" if the kernel gave none). */
++    public static final class DgramReceived {
++        public final RubyString data;
++        public final String srcPath;
++        DgramReceived(RubyString data, String srcPath) { this.data = data; this.srcPath = srcPath; }
++    }
++
++    /**
++     * Blocking recvfrom(2) on a raw UnixFdChannel (Socket.new(:UNIX, :DGRAM),
++     * via rawSocket()/for_fd -- see RubySocket_unixDgram.java). Shared by
++     * RubyUNIXSocket#recvfrom (a for_fd-wrapped raw dgram fd) and
++     * RubyUDPSocket.recvfrom (a Socket object itself, when its channel is a
++     * UnixFdChannel) so the EAGAIN/waitReadable retry shape -- same as
++     * send_io/recv_io -- isn't duplicated between them.
++     */
++    public static DgramReceived recvFromBlocking(ThreadContext context, OpenFile fptr, int fd, int len) {
++        if (len < 0) throw org.jruby.api.Error.argumentError(context, "negative length " + len + " given");
++        Ruby runtime = context.runtime;
++        try (Arena arena = Arena.ofConfined()) {
++            MemorySegment buf = arena.allocate(Math.max(len, 1));
++            UnixDomainNative.RecvFromResult result;
++            while (true) {
++                try {
++                    result = UnixDomainContext.blocking(context, fd, "recvfrom",
++                            () -> UnixDomainNative.recvFrom(fd, buf, len));
++                    break;
++                } catch (Exception e) {
++                    int errno = UnixDomainContext.lastErrno(context);
++                    if (errno == UnixDomainNative.EAGAIN && fptr.waitReadable(context)) continue;
++                    throw runtime.newErrnoFromInt(errno, "recvfrom(2)");
++                }
++            }
++            byte[] bytes = new byte[(int) result.n];
++            MemorySegment.copy(buf, ValueLayout.JAVA_BYTE, 0, bytes, 0, bytes.length);
++            RubyString data = runtime.newString(new ByteList(bytes, false));
++            return new DgramReceived(data, result.srcPath);
++        }
++    }
++
++    /**
++     * Single-attempt, non-blocking recvfrom(2) on a raw UnixFdChannel.
++     * Returns null if it would block (caller decides :wait_readable vs
++     * raising, matching #recv_nonblock/#recvfrom_nonblock's exception:
++     * false convention) rather than retrying like recvFromBlocking above.
++     *
++     * UnixFdChannel isn't a SelectableChannel, so none of the
++     * configureBlocking(false)-based nonblock machinery elsewhere in this
++     * codebase (DatagramChannel, RubyBasicSocket#doReadNonblock) applies to
++     * it -- confirmed by testing: doReadNonblock's `if (!(channel
++     * instanceof SelectableChannel))` check unconditionally raises EAGAIN
++     * for any UnixFdChannel, even when data is genuinely available. Real
++     * fix needs the raw fd toggled into actual OS-level O_NONBLOCK around
++     * the call (fcntl F_GETFL/F_SETFL), then restored -- the same shape as
++     * DatagramChannel#configureBlocking(false)/(oldBlocking), just done by
++     * hand since there's no Channel-level API for a plain fd.
++     */
++    public static DgramReceived recvFromNonBlocking(ThreadContext context, int fd, int len) {
++        if (len < 0) throw org.jruby.api.Error.argumentError(context, "negative length " + len + " given");
++        Ruby runtime = context.runtime;
++        int oldFlags = getFlagsOrRaise(runtime, fd);
++        setFlagsOrRaise(runtime, fd, oldFlags | UnixDomainNative.O_NONBLOCK);
++        try (Arena arena = Arena.ofConfined()) {
++            MemorySegment buf = arena.allocate(Math.max(len, 1));
++            UnixDomainNative.RecvFromResult result;
++            try {
++                result = UnixDomainContext.blocking(context, fd, "recvfrom",
++                        () -> UnixDomainNative.recvFrom(fd, buf, len));
++            } catch (Exception e) {
++                int errno = UnixDomainContext.lastErrno(context);
++                if (errno == UnixDomainNative.EAGAIN) return null;
++                throw runtime.newErrnoFromInt(errno, "recvfrom(2)");
++            }
++            byte[] bytes = new byte[(int) result.n];
++            MemorySegment.copy(buf, ValueLayout.JAVA_BYTE, 0, bytes, 0, bytes.length);
++            return new DgramReceived(runtime.newString(new ByteList(bytes, false)), result.srcPath);
++        } finally {
++            setFlagsOrRaise(runtime, fd, oldFlags);
++        }
++    }
++
++    private static int getFlagsOrRaise(Ruby runtime, int fd) {
++        try {
++            return UnixDomainNative.getFlags(fd);
++        } catch (UnixDomainNative.NativeException ne) {
++            throw runtime.newErrnoFromInt(ne.errno, "fcntl(2)");
++        }
++    }
++
++    private static void setFlagsOrRaise(Ruby runtime, int fd, int flags) {
++        try {
++            UnixDomainNative.setFlags(fd, flags);
++        } catch (UnixDomainNative.NativeException ne) {
++            throw runtime.newErrnoFromInt(ne.errno, "fcntl(2)");
++        }
++    }
++}
+diff --git a/core/src/main/java/org/jruby/ext/socket/UnixDomainContext.java b/core/src/main/java/org/jruby/ext/socket/UnixDomainContext.java
+new file mode 100644
+index 0000000000..38df6988cc
+--- /dev/null
++++ b/core/src/main/java/org/jruby/ext/socket/UnixDomainContext.java
+@@ -0,0 +1,155 @@
++package org.jruby.ext.socket;
++
++import org.jruby.runtime.ThreadContext;
++import org.jruby.runtime.builtin.IRubyObject;
++import org.jruby.util.collections.ConcurrentWeakHashMap;
++
++import java.lang.foreign.FunctionDescriptor;
++import java.lang.foreign.Linker;
++import java.lang.foreign.MemorySegment;
++import java.lang.foreign.ValueLayout;
++import java.lang.invoke.MethodHandle;
++
++/**
++ * CRuby-like per-execution-context frame for Unix-domain IPC.
++ *
++ * CRuby (thread.c):
++ *   rb_thread_io_blocking_region(func, data, fd)
++ *     th->waiting_fd = fd
++ *     BLOCKING_REGION { val = func(); saved_errno = errno; }
++ *     th->waiting_fd = -1
++ *     RUBY_VM_CHECK_INTS_BLOCKING(th)
++ *     errno = saved_errno
++ *
++ * JRuby already has the execution context: ThreadContext.
++ * Fibers swap it. Do not hang this off java.lang.ThreadLocal.
++ * That follows the carrier thread and lies when a fiber migrates.
++ *
++ * @author Troy Mallory (CufeHaco) - JEP-380/FFM unix socket support (jruby/jruby#9040)
++ */
++public final class UnixDomainContext {
++    public static final Object KEY = new Object();
++
++    public static final class Frame {
++        public int waitingFd = -1;
++        public int lastErrno;
++        public String lastOp;
++        public int lastRc;
++        public long enteredNanos;
++    }
++
++    private static volatile MethodHandle MH_ERRNO_LOC;
++    private static volatile boolean ERRNO_PROBED;
++
++    // ConcurrentWeakHashMap (already in JRuby's util.collections, Doug Lea /
++    // JSR-166, public domain), not WeakHashMap+synchronized: get() doesn't
++    // lock at all, and put/remove only lock their own segment (16 by
++    // default), not the whole table -- no single monitor shared by every
++    // thread/fiber doing send_io/recv_io/dgram-recvfrom across the process.
++    // Still weak-keyed, so a dead ThreadContext's Frame is still reclaimed
++    // automatically (via each segment's own ReferenceQueue, drained
++    // opportunistically on put/remove) -- same cleanup guarantee the old
++    // WeakHashMap had, just without needing a shared lock to get it.
++    private static final ConcurrentWeakHashMap<ThreadContext, Frame> FRAMES = new ConcurrentWeakHashMap<>();
++
++    private UnixDomainContext() {}
++
++    public static Frame current(ThreadContext context) {
++        // Not FRAMES.computeIfAbsent: ConcurrentWeakHashMap doesn't override
++        // it, so it would fall back to Map's default implementation, which
++        // is a plain get()-then-put() -- not atomic, and this map is read
++        // and written from multiple threads (one thread's blocking() vs.
++        // another thread inspecting its waitingFd). get()+putIfAbsent()
++        // below are both real, lock-scoped ConcurrentMap operations, so two
++        // threads racing to create the first Frame for the same context
++        // can't clobber each other's instance.
++        Frame frame = FRAMES.get(context);
++        if (frame != null) return frame;
++        Frame created = new Frame();
++        Frame existing = FRAMES.putIfAbsent(context, created);
++        return existing != null ? existing : created;
++    }
++
++    public static <T> T blocking(ThreadContext context, int fd, String op, Call<T> body) throws Exception {
++        Frame frame = current(context);
++        int prevFd = frame.waitingFd;
++        String prevOp = frame.lastOp;
++        frame.waitingFd = fd;
++        frame.lastOp = op;
++        frame.enteredNanos = System.nanoTime();
++        try {
++            T value = body.get();
++            frame.lastErrno = 0;
++            return value;
++        } catch (Exception e) {
++            // NativeException already carries a reliably-captured errno (via
++            // Linker.Option.captureCallState, read the instant the syscall
++            // returned) -- prefer it over a fresh __errno_location() call
++            // here, which runs after this frame's Arena.close() and other
++            // JVM-internal native calls have had a chance to clobber errno.
++            frame.lastErrno = (e instanceof UnixDomainNative.NativeException ne && ne.errno != 0)
++                    ? ne.errno : captureErrno();
++            frame.lastRc = -1;
++            throw e;
++        } finally {
++            frame.waitingFd = prevFd;
++            frame.lastOp = prevOp;
++            context.pollThreadEvents();
++        }
++    }
++
++    public static int lastErrno(ThreadContext context) {
++        return current(context).lastErrno;
++    }
++
++    public static int waitingFd(ThreadContext context) {
++        return current(context).waitingFd;
++    }
++
++    public static IRubyObject lastErrnoAsFixnum(ThreadContext context) {
++        return context.runtime.newFixnum(current(context).lastErrno);
++    }
++
++    public static int captureErrno() {
++        MethodHandle loc = errnoLocation();
++        if (loc == null) return 0;
++        try {
++            MemorySegment ptr = (MemorySegment) loc.invokeExact();
++            return ptr.reinterpret(4).get(ValueLayout.JAVA_INT, 0);
++        } catch (Throwable t) {
++            return 0;
++        }
++    }
++
++    public static void record(ThreadContext context, String op, int rc) {
++        Frame frame = current(context);
++        frame.lastOp = op;
++        frame.lastRc = rc;
++        frame.lastErrno = rc < 0 ? captureErrno() : 0;
++    }
++
++    private static MethodHandle errnoLocation() {
++        if (ERRNO_PROBED) return MH_ERRNO_LOC;
++        synchronized (UnixDomainContext.class) {
++            if (ERRNO_PROBED) return MH_ERRNO_LOC;
++            try {
++                Linker linker = Linker.nativeLinker();
++                MemorySegment sym = linker.defaultLookup()
++                        .find("__errno_location")
++                        .or(() -> linker.defaultLookup().find("__error"))
++                        .orElseThrow();
++                MH_ERRNO_LOC = linker.downcallHandle(sym,
++                        FunctionDescriptor.of(ValueLayout.ADDRESS));
++            } catch (Throwable t) {
++                MH_ERRNO_LOC = null;
++            }
++            ERRNO_PROBED = true;
++            return MH_ERRNO_LOC;
++        }
++    }
++
++    @FunctionalInterface
++    public interface Call<T> {
++        T get() throws Exception;
++    }
++}
+diff --git a/core/src/main/java/org/jruby/ext/socket/UnixDomainNative.java b/core/src/main/java/org/jruby/ext/socket/UnixDomainNative.java
+new file mode 100644
+index 0000000000..c8b3f8474c
+--- /dev/null
++++ b/core/src/main/java/org/jruby/ext/socket/UnixDomainNative.java
+@@ -0,0 +1,901 @@
++package org.jruby.ext.socket;
++
++import org.jruby.util.log.Logger;
++import org.jruby.util.log.LoggerFactory;
++
++import java.lang.foreign.AddressLayout;
++import java.lang.foreign.Arena;
++import java.lang.foreign.FunctionDescriptor;
++import java.lang.foreign.Linker;
++import java.lang.foreign.MemoryLayout;
++import java.lang.foreign.MemorySegment;
++import java.lang.foreign.StructLayout;
++import java.lang.foreign.SymbolLookup;
++import java.lang.foreign.ValueLayout;
++import java.lang.invoke.MethodHandle;
++import java.lang.invoke.VarHandle;
++import java.nio.file.FileSystems;
++
++/**
++ * FFM (JEP-454) libc bindings for the Unix IPC ops JEP-380 does not provide.
++ *
++ * JEP-380 owns the Channel. This class owns the connection primitives:
++ * socketpair(2), getsockname(2), sendmsg/recvmsg SCM_RIGHTS, close(2), and
++ * read(2)/write(2)/shutdown(2) for UnixFdChannel -- the ByteChannel wrapper
++ * for fds JEP-380 has no public API to wrap (socketpair/SCM_RIGHTS ends).
++ *
++ * Boot is Build-Match-Verify-Execute. Probe fails closed without
++ * --enable-native-access. Layout is Linux LP64.
++ *
++ * @author Troy Mallory (CufeHaco) - JEP-380/FFM unix socket support (jruby/jruby#9040)
++ */
++public final class UnixDomainNative {
++    private static final Logger LOG = LoggerFactory.getLogger(UnixDomainNative.class);
++
++    public static final int BIT_FFM         = 1 << 0;
++    public static final int BIT_PAIR        = 1 << 1;
++    public static final int BIT_SCM         = 1 << 2;
++    public static final int BIT_GETSOCKNAME = 1 << 3;
++    public static final int BIT_LINUX_LP64  = 1 << 4;
++    public static final int BIT_DGRAM       = 1 << 5;
++    public static final int BIT_GETPEERNAME = 1 << 6;
++
++    static final int AF_UNIX     = 1;
++    static final int SOCK_STREAM = 1;
++    public static final int SOCK_DGRAM = 2;
++    static final int SOL_SOCKET  = 1;
++    static final int SCM_RIGHTS  = 1;
++    static final int SUN_PATH    = 108;
++    static final int SO_TYPE     = 3;
++    static final int F_GETFL     = 3;
++    static final int F_SETFL     = 4;
++    static final int O_NONBLOCK  = 04000; // octal, Linux
++
++    public static final int SHUT_RD   = 0;
++    public static final int SHUT_WR   = 1;
++    public static final int SHUT_RDWR = 2;
++
++    /** EAGAIN == EWOULDBLOCK on Linux. Matches this file's existing
++     * Linux-only scope (see linuxLp64()). */
++    public static final int EAGAIN = 11;
++
++    /** Real getpeername(2) failure when a socket was bound but never
++     * connect()'d -- see UnixDomain#remoteAddress and peerPathOf. */
++    public static final int ENOTCONN = 107;
++
++    private static final ValueLayout.OfInt  C_INT  = ValueLayout.JAVA_INT;
++    private static final ValueLayout.OfLong C_LONG = ValueLayout.JAVA_LONG;
++    private static final ValueLayout.OfByte C_BYTE = ValueLayout.JAVA_BYTE;
++    private static final AddressLayout      C_PTR  = ValueLayout.ADDRESS;
++
++    /**
++     * errno must be read via Linker.Option.captureCallState, not a second
++     * __errno_location() downcall after the fact (see UnixDomainContext).
++     * The JVM stores it immediately after the raw call returns, before any
++     * GC-safepoint or other JVM-internal native call (e.g. the free(3)
++     * behind an Arena.close()) gets a chance to clobber it.
++     */
++    private static final StructLayout  CAPTURE_LAYOUT = Linker.Option.captureStateLayout();
++    private static final VarHandle     ERRNO_VH = CAPTURE_LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("errno"));
++    private static final Linker.Option CAPTURE_ERRNO = Linker.Option.captureCallState("errno");
++
++    // Reused per carrier thread like UnixFdChannel.SCRATCH -- read/write is
++    // the hot path, so this must not be a fresh Arena.allocate per call.
++    // Fixed-size and never resized, so ofAuto (GC-reclaimed, no close needed)
++    // is fine here, unlike SCRATCH's growable data buffer.
++    private static final ThreadLocal<MemorySegment> ERRNO_STATE =
++            ThreadLocal.withInitial(() -> Arena.ofAuto().allocate(CAPTURE_LAYOUT));
++
++    private static int errnoOf(MemorySegment captureState) {
++        return (int) ERRNO_VH.get(captureState, 0L);
++    }
++
++    private static final int BITS;
++    private static final MethodHandle MH_SOCKETPAIR;
++    private static final MethodHandle MH_CLOSE;
++    private static final MethodHandle MH_GETSOCKNAME;
++    private static final MethodHandle MH_SENDMSG;
++    private static final MethodHandle MH_RECVMSG;
++    private static final MethodHandle MH_READ;
++    private static final MethodHandle MH_WRITE;
++    private static final MethodHandle MH_SHUTDOWN;
++    private static final MethodHandle MH_SOCKET;
++    private static final MethodHandle MH_BIND;
++    private static final MethodHandle MH_SENDTO;
++    private static final MethodHandle MH_RECVFROM;
++    private static final MethodHandle MH_GETSOCKOPT;
++    private static final MethodHandle MH_GETSOCKOPT_ERRNO;
++    private static final MethodHandle MH_SETSOCKOPT;
++    private static final MethodHandle MH_IOCTL_PTR;
++    private static final MethodHandle MH_POLL;
++    private static final MethodHandle MH_GETPEERNAME;
++    private static final MethodHandle MH_FCNTL_GET;
++    private static final MethodHandle MH_FCNTL_SET;
++    private static final String ERROR;
++
++    static {
++        int bits = 0;
++        MethodHandle socketpair = null, close = null, getsockname = null, sendmsg = null, recvmsg = null;
++        MethodHandle read = null, write = null, shutdown = null;
++        MethodHandle rawSocket = null, rawBind = null, sendto = null, recvfrom = null, getsockopt = null;
++        MethodHandle getpeername = null, fcntlGet = null, fcntlSet = null;
++        MethodHandle getsockoptErrno = null, setsockopt = null, ioctlPtr = null, poll = null;
++        String error = null;
++        try {
++            if (!linuxLp64()) {
++                throw new UnsupportedOperationException("FFM Unix IPC is Linux LP64 only");
++            }
++            bits |= BIT_LINUX_LP64;
++            Linker linker = Linker.nativeLinker();
++            SymbolLookup libc = linker.defaultLookup();
++            socketpair = downcall(linker, libc, "socketpair",
++                    FunctionDescriptor.of(C_INT, C_INT, C_INT, C_INT, C_PTR));
++            close = downcall(linker, libc, "close",
++                    FunctionDescriptor.of(C_INT, C_INT));
++            getsockname = downcall(linker, libc, "getsockname",
++                    FunctionDescriptor.of(C_INT, C_INT, C_PTR, C_PTR));
++            getpeername = downcall(linker, libc, "getpeername",
++                    FunctionDescriptor.of(C_INT, C_INT, C_PTR, C_PTR), CAPTURE_ERRNO);
++            sendmsg = downcall(linker, libc, "sendmsg",
++                    FunctionDescriptor.of(C_LONG, C_INT, C_PTR, C_INT), CAPTURE_ERRNO);
++            recvmsg = downcall(linker, libc, "recvmsg",
++                    FunctionDescriptor.of(C_LONG, C_INT, C_PTR, C_INT), CAPTURE_ERRNO);
++            read = downcall(linker, libc, "read",
++                    FunctionDescriptor.of(C_LONG, C_INT, C_PTR, C_LONG), CAPTURE_ERRNO);
++            write = downcall(linker, libc, "write",
++                    FunctionDescriptor.of(C_LONG, C_INT, C_PTR, C_LONG), CAPTURE_ERRNO);
++            shutdown = downcall(linker, libc, "shutdown",
++                    FunctionDescriptor.of(C_INT, C_INT, C_INT));
++            bits |= BIT_FFM;
++            if (verifyPair(socketpair, close)) {
++                bits |= BIT_PAIR;
++                bits |= BIT_GETSOCKNAME;
++                bits |= BIT_SCM;
++                bits |= BIT_GETPEERNAME;
++            }
++
++            // Resolved separately from the block above: these four are only
++            // needed for raw Socket.new(:UNIX, :DGRAM) support, not the
++            // UNIXSocket/UNIXServer/pair() path. A hypothetical resolution
++            // failure here (exotic libc) must not take down BIT_PAIR/BIT_SCM
++            // /BIT_GETSOCKNAME, which are already verified working above.
++            try {
++                rawSocket = downcall(linker, libc, "socket",
++                        FunctionDescriptor.of(C_INT, C_INT, C_INT, C_INT));
++                rawBind = downcall(linker, libc, "bind",
++                        FunctionDescriptor.of(C_INT, C_INT, C_PTR, C_INT));
++                sendto = downcall(linker, libc, "sendto",
++                        FunctionDescriptor.of(C_LONG, C_INT, C_PTR, C_LONG, C_INT, C_PTR, C_INT), CAPTURE_ERRNO);
++                recvfrom = downcall(linker, libc, "recvfrom",
++                        FunctionDescriptor.of(C_LONG, C_INT, C_PTR, C_LONG, C_INT, C_PTR, C_PTR), CAPTURE_ERRNO);
++                getsockopt = downcall(linker, libc, "getsockopt",
++                        FunctionDescriptor.of(C_INT, C_INT, C_INT, C_INT, C_PTR, C_PTR));
++                // errno-capturing getsockopt/setsockopt for BasicSocket#getsockopt/
++                // #setsockopt on any socket fd (see getSockopt/setSockopt)
++                getsockoptErrno = downcall(linker, libc, "getsockopt",
++                        FunctionDescriptor.of(C_INT, C_INT, C_INT, C_INT, C_PTR, C_PTR), CAPTURE_ERRNO);
++                setsockopt = downcall(linker, libc, "setsockopt",
++                        FunctionDescriptor.of(C_INT, C_INT, C_INT, C_INT, C_PTR, C_INT), CAPTURE_ERRNO);
++                poll = downcall(linker, libc, "poll",
++                        FunctionDescriptor.of(C_INT, C_PTR, C_LONG, C_INT));
++                // ioctl(int, unsigned long, ...) with one pointer argument
++                ioctlPtr = downcall(linker, libc, "ioctl",
++                        FunctionDescriptor.of(C_INT, C_INT, C_LONG, C_PTR),
++                        Linker.Option.firstVariadicArg(2), CAPTURE_ERRNO);
++                // fcntl(2) is variadic in C; declaring the two concrete
++                // fixed-arity shapes actually used (F_GETFL takes no extra
++                // arg, F_SETFL takes one int) as separate downcall handles
++                // on the same symbol is the standard, correct way to call a
++                // variadic libc function from FFM when only specific,
++                // known-arity call shapes are needed.
++                fcntlGet = downcall(linker, libc, "fcntl",
++                        FunctionDescriptor.of(C_INT, C_INT, C_INT));
++                fcntlSet = downcall(linker, libc, "fcntl",
++                        FunctionDescriptor.of(C_INT, C_INT, C_INT, C_INT));
++                bits |= BIT_DGRAM;
++            } catch (Throwable t) {
++                rawSocket = null; rawBind = null; sendto = null; recvfrom = null; getsockopt = null;
++                getsockoptErrno = null; setsockopt = null; ioctlPtr = null; poll = null;
++                fcntlGet = null; fcntlSet = null;
++                LOG.debug("UnixDomainNative dgram probe failed: {}", t);
++            }
++        } catch (Throwable t) {
++            error = t.getClass().getSimpleName() + ": " + t.getMessage();
++            LOG.debug("UnixDomainNative probe failed: {}", error);
++        }
++        BITS = bits;
++        MH_SOCKETPAIR = socketpair;
++        MH_CLOSE = close;
++        MH_GETSOCKNAME = getsockname;
++        MH_SENDMSG = sendmsg;
++        MH_RECVMSG = recvmsg;
++        MH_READ = read;
++        MH_WRITE = write;
++        MH_SHUTDOWN = shutdown;
++        MH_SOCKET = rawSocket;
++        MH_BIND = rawBind;
++        MH_SENDTO = sendto;
++        MH_RECVFROM = recvfrom;
++        MH_GETSOCKOPT = getsockopt;
++        MH_GETSOCKOPT_ERRNO = getsockoptErrno;
++        MH_SETSOCKOPT = setsockopt;
++        MH_IOCTL_PTR = ioctlPtr;
++        MH_POLL = poll;
++        MH_GETPEERNAME = getpeername;
++        MH_FCNTL_GET = fcntlGet;
++        MH_FCNTL_SET = fcntlSet;
++        ERROR = error;
++    }
++
++    private UnixDomainNative() {}
++
++    public static int bits() { return BITS; }
++    public static boolean available() { return (BITS & BIT_FFM) != 0; }
++    public static boolean hasPair() { return (BITS & BIT_PAIR) != 0; }
++    public static boolean hasScm() { return (BITS & BIT_SCM) != 0; }
++    public static boolean hasGetsockname() { return (BITS & BIT_GETSOCKNAME) != 0; }
++    public static boolean hasDgram() { return (BITS & BIT_DGRAM) != 0; }
++    public static boolean hasGetpeername() { return (BITS & BIT_GETPEERNAME) != 0; }
++    public static String probeError() { return ERROR; }
++
++    public static int[] pair() throws NativeException {
++        return pair(SOCK_STREAM);
++    }
++
++    /** socketpair(AF_UNIX, type, 0): SOCK_STREAM or SOCK_DGRAM. */
++    public static int[] pair(int type) throws NativeException {
++        require(BIT_PAIR, "socketpair");
++        try (Arena arena = Arena.ofConfined()) {
++            MemorySegment fds = arena.allocate(C_INT, 2);
++            int rc = (int) MH_SOCKETPAIR.invokeExact(AF_UNIX, type, 0, fds);
++            if (rc != 0) throw new NativeException("socketpair", rc);
++            return new int[] { fds.getAtIndex(C_INT, 0), fds.getAtIndex(C_INT, 1) };
++        } catch (NativeException e) {
++            throw e;
++        } catch (Throwable t) {
++            throw new NativeException("socketpair", t);
++        }
++    }
++
++    /**
++     * Raw socket(2)/bind(2)/sendto(2)/recvfrom(2) for Socket.new(:UNIX,
++     * :DGRAM) -- JEP-380 only added SocketChannel/ServerSocketChannel
++     * support (stream); DatagramChannel.open(ProtocolFamily) rejects UNIX
++     * outright, so there is no JEP-380 API for this at all. The fd these
++     * produce is wrapped the same way as pair()/for_fd -- via
++     * channelFromFd, i.e. a plain UnixFdChannel -- since bind/send/recv
++     * dispatch (see RubySocket_unixDgram.java / RubyBasicSocket_unixAddr.java)
++     * only need Channel.fd(), not stream-vs-dgram-shaped methods.
++     */
++    public static int rawSocket(int domain, int type, int protocol) throws NativeException {
++        require(BIT_DGRAM, "socket");
++        try {
++            int rc = (int) MH_SOCKET.invokeExact(domain, type, protocol);
++            if (rc < 0) throw new NativeException("socket", rc);
++            return rc;
++        } catch (NativeException e) {
++            throw e;
++        } catch (Throwable t) {
++            throw new NativeException("socket", t);
++        }
++    }
++
++    public static void bindPath(int fd, String path) throws NativeException {
++        require(BIT_DGRAM, "bind");
++        try (Arena arena = Arena.ofConfined()) {
++            byte[] pathBytes = path.getBytes(java.nio.charset.StandardCharsets.UTF_8);
++            if (pathBytes.length >= SUN_PATH) throw new NativeException("bind", "path too long");
++            MemorySegment sun = sockaddrUn(arena, pathBytes);
++            int addrlen = 2 + pathBytes.length + 1;
++            int rc = (int) MH_BIND.invokeExact(fd, sun, addrlen);
++            if (rc != 0) throw new NativeException("bind", rc);
++        } catch (NativeException e) {
++            throw e;
++        } catch (Throwable t) {
++            throw new NativeException("bind", t);
++        }
++    }
++
++    public static long sendTo(int fd, byte[] data, int off, int len, String destPath) throws NativeException {
++        require(BIT_DGRAM, "sendto");
++        MemorySegment capState = ERRNO_STATE.get();
++        try (Arena arena = Arena.ofConfined()) {
++            MemorySegment buf = arena.allocate(Math.max(len, 1));
++            MemorySegment.copy(data, off, buf, C_BYTE, 0, len);
++            MemorySegment dest = MemorySegment.NULL;
++            int destLen = 0;
++            if (destPath != null) {
++                byte[] pathBytes = destPath.getBytes(java.nio.charset.StandardCharsets.UTF_8);
++                if (pathBytes.length >= SUN_PATH) throw new NativeException("sendto", "path too long");
++                dest = sockaddrUn(arena, pathBytes);
++                destLen = 2 + pathBytes.length + 1;
++            }
++            long rc = (long) MH_SENDTO.invokeExact(capState, fd, buf, (long) len, 0, dest, destLen);
++            if (rc < 0) throw new NativeException("sendto", (int) rc, errnoOf(capState));
++            return rc;
++        } catch (NativeException e) {
++            throw e;
++        } catch (Throwable t) {
++            throw new NativeException("sendto", t);
++        }
++    }
++
++    /** Linux recv/send flag values (bits/socket.h). */
++    public static final int MSG_OOB = 0x01, MSG_PEEK = 0x02, MSG_DONTWAIT = 0x40;
++
++    /**
++     * recv(2) with flags on any socket fd -- including the real fd of a JDK
++     * inet channel, for flags (MSG_PEEK, MSG_OOB, ...) java.nio cannot pass.
++     */
++    public static long recv(int fd, MemorySegment buf, long len, int flags) throws NativeException {
++        require(BIT_DGRAM, "recv");
++        MemorySegment capState = ERRNO_STATE.get();
++        try {
++            long rc = (long) MH_RECVFROM.invokeExact(capState, fd, buf, len, flags, MemorySegment.NULL, MemorySegment.NULL);
++            if (rc < 0) throw new NativeException("recv", (int) rc, errnoOf(capState));
++            return rc;
++        } catch (NativeException e) {
++            throw e;
++        } catch (Throwable t) {
++            throw new NativeException("recv", t);
++        }
++    }
++
++    /** send(2) with flags on any connected socket fd; see {@link #recv}. */
++    public static long send(int fd, byte[] data, int off, int len, int flags) throws NativeException {
++        require(BIT_DGRAM, "send");
++        MemorySegment capState = ERRNO_STATE.get();
++        try {
++            MemorySegment buf = UnixFdChannel.scratch(Math.max(len, 1));
++            MemorySegment.copy(data, off, buf, C_BYTE, 0, len);
++            long rc = (long) MH_SENDTO.invokeExact(capState, fd, buf, (long) len, flags, MemorySegment.NULL, 0);
++            if (rc < 0) throw new NativeException("send", (int) rc, errnoOf(capState));
++            return rc;
++        } catch (NativeException e) {
++            throw e;
++        } catch (Throwable t) {
++            throw new NativeException("send", t);
++        }
++    }
++
++    public static final class RecvFromResult {
++        public final long n;
++        public final String srcPath; // "" if the kernel gave no/empty address
++        RecvFromResult(long n, String srcPath) { this.n = n; this.srcPath = srcPath; }
++    }
++
++    public static RecvFromResult recvFrom(int fd, MemorySegment buf, long len) throws NativeException {
++        require(BIT_DGRAM, "recvfrom");
++        MemorySegment capState = ERRNO_STATE.get();
++        try (Arena arena = Arena.ofConfined()) {
++            MemorySegment sun = arena.allocate(2 + SUN_PATH);
++            MemorySegment addrlen = arena.allocate(C_INT);
++            addrlen.set(C_INT, 0, 2 + SUN_PATH);
++            long rc = (long) MH_RECVFROM.invokeExact(capState, fd, buf, len, 0, sun, addrlen);
++            if (rc < 0) throw new NativeException("recvfrom", (int) rc, errnoOf(capState));
++            String srcPath = parseSockaddrUn(sun, addrlen.get(C_INT, 0));
++            return new RecvFromResult(rc, srcPath);
++        } catch (NativeException e) {
++            throw e;
++        } catch (Throwable t) {
++            throw new NativeException("recvfrom", t);
++        }
++    }
++
++    /**
++     * getsockopt(SOL_SOCKET, SO_TYPE) -- the one cheap, side-effect-free way
++     * to tell a real SOCK_DGRAM fd from a SOCK_STREAM one when a caller only
++     * has a bare fd (UNIXSocket.for_fd), used by RubyUNIXSocket#recvfrom to
++     * decide whether the kernel's recvfrom(2) source address is meaningful
++     * (dgram) or should fall back to the existing connected-peer lookup
++     * (stream, where AF_UNIX recvfrom does not reliably populate src_addr).
++     * Returns -1 (not SOCK_STREAM/SOCK_DGRAM) on any failure -- callers
++     * should treat that as "assume stream, keep existing behavior."
++     */
++    public static int socketType(int fd) {
++        if (fd < 0 || MH_GETSOCKOPT == null) return -1;
++        try (Arena arena = Arena.ofConfined()) {
++            MemorySegment val = arena.allocate(C_INT);
++            MemorySegment len = arena.allocate(C_INT);
++            len.set(C_INT, 0, 4);
++            int rc = (int) MH_GETSOCKOPT.invokeExact(fd, SOL_SOCKET, SO_TYPE, val, len);
++            if (rc != 0) return -1;
++            return val.get(C_INT, 0);
++        } catch (Throwable t) {
++            return -1;
++        }
++    }
++
++    public static boolean hasSockopt() { return MH_GETSOCKOPT_ERRNO != null && MH_SETSOCKOPT != null; }
++
++    /** getsockopt(2) on any socket fd: the raw option bytes, as the kernel returns them. */
++    public static byte[] getSockopt(int fd, int level, int optname) throws NativeException {
++        if (MH_GETSOCKOPT_ERRNO == null) throw new NativeException("getsockopt", "FFM getsockopt not available");
++        MemorySegment capState = ERRNO_STATE.get();
++        try {
++            MemorySegment scratch = UnixFdChannel.scratch(256 + 8);
++            MemorySegment val = scratch.asSlice(0, 256);
++            MemorySegment len = scratch.asSlice(256, 4);
++            len.set(C_INT, 0, 256);
++            int rc = (int) MH_GETSOCKOPT_ERRNO.invokeExact(capState, fd, level, optname, val, len);
++            if (rc != 0) throw new NativeException("getsockopt", rc, errnoOf(capState));
++            byte[] out = new byte[len.get(C_INT, 0)];
++            MemorySegment.copy(val, C_BYTE, 0, out, 0, out.length);
++            return out;
++        } catch (NativeException e) {
++            throw e;
++        } catch (Throwable t) {
++            throw new NativeException("getsockopt", t);
++        }
++    }
++
++    public static boolean hasIoctl() { return MH_IOCTL_PTR != null; }
++
++    public static final short POLLIN = 0x1, POLLOUT = 0x4;
++
++    private static final MethodHandle MH_GETHOSTNAME = optionalDowncall("gethostname",
++            FunctionDescriptor.of(C_INT, C_PTR, C_LONG));
++
++    private static MethodHandle optionalDowncall(String name, FunctionDescriptor desc) {
++        try {
++            if (!linuxLp64()) return null;
++            Linker linker = Linker.nativeLinker();
++            return downcall(linker, linker.defaultLookup(), name, desc);
++        } catch (Throwable t) {
++            return null;
++        }
++    }
++
++    /** gethostname(2), or null if unavailable. */
++    public static String hostname() {
++        if (MH_GETHOSTNAME == null) return null;
++        try (Arena arena = Arena.ofConfined()) {
++            MemorySegment buf = arena.allocate(256);
++            int rc = (int) MH_GETHOSTNAME.invokeExact(buf, 256L);
++            return rc == 0 ? buf.getString(0) : null;
++        } catch (Throwable t) {
++            return null;
++        }
++    }
++
++    public static boolean hasPoll() { return MH_POLL != null; }
++
++    /** poll(2) on one fd: >0 ready (or error/hangup -- let the next syscall report it), 0 timed out. */
++    public static int poll(int fd, short events, int timeoutMs) {
++        try {
++            MemorySegment pfd = UnixFdChannel.scratch(8);
++            pfd.set(C_INT, 0, fd);
++            pfd.set(ValueLayout.JAVA_SHORT, 4, events);
++            pfd.set(ValueLayout.JAVA_SHORT, 6, (short) 0);
++            int rc = (int) MH_POLL.invokeExact(pfd, 1L, timeoutMs);
++            return rc < 0 ? 0 : rc; // EINTR etc.: treat as a timed-out slice, the caller re-checks
++        } catch (Throwable t) {
++            return 1;
++        }
++    }
++
++    /**
++     * ioctl(2) with a buffer argument: data is copied in, the call made with a
++     * pointer to it, and the (possibly updated) bytes copied back into data.
++     */
++    public static int ioctl(int fd, long request, byte[] data, int off, int len) throws NativeException {
++        if (MH_IOCTL_PTR == null) throw new NativeException("ioctl", "FFM ioctl not available");
++        MemorySegment capState = ERRNO_STATE.get();
++        try {
++            MemorySegment buf = UnixFdChannel.scratch(Math.max(len, 1));
++            MemorySegment.copy(data, off, buf, C_BYTE, 0, len);
++            int rc = (int) MH_IOCTL_PTR.invokeExact(capState, fd, request, buf);
++            if (rc < 0) throw new NativeException("ioctl", rc, errnoOf(capState));
++            MemorySegment.copy(buf, C_BYTE, 0, data, off, len);
++            return rc;
++        } catch (NativeException e) {
++            throw e;
++        } catch (Throwable t) {
++            throw new NativeException("ioctl", t);
++        }
++    }
++
++    /** setsockopt(2) on any socket fd with the raw option bytes. */
++    public static void setSockopt(int fd, int level, int optname, byte[] data, int off, int len) throws NativeException {
++        if (MH_SETSOCKOPT == null) throw new NativeException("setsockopt", "FFM setsockopt not available");
++        MemorySegment capState = ERRNO_STATE.get();
++        try {
++            MemorySegment val = UnixFdChannel.scratch(Math.max(len, 1));
++            MemorySegment.copy(data, off, val, C_BYTE, 0, len);
++            int rc = (int) MH_SETSOCKOPT.invokeExact(capState, fd, level, optname, val, len);
++            if (rc != 0) throw new NativeException("setsockopt", rc, errnoOf(capState));
++        } catch (NativeException e) {
++            throw e;
++        } catch (Throwable t) {
++            throw new NativeException("setsockopt", t);
++        }
++    }
++
++    private static MemorySegment sockaddrUn(Arena arena, byte[] pathBytes) {
++        MemorySegment sun = arena.allocate(2 + SUN_PATH); // zero-initialized
++        sun.set(C_BYTE, 0, (byte) AF_UNIX);
++        sun.set(C_BYTE, 1, (byte) 0);
++        MemorySegment.copy(pathBytes, 0, sun, C_BYTE, 2, pathBytes.length);
++        return sun;
++    }
++
++    // Same parsing convention as pathOf(int): skip the 2-byte sun_family,
++    // handle Linux's abstract-namespace leading NUL, stop at the first NUL
++    // (or end of the reported length) for a regular path.
++    private static String parseSockaddrUn(MemorySegment sun, int len) {
++        if (len <= 2) return "";
++        byte[] bytes = new byte[len - 2];
++        MemorySegment.copy(sun, C_BYTE, 2, bytes, 0, bytes.length);
++        if (bytes[0] == 0) {
++            int end = 1;
++            while (end < bytes.length && bytes[end] != 0) end++;
++            return end <= 1 ? "" : "\0" + new String(bytes, 1, end - 1);
++        }
++        int end = 0;
++        while (end < bytes.length && bytes[end] != 0) end++;
++        return new String(bytes, 0, end);
++    }
++
++    public static int close(int fd) {
++        if (fd < 0 || MH_CLOSE == null) return -1;
++        try {
++            return (int) MH_CLOSE.invokeExact(fd);
++        } catch (Throwable t) {
++            return -1;
++        }
++    }
++
++    public static java.nio.channels.Channel channelFromFd(int fd) {
++        return new UnixFdChannel(fd);
++    }
++
++    public static long read(int fd, MemorySegment buf, long count) throws NativeException {
++        require(BIT_FFM, "read");
++        MemorySegment capState = ERRNO_STATE.get();
++        try {
++            long rc = (long) MH_READ.invokeExact(capState, fd, buf, count);
++            if (rc < 0) throw new NativeException("read", (int) rc, errnoOf(capState));
++            return rc;
++        } catch (NativeException e) {
++            throw e;
++        } catch (Throwable t) {
++            throw new NativeException("read", t);
++        }
++    }
++
++    public static long write(int fd, MemorySegment buf, long count) throws NativeException {
++        require(BIT_FFM, "write");
++        MemorySegment capState = ERRNO_STATE.get();
++        try {
++            long rc = (long) MH_WRITE.invokeExact(capState, fd, buf, count);
++            if (rc < 0) throw new NativeException("write", (int) rc, errnoOf(capState));
++            return rc;
++        } catch (NativeException e) {
++            throw e;
++        } catch (Throwable t) {
++            throw new NativeException("write", t);
++        }
++    }
++
++    /**
++     * Best-effort, like close(): used to force a thread blocked in read(2)
++     * on this fd to return (see UnixFdChannel), not to report success.
++     * shutdown(2) is the safe way to do that -- unlike close(2), it doesn't
++     * race with fd reuse in another thread, and reliably unblocks a pending
++     * recv/read on this exact socket.
++     */
++    public static int shutdown(int fd, int how) {
++        if (fd < 0 || MH_SHUTDOWN == null) return -1;
++        try {
++            return (int) MH_SHUTDOWN.invokeExact(fd, how);
++        } catch (Throwable t) {
++            return -1;
++        }
++    }
++
++    public static String pathOf(int fd) throws NativeException {
++        require(BIT_GETSOCKNAME, "getsockname");
++        try (Arena arena = Arena.ofConfined()) {
++            MemorySegment sun = arena.allocate(2 + SUN_PATH);
++            MemorySegment len = arena.allocate(C_INT);
++            len.set(C_INT, 0, 2 + SUN_PATH);
++            int rc = (int) MH_GETSOCKNAME.invokeExact(fd, sun, len);
++            if (rc != 0) throw new NativeException("getsockname", rc);
++            int n = len.get(C_INT, 0);
++            if (n <= 2) return "";
++            byte[] bytes = new byte[n - 2];
++            MemorySegment.copy(sun, C_BYTE, 2, bytes, 0, bytes.length);
++            if (bytes[0] == 0) {
++                int end = 1;
++                while (end < bytes.length && bytes[end] != 0) end++;
++                return "\0" + new String(bytes, 1, end - 1);
++            }
++            int end = 0;
++            while (end < bytes.length && bytes[end] != 0) end++;
++            return new String(bytes, 0, end);
++        } catch (NativeException e) {
++            throw e;
++        } catch (Throwable t) {
++            throw new NativeException("getsockname", t);
++        }
++    }
++
++    /**
++     * getpeername(2) -- unlike pathOf/getsockname (always succeeds for any
++     * bound-or-not socket), this genuinely fails with ENOTCONN when there is
++     * no peer. That's the one reliable, kernel-verified way to tell a really
++     * connected UnixFdChannel (pair()/socketpair()/for_fd on an already-
++     * connected fd -- unnamed, but a real peer) from a raw Socket.new(:UNIX,
++     * :DGRAM) that was only bound, never connected (see
++     * UnixDomain#remoteAddress). Captures errno (via CAPTURE_ERRNO, same as
++     * read/write/sendto/recvfrom) specifically so the ENOTCONN case is
++     * distinguishable from any other failure.
++     */
++    public static String peerPathOf(int fd) throws NativeException {
++        require(BIT_GETPEERNAME, "getpeername");
++        MemorySegment capState = ERRNO_STATE.get();
++        try (Arena arena = Arena.ofConfined()) {
++            MemorySegment sun = arena.allocate(2 + SUN_PATH);
++            MemorySegment len = arena.allocate(C_INT);
++            len.set(C_INT, 0, 2 + SUN_PATH);
++            int rc = (int) MH_GETPEERNAME.invokeExact(capState, fd, sun, len);
++            if (rc != 0) throw new NativeException("getpeername", rc, errnoOf(capState));
++            return parseSockaddrUn(sun, len.get(C_INT, 0));
++        } catch (NativeException e) {
++            throw e;
++        } catch (Throwable t) {
++            throw new NativeException("getpeername", t);
++        }
++    }
++
++    /** fcntl(fd, F_GETFL) -- current file status flags. */
++    public static int getFlags(int fd) throws NativeException {
++        require(BIT_DGRAM, "fcntl");
++        try {
++            int rc = (int) MH_FCNTL_GET.invokeExact(fd, F_GETFL);
++            if (rc < 0) throw new NativeException("fcntl", rc);
++            return rc;
++        } catch (NativeException e) {
++            throw e;
++        } catch (Throwable t) {
++            throw new NativeException("fcntl", t);
++        }
++    }
++
++    /** fcntl(fd, F_SETFL, flags) -- replace file status flags wholesale
++     * (caller is responsible for OR-ing/clearing bits against a prior
++     * getFlags() result, same contract as DatagramChannel#configureBlocking
++     * needing the old value to restore it afterward). */
++    public static void setFlags(int fd, int flags) throws NativeException {
++        require(BIT_DGRAM, "fcntl");
++        try {
++            int rc = (int) MH_FCNTL_SET.invokeExact(fd, F_SETFL, flags);
++            if (rc < 0) throw new NativeException("fcntl", rc);
++        } catch (NativeException e) {
++            throw e;
++        } catch (Throwable t) {
++            throw new NativeException("fcntl", t);
++        }
++    }
++
++    public static int sendIo(int sockFd, int passFd) throws NativeException {
++        require(BIT_SCM, "sendmsg");
++        try (Arena arena = Arena.ofConfined()) {
++            MemorySegment payload = arena.allocate(1);
++            payload.set(C_BYTE, 0, (byte) 0);
++            MemorySegment iov = arena.allocate(16);
++            iov.set(C_PTR, 0, payload);
++            iov.set(C_LONG, 8, 1L);
++            int cmsgLen = 16 + 4;
++            MemorySegment cmsg = arena.allocate(24);
++            cmsg.set(C_LONG, 0, cmsgLen);
++            cmsg.set(C_INT, 8, SOL_SOCKET);
++            cmsg.set(C_INT, 12, SCM_RIGHTS);
++            cmsg.set(C_INT, 16, passFd);
++            MemorySegment msg = arena.allocate(56);
++            msg.set(C_PTR, 0, MemorySegment.NULL);
++            msg.set(C_INT, 8, 0);
++            msg.set(C_PTR, 16, iov);
++            msg.set(C_LONG, 24, 1L);
++            msg.set(C_PTR, 32, cmsg);
++            msg.set(C_LONG, 40, cmsgLen);
++            msg.set(C_INT, 48, 0);
++            MemorySegment capState = arena.allocate(CAPTURE_LAYOUT);
++            long rc = (long) MH_SENDMSG.invokeExact(capState, sockFd, msg, 0);
++            if (rc < 0) throw new NativeException("sendmsg", (int) rc, errnoOf(capState));
++            return (int) rc;
++        } catch (NativeException e) {
++            throw e;
++        } catch (Throwable t) {
++            throw new NativeException("sendmsg", t);
++        }
++    }
++
++    // -- general sendmsg(2)/recvmsg(2), for BasicSocket#sendmsg/#recvmsg --
++    // Linux LP64 layouts: struct msghdr is 56 bytes (msg_name@0,
++    // msg_namelen@8, msg_iov@16, msg_iovlen@24, msg_control@32,
++    // msg_controllen@40, msg_flags@48); struct iovec is 16; struct cmsghdr is
++    // a 16-byte header (cmsg_len@0, cmsg_level@8, cmsg_type@12) padded to 8.
++    // Every buffer is carved from the thread's scratch segment, one get() per
++    // call (see UnixFdChannel#scratch).
++    public static final int MSG_TRUNC = 0x20, MSG_CTRUNC = 0x08;
++    private static final int MSGHDR = 56, IOVEC = 16, CMSGHDR = 16, NAME_MAX_LEN = 128;
++
++    private static long align8(long n) { return (n + 7) & ~7L; }
++
++    /** One control message: cmsg_level, cmsg_type and its data bytes. */
++    public record Cmsg(int level, int type, byte[] data) {}
++
++    /** recvmsg(2) result: bytes read, sender sockaddr (may be empty), msg_flags, control messages. */
++    public record RecvMsgResult(long n, byte[] data, byte[] name, int flags, java.util.List<Cmsg> controls) {}
++
++    public static long sendMsg(int fd, byte[] data, int off, int len, byte[] dest,
++                               java.util.List<Cmsg> controls, int flags) throws NativeException {
++        require(BIT_SCM, "sendmsg");
++        long controlLen = 0;
++        for (Cmsg c : controls) controlLen += CMSGHDR + align8(c.data().length);
++        int nameLen = dest == null ? 0 : dest.length;
++        long total = MSGHDR + IOVEC + align8(nameLen) + controlLen + Math.max(len, 1);
++        MemorySegment capState = ERRNO_STATE.get();
++        try {
++            MemorySegment all = UnixFdChannel.scratch((int) total);
++            all.asSlice(0, total).fill((byte) 0);
++            MemorySegment msg = all.asSlice(0, MSGHDR);
++            MemorySegment iov = all.asSlice(MSGHDR, IOVEC);
++            long at = MSGHDR + IOVEC;
++            MemorySegment name = all.asSlice(at, Math.max(nameLen, 1)); at += align8(nameLen);
++            MemorySegment control = all.asSlice(at, Math.max(controlLen, 1)); at += controlLen;
++            MemorySegment buf = all.asSlice(at, Math.max(len, 1));
++
++            MemorySegment.copy(data, off, buf, C_BYTE, 0, len);
++            iov.set(C_PTR, 0, buf);
++            iov.set(C_LONG, 8, (long) len);
++            if (nameLen > 0) MemorySegment.copy(dest, 0, name, C_BYTE, 0, nameLen);
++            long c = 0;
++            for (Cmsg cm : controls) {
++                control.set(C_LONG, c, (long) (CMSGHDR + cm.data().length));
++                control.set(C_INT, c + 8, cm.level());
++                control.set(C_INT, c + 12, cm.type());
++                MemorySegment.copy(cm.data(), 0, control, C_BYTE, c + CMSGHDR, cm.data().length);
++                c += CMSGHDR + align8(cm.data().length);
++            }
++            msg.set(C_PTR, 0, nameLen > 0 ? name : MemorySegment.NULL);
++            msg.set(C_INT, 8, nameLen);
++            msg.set(C_PTR, 16, iov);
++            msg.set(C_LONG, 24, 1L);
++            msg.set(C_PTR, 32, controlLen > 0 ? control : MemorySegment.NULL);
++            msg.set(C_LONG, 40, controlLen);
++            long rc = (long) MH_SENDMSG.invokeExact(capState, fd, msg, flags);
++            if (rc < 0) throw new NativeException("sendmsg", (int) rc, errnoOf(capState));
++            return rc;
++        } catch (NativeException e) {
++            throw e;
++        } catch (Throwable t) {
++            throw new NativeException("sendmsg", t);
++        }
++    }
++
++    public static RecvMsgResult recvMsg(int fd, int len, int controlLen, int flags) throws NativeException {
++        require(BIT_SCM, "recvmsg");
++        long total = MSGHDR + IOVEC + NAME_MAX_LEN + align8(controlLen) + Math.max(len, 1);
++        MemorySegment capState = ERRNO_STATE.get();
++        try {
++            MemorySegment all = UnixFdChannel.scratch((int) total);
++            MemorySegment msg = all.asSlice(0, MSGHDR);
++            MemorySegment iov = all.asSlice(MSGHDR, IOVEC);
++            MemorySegment name = all.asSlice(MSGHDR + IOVEC, NAME_MAX_LEN);
++            long at = MSGHDR + IOVEC + NAME_MAX_LEN;
++            MemorySegment control = all.asSlice(at, Math.max(controlLen, 1)); at += align8(controlLen);
++            MemorySegment buf = all.asSlice(at, Math.max(len, 1));
++
++            iov.set(C_PTR, 0, buf);
++            iov.set(C_LONG, 8, (long) len);
++            msg.set(C_PTR, 0, name);
++            msg.set(C_INT, 8, NAME_MAX_LEN);
++            msg.set(C_INT, 12, 0);
++            msg.set(C_PTR, 16, iov);
++            msg.set(C_LONG, 24, 1L);
++            msg.set(C_PTR, 32, controlLen > 0 ? control : MemorySegment.NULL);
++            msg.set(C_LONG, 40, (long) controlLen);
++            msg.set(C_INT, 48, 0);
++            long rc = (long) MH_RECVMSG.invokeExact(capState, fd, msg, flags);
++            if (rc < 0) throw new NativeException("recvmsg", (int) rc, errnoOf(capState));
++
++            // with MSG_TRUNC in flags, rc is the datagram's full length; only len bytes are in buf
++            byte[] data = new byte[(int) Math.min(rc, len)];
++            MemorySegment.copy(buf, C_BYTE, 0, data, 0, data.length);
++            byte[] sender = new byte[Math.min(msg.get(C_INT, 8), NAME_MAX_LEN)];
++            MemorySegment.copy(name, C_BYTE, 0, sender, 0, sender.length);
++
++            java.util.List<Cmsg> controls = new java.util.ArrayList<>();
++            long used = Math.min(msg.get(C_LONG, 40), controlLen);
++            for (long c = 0; c + CMSGHDR <= used; ) {
++                long cmsgLen = control.get(C_LONG, c);
++                if (cmsgLen < CMSGHDR || c + cmsgLen > used) break;
++                byte[] cdata = new byte[(int) (cmsgLen - CMSGHDR)];
++                MemorySegment.copy(control, C_BYTE, c + CMSGHDR, cdata, 0, cdata.length);
++                controls.add(new Cmsg(control.get(C_INT, c + 8), control.get(C_INT, c + 12), cdata));
++                c += align8(cmsgLen);
++            }
++            return new RecvMsgResult(rc, data, sender, msg.get(C_INT, 48), controls);
++        } catch (NativeException e) {
++            throw e;
++        } catch (Throwable t) {
++            throw new NativeException("recvmsg", t);
++        }
++    }
++
++    public static int recvIo(int sockFd) throws NativeException {
++        require(BIT_SCM, "recvmsg");
++        try (Arena arena = Arena.ofConfined()) {
++            MemorySegment payload = arena.allocate(1);
++            MemorySegment iov = arena.allocate(16);
++            iov.set(C_PTR, 0, payload);
++            iov.set(C_LONG, 8, 1L);
++            MemorySegment cmsg = arena.allocate(24);
++            MemorySegment msg = arena.allocate(56);
++            msg.set(C_PTR, 0, MemorySegment.NULL);
++            msg.set(C_INT, 8, 0);
++            msg.set(C_PTR, 16, iov);
++            msg.set(C_LONG, 24, 1L);
++            msg.set(C_PTR, 32, cmsg);
++            msg.set(C_LONG, 40, 24L);
++            msg.set(C_INT, 48, 0);
++            MemorySegment capState = arena.allocate(CAPTURE_LAYOUT);
++            long rc = (long) MH_RECVMSG.invokeExact(capState, sockFd, msg, 0);
++            if (rc < 0) throw new NativeException("recvmsg", (int) rc, errnoOf(capState));
++            return cmsg.get(C_INT, 16);
++        } catch (NativeException e) {
++            throw e;
++        } catch (Throwable t) {
++            throw new NativeException("recvmsg", t);
++        }
++    }
++
++    private static boolean verifyPair(MethodHandle socketpair, MethodHandle close) throws Throwable {
++        try (Arena arena = Arena.ofConfined()) {
++            MemorySegment fds = arena.allocate(C_INT, 2);
++            int rc = (int) socketpair.invokeExact(AF_UNIX, SOCK_STREAM, 0, fds);
++            if (rc != 0) return false;
++            int a = fds.getAtIndex(C_INT, 0);
++            int b = fds.getAtIndex(C_INT, 1);
++            try {
++                return a >= 0 && b >= 0;
++            } finally {
++                int ignoredA = (int) close.invokeExact(a);
++                int ignoredB = (int) close.invokeExact(b);
++            }
++        }
++    }
++
++    private static MethodHandle downcall(Linker linker, SymbolLookup lookup, String name, FunctionDescriptor desc, Linker.Option... options) {
++        MemorySegment sym = lookup.find(name).orElseThrow(() -> new IllegalStateException("missing " + name));
++        return linker.downcallHandle(sym, desc, options);
++    }
++
++    private static boolean linuxLp64() {
++        String os = System.getProperty("os.name", "");
++        String arch = System.getProperty("os.arch", "");
++        return os.toLowerCase().contains("linux") && (arch.contains("64") || arch.equals("aarch64") || arch.equals("amd64"));
++    }
++
++    private static void require(int bit, String op) throws NativeException {
++        if ((BITS & bit) == 0) {
++            throw new NativeException(op, "FFM " + op + " not available (" +
++                    (ERROR == null ? "bit off" : ERROR) + ")");
++        }
++    }
++
++    public static final class NativeException extends Exception {
++        /** Reliably-captured errno via Linker.Option.captureCallState, or 0 if none was captured. */
++        public final int errno;
++
++        public NativeException(String op, int rc) { super(op + " failed rc=" + rc); this.errno = 0; }
++        public NativeException(String op, int rc, int errno) {
++            super(op + " failed rc=" + rc + " errno=" + errno);
++            this.errno = errno;
++        }
++        public NativeException(String op, String msg) { super(op + ": " + msg); this.errno = 0; }
++        public NativeException(String op, Throwable cause) { super(op + ": " + cause.getMessage(), cause); this.errno = 0; }
++    }
++}
+diff --git a/core/src/main/java/org/jruby/ext/socket/UnixFdChannel.java b/core/src/main/java/org/jruby/ext/socket/UnixFdChannel.java
+new file mode 100644
+index 0000000000..06c8b2fec6
+--- /dev/null
++++ b/core/src/main/java/org/jruby/ext/socket/UnixFdChannel.java
+@@ -0,0 +1,389 @@
++package org.jruby.ext.socket;
++
++import java.io.IOException;
++import java.lang.foreign.Arena;
++import java.lang.foreign.MemorySegment;
++import java.lang.foreign.ValueLayout;
++import java.nio.ByteBuffer;
++import java.nio.channels.ByteChannel;
++import java.nio.channels.ClosedChannelException;
++import java.nio.channels.spi.AbstractInterruptibleChannel;
++import java.util.Map;
++
++/**
++ * ByteChannel wrapping a raw fd via FFM read(2)/write(2), for the fds
++ * JEP-380 has no public API to wrap directly: the two ends of an FFM
++ * socketpair(2) (UnixDomain.pair) and fds received over SCM_RIGHTS. The
++ * named bind/connect/accept path stays on real JEP-380
++ * SocketChannel/ServerSocketChannel throughout -- this class only exists
++ * for that narrower gap, replacing what used to be
++ * jnr.unixsocket.UnixSocketChannel.fromFD.
++ *
++ * Interruptibility: extends AbstractInterruptibleChannel, the same public,
++ * stable JDK mechanism FileChannel/DatagramChannel use (begin()/end()
++ * around the blocking call), so Thread#kill/interrupt works the normal
++ * JRuby way -- no java.nio.Selector/SelChImpl, no JDK-internal reflection.
++ * implCloseChannel does shutdown(2) before close(2): a bare close(2) races
++ * fd reuse if another thread is still blocked in read(2) on this exact fd
++ * (a real POSIX gotcha), while shutdown(2) reliably forces that blocked
++ * read to return first.
++ *
++ * RubyBasicSocket#recv/#read hand this a heap ByteBuffer (plain
++ * ByteBuffer.allocate, not allocateDirect), so the heap path below is the
++ * one real Ruby code actually takes, not a fallback. A fresh
++ * Arena.ofConfined() per call measured ~35% slower than JNR's channel on
++ * UNIXSocket.pair ping-pong -- SCRATCH reuses one growable native buffer
++ * per carrier thread instead. Safe as a plain ThreadLocal (unlike
++ * UnixDomainContext's Fiber-sensitive per-ThreadContext state): this
++ * buffer is written and consumed within one synchronous read()/write()
++ * call and never observed across a fiber-switch boundary, so which OS
++ * thread backs it doesn't matter -- it's a scratch buffer, not
++ * Ruby-visible state.
++ *
++ * @author Troy Mallory (CufeHaco) - JEP-380/FFM unix socket support (jruby/jruby#9040)
++ */
++public final class UnixFdChannel extends AbstractInterruptibleChannel implements ByteChannel {
++    private static final int SCRATCH_DEFAULT_SIZE = 8192;
++    private static final ThreadLocal<Scratch> SCRATCH = ThreadLocal.withInitial(Scratch::new);
++
++    /**
++     * Grow-on-demand, shrink-with-governor. Off-heap, so it never shows up
++     * as JVM heap pressure -- the growth problem here is unbounded per-
++     * thread native memory, not GC, but the fix is the exact same shape as
++     * Kestowv Wave's per-core governor: a rare, decisive writer (shrink)
++     * gated by a decaying usage signal, a wide hysteresis dead-band so a
++     * single small call right after a burst doesn't immediately snap the
++     * buffer back down (which would just force the next big call to
++     * regrow it -- thrashing), and a floor so it never shrinks below the
++     * size that was already fine for ordinary small messages.
++     *
++     * Without this, one large one-off read/write (e.g. a single big
++     * message on an otherwise small-message connection) permanently
++     * inflates this carrier thread's native footprint for the rest of the
++     * thread's life, even if every later call only ever needs a few KB.
++     */
++    /**
++     * This carrier thread's scratch native buffer, at least minSize bytes,
++     * for the other FFM socket calls (recv/send with flags, sockopts, ioctl,
++     * sendmsg/recvmsg) -- the same reuse and governor as read/write here.
++     * Call once per syscall and carve slices from it: a later get() may
++     * resize, which frees the segment an earlier call returned.
++     */
++    static MemorySegment scratch(int minSize) {
++        return SCRATCH.get().get(minSize);
++    }
++
++    private static final class Scratch {
++        // Never shrink below this -- matches the original fixed default,
++        // so ordinary small messages never pay a regrow cost after a
++        // single large outlier is done. Same role as Wave's GOV_MIN floor
++        // ("JVM stays warm, cores cool" -- here: "don't shrink into a size
++        // that's just going to regrow next call").
++        private static final int MIN_SIZE = SCRATCH_DEFAULT_SIZE;
++
++        // How many get() calls form one governor "tick" -- checked
++        // periodically, not on every call, same as Wave's GOV_INTERVAL
++        // being a real time period rather than a continuous check. Purely
++        // call-count-based here since this buffer has no wall-clock tick
++        // of its own; higher = slower to react but less governor overhead.
++        private static final int TICK_CALLS = 64;
++
++        // Wide dead-band before considering a shrink at all: the current
++        // size has to be at least 4x recent actual usage. Mirrors
++        // GOV_HYSTERESIS -- without a wide margin here, usage sitting
++        // right at a boundary would oscillate grow/shrink every tick.
++        private static final int HYSTERESIS_RATIO = 4;
++
++        private Arena arena = Arena.ofConfined();
++        private MemorySegment segment = arena.allocate(SCRATCH_DEFAULT_SIZE);
++        private int recentMax = SCRATCH_DEFAULT_SIZE;
++        private int callsThisTick = 0;
++
++        MemorySegment get(int minSize) {
++            if (segment.byteSize() < minSize) {
++                // Must grow -- this is a correctness requirement for the
++                // current call, not a policy decision, so it happens
++                // immediately regardless of tick/hysteresis state.
++                resize(minSize);
++                recentMax = minSize;
++                callsThisTick = 0;
++                return segment;
++            }
++
++            if (minSize > recentMax) recentMax = minSize;
++
++            if (++callsThisTick >= TICK_CALLS) {
++                // Halfway back toward observed usage, not an instant snap
++                // to recentMax -- same "back off decisively but don't
++                // overshoot" shape as Wave's incremental GOV_STEP, so one
++                // noisy tick's recentMax can't yank the buffer straight
++                // down to a size the very next call would just regrow.
++                if ((long) recentMax * HYSTERESIS_RATIO < segment.byteSize()) {
++                    int target = Math.max(MIN_SIZE, (int) ((segment.byteSize() + recentMax) / 2));
++                    if (target < segment.byteSize()) resize(target);
++                }
++                recentMax = minSize;
++                callsThisTick = 0;
++            }
++
++            return segment;
++        }
++
++        private void resize(int size) {
++            arena.close();
++            arena = Arena.ofConfined();
++            segment = arena.allocate(size);
++        }
++    }
++
++    // org.jruby.runtime.Helpers#errnoFromMessage string-matches IOException
++    // messages against exactly these literals (the ones the JDK's own
++    // native channels happen to throw) to recover an Errno:: class -- it
++    // has no other way to see the real errno. Without this, "rescue
++    // Errno::EPIPE" silently fails to catch on a pair()/for_fd socket,
++    // since UnixDomainNative's own message ("write failed rc=-1 errno=32")
++    // doesn't match anything. Linux x86-64 errno values.
++    private static final Map<Integer, String> ERRNO_MESSAGES = Map.ofEntries(
++            Map.entry(9,   "Bad file descriptor"),       // EBADF
++            Map.entry(13,  "Permission denied"),         // EACCES
++            Map.entry(28,  "No space left on device"),   // ENOSPC
++            Map.entry(32,  "Broken pipe"),                // EPIPE
++            Map.entry(89,  "Destination address required"), // EDESTADDRREQ
++            Map.entry(90,  "Message too long"),          // EMSGSIZE
++            Map.entry(103, "An established connection was aborted by the software in your host machine"), // ECONNABORTED
++            Map.entry(104, "Connection reset by peer"),  // ECONNRESET
++            Map.entry(107, "Transport endpoint is not connected"), // ENOTCONN
++            Map.entry(110, "Operation timed out")        // ETIMEDOUT
++    );
++
++    private final int fd;
++
++    // Lazily-computed, then cached for this instance's lifetime: a socket's
++    // SOCK_STREAM/SOCK_DGRAM type is fixed at socket(2) creation time and
++    // can never change afterward, so re-querying it via getsockopt(SO_TYPE)
++    // on every RubyUNIXSocket#recvfrom call (measured ~1.2us/call in
++    // isolation -- not huge per call, but pure waste since the answer is
++    // always the same) is a repeated syscall for a value that was already
++    // known after the first call. Safe as a plain instance field, not a
++    // ThreadLocal/shared map: this fd is immutable per instance (final,
++    // set once in the constructor), so there's no reopen/rebind path that
++    // could make a cached value stale -- same "one fixed key, own slot,
++    // compute once" shape as BITS/SCRATCH elsewhere in this file/class.
++    private int cachedSockType = Integer.MIN_VALUE;
++
++    UnixFdChannel(int fd) {
++        this.fd = fd;
++    }
++
++    public int fd() { return fd; }
++
++    int sockType() {
++        if (cachedSockType == Integer.MIN_VALUE) {
++            cachedSockType = UnixDomainNative.socketType(fd);
++        }
++        return cachedSockType;
++    }
++
++    @Override
++    public int read(ByteBuffer dst) throws IOException {
++        if (!isOpen()) throw new ClosedChannelException();
++        boolean completed = false;
++        try {
++            begin();
++            long n = rawRead(fd, dst);
++            completed = true;
++            return readResult(n);
++        } finally {
++            end(completed);
++        }
++    }
++
++    @Override
++    public int write(ByteBuffer src) throws IOException {
++        if (!isOpen()) throw new ClosedChannelException();
++        boolean completed = false;
++        try {
++            begin();
++            long n = rawWrite(fd, src);
++            completed = true;
++            return writeResult(n);
++        } finally {
++            end(completed);
++        }
++    }
++
++    // WHY: this channel isn't a SelectableChannel, so OpenFile#setNonblock
++    // can't flip it non-blocking and PosixShim used to answer every
++    // read_nonblock on it with EAGAIN without reading at all -- even with
++    // data waiting, and at EOF (where MRI raises EOFError). write_nonblock
++    // likewise did a plain blocking write. These do one real read(2)/write(2)
++    // with the fd temporarily in O_NONBLOCK, the same fcntl toggle
++    // UnixDomain#recvFromNonBlocking already uses for recv_nonblock.
++    /** Non-blocking read. Channel contract: bytes read, 0 if none available, -1 at EOF. */
++    public int readNonBlocking(ByteBuffer dst) throws IOException {
++        if (!isOpen()) throw new ClosedChannelException();
++        int oldFlags = flags();
++        setFlags(oldFlags | UnixDomainNative.O_NONBLOCK);
++        try {
++            return readResult(rawRead(fd, dst));
++        } finally {
++            setFlags(oldFlags);
++        }
++    }
++
++    /** Non-blocking write. Channel contract: bytes written, 0 if the socket buffer is full. */
++    public int writeNonBlocking(ByteBuffer src) throws IOException {
++        if (!isOpen()) throw new ClosedChannelException();
++        int oldFlags = flags();
++        setFlags(oldFlags | UnixDomainNative.O_NONBLOCK);
++        try {
++            return writeResult(rawWrite(fd, src));
++        } finally {
++            setFlags(oldFlags);
++        }
++    }
++
++    private int flags() throws IOException {
++        try {
++            return UnixDomainNative.getFlags(fd);
++        } catch (UnixDomainNative.NativeException e) {
++            throw toIOException(e);
++        }
++    }
++
++    private void setFlags(int flags) throws IOException {
++        try {
++            UnixDomainNative.setFlags(fd, flags);
++        } catch (UnixDomainNative.NativeException e) {
++            throw toIOException(e);
++        }
++    }
++
++    /**
++     * rawRead/rawWrite's result for EAGAIN on a non-blocking fd. It needs its
++     * own value: read(2)'s 0 already means EOF.
++     */
++    static final long WOULD_BLOCK = -2;
++
++    /** rawRead result to Channel contract: -1 at EOF, 0 if nothing available yet. */
++    static int readResult(long n) {
++        if (n == WOULD_BLOCK) return 0;
++        return n == 0 ? -1 : (int) n;
++    }
++
++    /** rawWrite result to Channel contract: 0 if the socket buffer is full. */
++    static int writeResult(long n) {
++        return n == WOULD_BLOCK ? 0 : (int) n;
++    }
++
++    // WHY static + fd-parameterized, not instance methods on this class: these
++    // are the bare read(2)/write(2) mechanics (scratch-buffer copy, direct-vs-
++    // heap ByteBuffer handling, errno mapping) with NO begin()/end() bracketing
++    // of their own -- callers decide whether to bracket them. This class's own
++    // read()/write() above do (see this class's header comment: that's what
++    // gives pair()/for_fd SCM_RIGHTS fds real Thread#kill/interrupt support,
++    // at the documented cost of the channel closing if a genuine interrupt
++    // lands mid-call). RubyUNIXSocket's named-socket read/write path
++    // (see RubyUNIXSocket_init.java / ChannelFD_jepUnixNativeChannel.java)
++    // deliberately calls these WITHOUT begin()/end() instead: a named JEP-380
++    // UNIXSocket keeps its fd genuinely blocking (unlike pair()/for_fd's
++    // channel, which stays non-blocking-capable via chSelect), and for that fd
++    // these are a real blocking read(2)/write(2) libc call with no JDK-level
++    // interrupt hook at all -- Thread#kill/Thread#raise/Timeout.timeout cannot
++    // abort it (matching jnr.unixsocket.UnixSocketChannel's long-standing,
++    // already-shipped behavior), but a genuine interrupt landing mid-call also
++    // can never tear the connection down, which AbstractInterruptibleChannel's
++    // own contract cannot offer. Measured: ~30% faster round-trip throughput
++    // than the select()-based non-blocking default these replace (this repo's
++    // kestowv_tier_one.rb benchmark against Kestowv 0.5.6's ipc/channel.rb) --
++    // see INTERPRETER.md Landmine 12/13 for the full trade-off and why the two
++    // obvious-looking alternatives (making the real SocketChannel itself
++    // blocking; wrapping it in this class's own begin()/end()-bracketed
++    // read/write) were tried first and rejected, not overlooked.
++    static long rawRead(int fd, ByteBuffer dst) throws IOException {
++        int remaining = dst.remaining();
++        if (remaining == 0) return 0;
++
++        long n;
++        if (dst.isDirect()) {
++            MemorySegment seg = MemorySegment.ofBuffer(dst);
++            n = nativeRead(fd, seg, remaining);
++            if (n > 0) dst.position(dst.position() + (int) n);
++        } else {
++            MemorySegment tmp = SCRATCH.get().get(remaining);
++            n = nativeRead(fd, tmp, remaining);
++            if (n > 0) {
++                if (dst.hasArray()) {
++                    // Copy straight into dst's backing array -- one copy,
++                    // not native->byte[]->dst via an intermediate put().
++                    int off = dst.arrayOffset() + dst.position();
++                    MemorySegment.copy(tmp, ValueLayout.JAVA_BYTE, 0, dst.array(), off, (int) n);
++                    dst.position(dst.position() + (int) n);
++                } else {
++                    byte[] bytes = new byte[(int) n];
++                    MemorySegment.copy(tmp, ValueLayout.JAVA_BYTE, 0, bytes, 0, (int) n);
++                    dst.put(bytes);
++                }
++            }
++        }
++        return n;
++    }
++
++    static long rawWrite(int fd, ByteBuffer src) throws IOException {
++        int remaining = src.remaining();
++        if (remaining == 0) return 0;
++
++        long n;
++        if (src.isDirect()) {
++            MemorySegment seg = MemorySegment.ofBuffer(src);
++            n = nativeWrite(fd, seg, remaining);
++            if (n > 0) src.position(src.position() + (int) n);
++        } else {
++            MemorySegment tmp = SCRATCH.get().get(remaining);
++            if (src.hasArray()) {
++                // Copy straight from src's backing array -- one copy,
++                // not src->byte[]->native via an intermediate get().
++                int off = src.arrayOffset() + src.position();
++                MemorySegment.copy(src.array(), off, tmp, ValueLayout.JAVA_BYTE, 0, remaining);
++            } else {
++                int startPos = src.position();
++                byte[] bytes = new byte[remaining];
++                src.get(bytes);
++                src.position(startPos);
++                MemorySegment.copy(bytes, 0, tmp, ValueLayout.JAVA_BYTE, 0, remaining);
++            }
++            n = nativeWrite(fd, tmp, remaining);
++            if (n > 0) src.position(src.position() + (int) n);
++        }
++        return n;
++    }
++
++    private static long nativeRead(int fd, MemorySegment seg, int len) throws IOException {
++        try {
++            return UnixDomainNative.read(fd, seg, len);
++        } catch (UnixDomainNative.NativeException e) {
++            if (e.errno == UnixDomainNative.EAGAIN) return WOULD_BLOCK;
++            throw toIOException(e);
++        }
++    }
++
++    private static long nativeWrite(int fd, MemorySegment seg, int len) throws IOException {
++        try {
++            return UnixDomainNative.write(fd, seg, len);
++        } catch (UnixDomainNative.NativeException e) {
++            if (e.errno == UnixDomainNative.EAGAIN) return WOULD_BLOCK;
++            throw toIOException(e);
++        }
++    }
++
++    static IOException toIOException(UnixDomainNative.NativeException e) {
++        String mapped = ERRNO_MESSAGES.get(e.errno);
++        return new IOException(mapped != null ? mapped : e.getMessage(), e);
++    }
++
++    @Override
++    protected void implCloseChannel() throws IOException {
++        UnixDomainNative.shutdown(fd, UnixDomainNative.SHUT_RDWR);
++        UnixDomainNative.close(fd);
++    }
++}
+diff --git a/core/src/main/java/org/jruby/ext/socket/UnixSocketNativeChannel.java b/core/src/main/java/org/jruby/ext/socket/UnixSocketNativeChannel.java
+new file mode 100644
+index 0000000000..8c2bc11a23
+--- /dev/null
++++ b/core/src/main/java/org/jruby/ext/socket/UnixSocketNativeChannel.java
+@@ -0,0 +1,87 @@
++package org.jruby.ext.socket;
++
++import java.io.IOException;
++import java.nio.ByteBuffer;
++import java.nio.channels.Channel;
++import java.nio.channels.ClosedChannelException;
++import java.nio.channels.ReadableByteChannel;
++import java.nio.channels.WritableByteChannel;
++
++/**
++ * The read/write half of a named JEP-380 unix-domain {@code SocketChannel},
++ * routed through FFM's raw read(2)/write(2) ({@link UnixFdChannel#rawRead}/
++ * {@link UnixFdChannel#rawWrite}) instead of through
++ * {@code sun.nio.ch.SocketChannelImpl.read()}/{@code write()}.
++ *
++ * WHY this exists, and why it's deliberately NOT an
++ * {@code AbstractInterruptibleChannel} the way {@link UnixFdChannel} itself
++ * is: {@code SocketChannelImpl} already extends
++ * {@code AbstractInterruptibleChannel}, so once
++ * {@code RubyUNIXSocket#init_sock} (see RubyUNIXSocket_init.java) leaves a
++ * named socket's fd genuinely blocking, a real {@code Thread.interrupt()}
++ * landing while truly inside its blocking {@code read()} throws
++ * {@code ClosedByInterruptException} and closes the channel as a side
++ * effect -- confirmed destroying every connection in a jittered
++ * Thread#raise/Timeout.timeout stress loop (1000/1000 trials). Wrapping the
++ * same real fd in {@link UnixFdChannel} instead doesn't help either: that
++ * class extends {@code AbstractInterruptibleChannel} on purpose (its own
++ * header comment) to give pair()/for_fd SCM_RIGHTS fds real
++ * Thread#kill/interrupt support, with the exact same close-on-interrupt
++ * trade-off, confirmed the same way.
++ *
++ * This class takes the one remaining option: a plain blocking read(2)/
++ * write(2) via FFM with NO begin()/end() bracketing, matching
++ * jnr.unixsocket.UnixSocketChannel's long-standing, already-shipped
++ * semantics -- Thread#kill/Thread#raise/Timeout.timeout cannot abort a
++ * blocked call (the thread simply waits for real I/O activity), but nothing
++ * can tear the connection down as a side effect of being interrupted either.
++ * That trade released ~30% of this path's round-trip throughput back
++ * (this repo's kestowv_tier_one.rb benchmark against Kestowv 0.5.6's
++ * ipc/channel.rb) by removing OpenFile#waitReadable's EAGAIN-driven
++ * select() from the hot path entirely -- see INTERPRETER.md Landmine 13.
++ *
++ * {@code owner} is the real {@code SocketChannel}: this class delegates
++ * {@code isOpen()}/{@code close()} to it rather than tracking its own
++ * state, so closing the Ruby-level IO (which closes {@code ch}, not this
++ * wrapper) is immediately visible here too. Only {@code chRead}/
++ * {@code chWrite} point at this class (see ChannelFD_jepUnixNativeChannel.java);
++ * {@code ch} itself -- used for connect/accept/getLocalAddress/
++ * getRemoteAddress/shutdownInput/shutdownOutput/close -- stays the real
++ * JEP-380 channel throughout, untouched.
++ *
++ * @author Troy Mallory (CufeHaco) - JEP-380/FFM unix socket support (jruby/jruby#9040)
++ */
++public final class UnixSocketNativeChannel implements ReadableByteChannel, WritableByteChannel {
++    private final Channel owner;
++    private final int fd;
++
++    public UnixSocketNativeChannel(Channel owner, int fd) {
++        this.owner = owner;
++        this.fd = fd;
++    }
++
++    @Override
++    public boolean isOpen() {
++        return owner.isOpen();
++    }
++
++    @Override
++    public void close() throws IOException {
++        owner.close();
++    }
++
++    @Override
++    public int read(ByteBuffer dst) throws IOException {
++        if (!isOpen()) throw new ClosedChannelException();
++        // EAGAIN is possible: this fd is normally blocking, but recv_nonblock/
++        // read_nonblock flip the owning SocketChannel (and so the shared fd)
++        // non-blocking around the call. It used to surface as IOError.
++        return UnixFdChannel.readResult(UnixFdChannel.rawRead(fd, dst));
++    }
++
++    @Override
++    public int write(ByteBuffer src) throws IOException {
++        if (!isOpen()) throw new ClosedChannelException();
++        return UnixFdChannel.writeResult(UnixFdChannel.rawWrite(fd, src));
++    }
++}
+diff --git a/core/src/main/java/org/jruby/runtime/Helpers.java b/core/src/main/java/org/jruby/runtime/Helpers.java
+index 3c44c5f633..88a5b87aed 100644
+--- a/core/src/main/java/org/jruby/runtime/Helpers.java
++++ b/core/src/main/java/org/jruby/runtime/Helpers.java
+@@ -365,6 +365,10 @@ public class Helpers {
+                     return Errno.EACCES;
+                 case "Protocol family not supported":
+                     return Errno.EPFNOSUPPORT;
++                case "Destination address required":
++                    return Errno.EDESTADDRREQ;
++                case "Transport endpoint is not connected":
++                    return Errno.ENOTCONN;
+             }
+ 
+             // Raised on Windows for process launch with missing file
+diff --git a/core/src/main/java/org/jruby/util/io/ChannelFD.java b/core/src/main/java/org/jruby/util/io/ChannelFD.java
+index 492bfc91ef..470a2ba0a8 100644
+--- a/core/src/main/java/org/jruby/util/io/ChannelFD.java
++++ b/core/src/main/java/org/jruby/util/io/ChannelFD.java
+@@ -172,7 +172,23 @@ public class ChannelFD implements Closeable {
+         if (ch instanceof SocketChannel) chSock = (SocketChannel)ch;
+         else chSock = null;
+         if (ch instanceof NativeSelectableChannel) chNative = (NativeSelectableChannel)ch;
+-        else chNative = null;
++        else chNative = jepUnixNativeChannel(ch);
++
++        // A connected (not listening) JEP-380 unix-domain SocketChannel gets its
++        // actual read/write mechanics replaced too -- see
++        // UnixSocketNativeChannel's header comment for the full reasoning (why
++        // FFM here, why NOT AbstractInterruptibleChannel-wrapped FFM either).
++        // ServerSocketChannel is deliberately excluded: a listening socket is
++        // never read from or written to, only accepted on.
++        if (chSock != null && org.jruby.ext.socket.UnixDomain.isUnixChannel(ch)) {
++            int fd = org.jruby.ext.socket.UnixDomain.fileno(ch);
++            if (!FilenoUtil.isFake(fd)) {
++                org.jruby.ext.socket.UnixSocketNativeChannel nativeIO =
++                        new org.jruby.ext.socket.UnixSocketNativeChannel(ch, fd);
++                chRead = nativeIO;
++                chWrite = nativeIO;
++            }
++        }
+ 
+         if (chNative != null) {
+             // we have an ENXIO channel, but need to know if it's a regular file to skip selection
+@@ -197,6 +213,39 @@ public class ChannelFD implements Closeable {
+         }
+     }
+ 
++    // WHY: jnr.enxio.channels.NativeSelectableChannel is how this class already
++    // recognizes a "real native descriptor" and, on that strength alone, skips
++    // the pre-read select() OpenFile#selectForRead otherwise does before every
++    // blocking read (that method's own comment: MRI never selects before a
++    // blocking rb_read_internal; JRuby only does it for ordinary SelectableChannels
++    // so a blocked read can be interrupted without closing the channel -- see
++    // RubyThread's wakeup() on native channels for why that already doesn't apply
++    // to a native descriptor either way). A JEP-380 unix-domain SocketChannel/
++    // ServerSocketChannel (jruby/jruby#9040) is just as real a native descriptor
++    // as JNR's own UnixSocketChannel -- FilenoUtil/UnixDomain.fileno already
++    // resolves its actual OS fd reflectively via sun.nio.ch.SelChImpl (used today
++    // for .fileno, send_io/recv_io) -- it simply doesn't implement JNR's
++    // enxio-specific marker interface, so it fell through to the generic
++    // SelectableChannel path and paid for a select() on every single blocking
++    // read it ever does. Measured cost: ~30% UNIXSocket round-trip throughput on
++    // a 256B request/response loop (JRuby-jep-380 repo, kestowv_tier_one.rb
++    // benchmark against Kestowv 0.5.6's ipc/channel.rb). Wrapping it here, rather
++    // than adding a second "is this native" concept, means every existing
++    // chNative consumer (this select-skip, plus PREAD_TASK/PWRITE_TASK's real
++    // pread/pwrite) picks it up for free.
++    private static NativeSelectableChannel jepUnixNativeChannel(Channel ch) {
++        if (!org.jruby.ext.socket.UnixDomain.isUnixChannel(ch)) return null;
++
++        int fd = org.jruby.ext.socket.UnixDomain.fileno(ch);
++        if (FilenoUtil.isFake(fd)) return null; // no real fd resolved -- stay on the select path
++
++        return new NativeSelectableChannel() {
++            @Override public int getFD() { return fd; }
++            @Override public boolean isOpen() { return ch.isOpen(); }
++            @Override public void close() throws IOException { ch.close(); }
++        };
++    }
++
+     public Channel ch;
+     public ReadableByteChannel chRead;
+     public WritableByteChannel chWrite;
+diff --git a/core/src/main/java/org/jruby/util/io/FilenoUtil.java b/core/src/main/java/org/jruby/util/io/FilenoUtil.java
+index 4c036ff599..fa2e7a027a 100644
+--- a/core/src/main/java/org/jruby/util/io/FilenoUtil.java
++++ b/core/src/main/java/org/jruby/util/io/FilenoUtil.java
+@@ -66,9 +66,12 @@ public class FilenoUtil {
+         } else if (ReflectiveAccess.FILE_DESCRIPTOR_SET_FILENO_HANDLE != null) {
+             FileDescriptor unixFD = new FileDescriptor();
+ 
+-            // UNIX sockets, from jnr-unixsocket
+             try {
+-                if (channel instanceof UnixSocketChannel) {
++                if (channel instanceof org.jruby.ext.socket.UnixFdChannel) {
++                    ReflectiveAccess.FILE_DESCRIPTOR_SET_FILENO.accept(unixFD, ((org.jruby.ext.socket.UnixFdChannel) channel).fd());
++                    return unixFD;
++                } else if (channel instanceof UnixSocketChannel) {
++                    // UNIX sockets, from jnr-unixsocket
+                     ReflectiveAccess.FILE_DESCRIPTOR_SET_FILENO.accept(unixFD, ((UnixSocketChannel)channel).getFD());
+                     return unixFD;
+                 } else if (channel instanceof UnixServerSocketChannel) {
+diff --git a/core/src/main/java/org/jruby/util/io/OpenFile.java b/core/src/main/java/org/jruby/util/io/OpenFile.java
+index eb011ac39e..306e68b6cb 100644
+--- a/core/src/main/java/org/jruby/util/io/OpenFile.java
++++ b/core/src/main/java/org/jruby/util/io/OpenFile.java
+@@ -2844,6 +2844,32 @@ public class OpenFile implements Finalizable {
+         return !nonblock;
+     }
+ 
++    /**
++     * Mark the Ruby-visible "nonblock?" bookkeeping flag without touching
++     * the real channel's actual OS-level blocking mode (setBlocking's own
++     * fd.chSelect.configureBlocking(...) call). For a channel whose real
++     * read/write already goes around performRead/performWrite's own
++     * chSelect-based machinery entirely (see UnixSocketNativeChannel), the
++     * two are legitimately independent: MRI reports every fd as
++     * non-blocking internally regardless of what blocking behavior Ruby
++     * code actually observes (rb_thread_io_blocking_region) -- IO#nonblock?
++     * mirrors that MRI-visible bookkeeping fact, which has nothing to do
++     * with whether THIS JVM's underlying fd happens to be configured
++     * O_NONBLOCK or not. Safe for performRead/performWrite's own nonblock
++     * branch too: it only ever special-cases a literal 0 return as EAGAIN,
++     * and a channel that already maps real EOF to -1 (the ReadableByteChannel
++     * contract -- see UnixFdChannel#rawRead) never produces that literal 0
++     * in the first place, so there is nothing for this flag to misroute.
++     */
++    public void setNonblockFlag(boolean nonblock) {
++        boolean locked = lock();
++        try {
++            this.nonblock = nonblock;
++        } finally {
++            if (locked) unlock();
++        }
++    }
++
+     // MRI: check_tty
+     public void checkTTY() {
+         if (fd.realFileno != -1 && runtime.getPosix().isatty(fd.realFileno) != 0
+diff --git a/core/src/main/java/org/jruby/util/io/PosixShim.java b/core/src/main/java/org/jruby/util/io/PosixShim.java
+index 552d912b63..bef040d427 100644
+--- a/core/src/main/java/org/jruby/util/io/PosixShim.java
++++ b/core/src/main/java/org/jruby/util/io/PosixShim.java
+@@ -5,6 +5,7 @@ import java.io.IOException;
+ import java.nio.ByteBuffer;
+ import java.nio.channels.Channel;
+ import java.nio.channels.Channels;
++import java.nio.channels.DatagramChannel;
+ import java.nio.channels.FileLock;
+ import java.nio.channels.NotYetConnectedException;
+ import java.nio.channels.OverlappingFileLockException;
+@@ -18,6 +19,7 @@ import jnr.posix.POSIX;
+ import org.jruby.Ruby;
+ import org.jruby.anno.CRuby;
+ import org.jruby.ext.fcntl.FcntlLibrary;
++import org.jruby.ext.socket.UnixFdChannel;
+ import org.jruby.platform.Platform;
+ import org.jruby.runtime.Helpers;
+ import org.jruby.util.JRubyFile;
+@@ -110,7 +112,8 @@ public class PosixShim {
+                 setErrno(Errno.EACCES);
+                 return -1;
+             }
+-            int written = fd.chWrite.write(buffer);
++            int written = nonblock && fd.ch instanceof UnixFdChannel ufc ?
++                    ufc.writeNonBlocking(buffer) : fd.chWrite.write(buffer);
+ 
+             if (written == 0 && length > 0) {
+                 // if it's a nonblocking write against a file and we've hit EOF, do EAGAIN
+@@ -162,7 +165,17 @@ public class PosixShim {
+     }
+ 
+     private int performRead(ChannelFD fd, ByteBuffer buffer, boolean nonblock) throws IOException {
+-        int read = fd.chRead.read(buffer);
++        int read;
++        if (nonblock && fd.ch instanceof UnixFdChannel ufc) {
++            read = ufc.readNonBlocking(buffer);
++        } else if (fd.ch instanceof DatagramChannel dgram && !dgram.isConnected()) {
++            // read(2) on a bound, unconnected datagram socket just takes the next
++            // datagram; DatagramChannel#read refuses (NotYetConnectedException).
++            int before = buffer.position();
++            read = dgram.receive(buffer) == null ? 0 : buffer.position() - before;
++        } else {
++            read = fd.chRead.read(buffer);
++        }
+ 
+         if (nonblock) {
+             if (read == JAVA_EOF) {
+@@ -199,6 +212,9 @@ public class PosixShim {
+                     }
+                 } else if (fd.chNative != null && fd.isNativeFile) {
+                     // it's a native file, so we don't do selection or nonblock
++                } else if (fd.ch instanceof UnixFdChannel) {
++                    // UNIXSocket.pair/for_fd: not selectable, but performRead does a
++                    // real O_NONBLOCK read(2), so there is no need to fake EAGAIN
+                 } else {
+                     setErrno(Errno.EAGAIN);
+                     return true;
+-- 
+2.43.0
+
