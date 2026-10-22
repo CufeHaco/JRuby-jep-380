@@ -1,0 +1,413 @@
+jruby 10.1.2.0-SNAPSHOT (4.0.0) 2026-10-22 0e6e01bae1 OpenJDK 64-Bit Server VM 25.0.4.1+1-1-24.04.4-Ubuntu on 25.0.4.1+1-1-24.04.4-Ubuntu +indy +jit [x86_64-linux]
+.....F....F...EEwarning: thread "Ruby-0-Thread-20: /data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/current_spec.rb:21" terminated with exception (report_on_exception is true):SpecExpectationNotMetError: Expected #<Thread:0x31984bbb run>.equal? #<Thread:0x727873be /data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/current_spec.rb:21 run>
+to be truthy but was false
+             SpecExpectation.fail_predicate at /data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/expectations/expectations.rb:33
+  SpecExpectation.fail_single_arg_predicate at /data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/expectations/expectations.rb:37
+         SpecPositiveOperatorMatcher#equal? at /data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/matchers/base.rb:37
+       block (4 levels) in <top (required)> at /data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/current_spec.rb:25
+F.....F........F.......FEF.......E..E..
+
+1)
+Thread::Backtrace::Location#absolute_path when used in eval with a given filename returns nil with absolute_path FAILED
+Expected "foo.rb" == nil
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace/location/absolute_path_spec.rb:33:in 'block (3 levels) in <top (required)>'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'Array#all?'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace/location/absolute_path_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'Kernel#load'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+
+2)
+Thread::Backtrace::Location#absolute_path canonicalization returns a canonical path without symlinks, even when __FILE__ does not FAILED
+Expected ["/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace/location/fixtures/absolute_path.rb",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace/location/fixtures/absolute_path.rb"] == ["/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/rubyspec_temp/355090/3-symlink.rb",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace/location/fixtures/absolute_path.rb"]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace/location/absolute_path_spec.rb:80:in 'block (4 levels) in <top (required)>'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'Array#all?'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace/location/absolute_path_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'Kernel#load'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+
+3)
+Thread::Backtrace::Location#absolute_path canonicalization returns a canonical path without symlinks, even when __FILE__ is removed FAILED
+Expected ["/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace/location/fixtures/absolute_path.rb",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace/location/fixtures/absolute_path.rb"] == ["/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/rubyspec_temp/355090/4-symlink.rb",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace/location/fixtures/absolute_path.rb"]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace/location/absolute_path_spec.rb:89:in 'block (4 levels) in <top (required)>'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'Array#all?'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace/location/absolute_path_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'Kernel#load'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+
+4)
+Thread::Backtrace::Location#path canonicalization returns a non-canonical path with symlinks, the same as __FILE__ FAILED
+Expected ["/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace/location/fixtures/path.rb",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace/location/fixtures/path.rb"] == ["/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/rubyspec_temp/355090/7-symlink.rb",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/rubyspec_temp/355090/7-symlink.rb"]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace/location/path_spec.rb:120:in 'block (4 levels) in <top (required)>'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'Array#all?'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace/location/path_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'Kernel#load'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+
+5)
+Thread#backtrace_locations can be called with `nil` length ERROR
+TypeError: no implicit conversion from nil to integer
+org/jruby/RubyThread.java:2178:in 'Thread#backtrace_locations'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace_locations_spec.rb:44:in 'block (2 levels) in <top (required)>'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'Array#all?'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace_locations_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'Kernel#load'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+
+6)
+Thread#backtrace_locations can be called with a range whose end is negative FAILED
+Expected [] == ["/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'BasicObject#instance_exec'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'MSpec.protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/context.rb:176:in 'block in ContextState#protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/context.rb:176:in 'Array#all?'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/context.rb:176:in 'ContextState#protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/context.rb:212:in 'block (2 levels) in ContextState#process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:285:in 'MSpec.repeat'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/context.rb:204:in 'block in ContextState#process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/context.rb:203:in 'Array#each'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/context.rb:203:in 'ContextState#process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:56:in 'MSpec.describe'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/object.rb:11:in 'Object#describe'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace_locations_spec.rb:3:in '<main>'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:100:in 'Kernel#load'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:100:in 'block (2 levels) in MSpec.files'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'BasicObject#instance_exec'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'MSpec.protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:100:in 'block in MSpec.files'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:91:in 'Array#each'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:91:in 'MSpec.each_file'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:96:in 'MSpec.files'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:64:in 'MSpec.process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/commands/mspec-run.rb:84:in 'MSpecRun#run'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/utils/script.rb:297:in 'MSpecScript.main'",
+ "spec/mspec/bin/mspec-run:7:in '<main>'"]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace_locations_spec.rb:54:in 'block (2 levels) in <top (required)>'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'Array#all?'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace_locations_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'Kernel#load'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+
+7)
+Thread#backtrace_locations returns nil if omitting more locations than available FAILED
+Expected [] == nil
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace_locations_spec.rb:71:in 'block (2 levels) in <top (required)>'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'Array#all?'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace_locations_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'Kernel#load'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+
+8)
+Thread#backtrace_locations without argument is the same as showing all locations with 0..-1 FAILED
+Expected ["/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace_locations_spec.rb:81:in 'Thread#backtrace_locations'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace_locations_spec.rb:81:in 'block (2 levels) in <top (required)>'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'BasicObject#instance_exec'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'MSpec.protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/context.rb:176:in 'block in ContextState#protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/context.rb:176:in 'Array#all?'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/context.rb:176:in 'ContextState#protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/context.rb:212:in 'block (2 levels) in ContextState#process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:285:in 'MSpec.repeat'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/context.rb:204:in 'block in ContextState#process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/context.rb:203:in 'Array#each'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/context.rb:203:in 'ContextState#process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:56:in 'MSpec.describe'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/object.rb:11:in 'Object#describe'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace_locations_spec.rb:3:in '<main>'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:100:in 'Kernel#load'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:100:in 'block (2 levels) in MSpec.files'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'BasicObject#instance_exec'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'MSpec.protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:100:in 'block in MSpec.files'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:91:in 'Array#each'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:91:in 'MSpec.each_file'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:96:in 'MSpec.files'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:64:in 'MSpec.process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/commands/mspec-run.rb:84:in 'MSpecRun#run'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/utils/script.rb:297:in 'MSpecScript.main'",
+ "spec/mspec/bin/mspec-run:7:in '<main>'"] == []
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace_locations_spec.rb:81:in 'block (2 levels) in <top (required)>'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'Array#all?'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace_locations_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'Kernel#load'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+
+9)
+Thread#backtrace returns an array (which may be empty) immediately after the thread is created FAILED
+Expected nil.is_a? Array
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace_spec.rb:33:in 'block (2 levels) in <top (required)>'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'Array#all?'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'Kernel#load'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+
+10)
+Thread#backtrace can be called with `nil` length ERROR
+TypeError: no implicit conversion from nil to integer
+org/jruby/RubyThread.java:2153:in 'Thread#backtrace'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace_spec.rb:59:in 'block (2 levels) in <top (required)>'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'Array#all?'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'Kernel#load'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+
+11)
+Thread#backtrace can be called with a range whose end is negative FAILED
+Expected nil == ["/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'BasicObject#instance_exec'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'MSpec.protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/context.rb:176:in 'block in ContextState#protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/context.rb:176:in 'Array#all?'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/context.rb:176:in 'ContextState#protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/context.rb:212:in 'block (2 levels) in ContextState#process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:285:in 'MSpec.repeat'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/context.rb:204:in 'block in ContextState#process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/context.rb:203:in 'Array#each'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/context.rb:203:in 'ContextState#process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:56:in 'MSpec.describe'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/object.rb:11:in 'Object#describe'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace_spec.rb:3:in '<main>'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:100:in 'Kernel#load'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:100:in 'block (2 levels) in MSpec.files'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'BasicObject#instance_exec'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:117:in 'MSpec.protect'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:100:in 'block in MSpec.files'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:91:in 'Array#each'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:91:in 'MSpec.each_file'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:96:in 'MSpec.files'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/runner/mspec.rb:64:in 'MSpec.process'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/commands/mspec-run.rb:84:in 'MSpecRun#run'",
+ "/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/mspec/lib/mspec/utils/script.rb:297:in 'MSpecScript.main'",
+ "spec/mspec/bin/mspec-run:7:in '<main>'"]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace_spec.rb:69:in 'block (2 levels) in <top (required)>'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'Array#all?'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/backtrace_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'Kernel#load'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+
+12)
+Thread.current returns the correct thread in a Fiber FAILED
+Expected #<Thread:0x31984bbb run>.equal? #<Thread:0x727873be /data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/current_spec.rb:21 run>
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/current_spec.rb:25:in 'block (4 levels) in <top (required)>'
+
+13)
+Thread.fork is an alias of Thread.start FAILED
+Expected #<Method: Thread.fork(new)(*)> == #<Method: Thread.start(*)>
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/fork_spec.rb:5:in 'block (2 levels) in <top (required)>'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'Array#all?'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/fork_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'Kernel#load'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+
+14)
+Thread#kill kills other fibers of that thread without running their ensure clauses FAILED
+Expected nil == :fiber_resumed
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/kill_spec.rb:134:in 'block (3 levels) in <top (required)>'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'Array#all?'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/kill_spec.rb:7:in 'block in <top (required)>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/kill_spec.rb:6:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'Kernel#load'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+
+15)
+Thread#priority= sets priority even when the thread has died FAILED
+Expected 0 == 3
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/priority_spec.rb:70:in 'block (2 levels) in <top (required)>'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'Array#all?'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/priority_spec.rb:34:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'Kernel#load'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+
+16)
+Thread#raise on a sleeping thread raises a RuntimeError when called with no arguments inside rescue ERROR
+Expected RuntimeError
+but got: RangeError
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/raise_spec.rb:84:in 'block (2 levels) in <top (required)>'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'Array#all?'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/raise_spec.rb:24:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'Kernel#load'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+
+17)
+Thread#raise on a sleeping thread calls #set_backtrace only in the caller thread FAILED
+Expected [] == [[#<Thread:0x217b0952@main run>, ["a.rb:1"]]]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/raise_spec.rb:160:in 'block (2 levels) in <top (required)>'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'Array#all?'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/raise_spec.rb:24:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'Kernel#load'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+
+18)
+Thread#raise on a running thread raises a RuntimeError when called with no arguments inside rescue ERROR
+Expected RuntimeError
+but got: RangeError
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/raise_spec.rb:244:in 'block (2 levels) in <top (required)>'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'Array#all?'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/raise_spec.rb:166:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'Kernel#load'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+
+19)
+Thread#raise on same thread raises a RuntimeError when called with no arguments inside rescue ERROR
+Expected RuntimeError("")
+but got: ZeroDivisionError("divided by 0")
+org/jruby/RubyFixnum.java:961:in 'Integer#/'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/raise_spec.rb:260:in 'block (3 levels) in <top (required)>'
+
+20)
+Thread#report_on_exception= when set to true prints a backtrace on $stderr in the regular backtrace order FAILED
+Expected:
+  $stdout: ""
+  $stderr: /\A
+\#<Thread:0x2059f785\ \/data\/valen\-systems\-shared\/worktrees\/cufehaco\/jruby\-upstream\/spec\/ruby\/core\/thread\/report_on_exception_spec\.rb:72\ run>\sterminated\swith\sexception\s\(report_on_exception\sis\strue\):\n
+\/data\/valen\-systems\-shared\/worktrees\/cufehaco\/jruby\-upstream\/spec\/ruby\/core\/thread\/report_on_exception_spec\.rb:67:in\s[`']foo':\sThread\#report_on_exception\sspecs\sbacktrace\sorder\s\(RuntimeError\)\n
+\tfrom\s\/data\/valen\-systems\-shared\/worktrees\/cufehaco\/jruby\-upstream\/spec\/ruby\/core\/thread\/report_on_exception_spec\.rb:75:in\s[`']block\s\(4\slevels\)\sin\s<top\s\(required\)>'\n
+\z/x
+
+     got:
+  $stdout: ""
+  $stderr: 
+"warning: thread \"Ruby-0-Thread-379: /data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/report_on_exception_spec.rb:72\" terminated with exception (report_on_exception is true):RuntimeError: Thread#report_on_exception specs backtrace order
+                             foo at /data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/report_on_exception_spec.rb:67
+  block (4 levels) in <top (required)> at /data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/report_on_exception_spec.rb:75
+"
+
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/report_on_exception_spec.rb:81:in 'block (3 levels) in <top (required)>'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'Array#all?'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/report_on_exception_spec.rb:47:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'Kernel#load'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+
+21)
+Thread#thread_variable_set removes a key if the value is nil FAILED
+Expected true == false
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/thread_variable_set_spec.rb:45:in 'block (2 levels) in <top (required)>'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'Array#all?'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/thread_variable_set_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'Kernel#load'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+
+22)
+Thread#thread_variable_set raises a FrozenError if the thread is frozen ERROR
+Expected FrozenError("can't modify frozen thread locals")
+but got: FrozenError("can't modify frozen Object: #<Thread:0xb529d7e /data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/thread_variable_set_spec.rb:5 dead>: #<Thread:0xb529d7e /data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/thread_variable_set_spec.rb:5 dead>")
+org/jruby/RubyThread.java:1191:in 'Thread#thread_variable_set'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/thread_variable_set_spec.rb:50:in 'block (3 levels) in <top (required)>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/thread_variable_set_spec.rb:50:in 'block (2 levels) in <top (required)>'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'Array#all?'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/thread_variable_set_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'Kernel#load'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+
+23)
+Thread#to_s returns a description including a thread name if given any ERROR
+EncodingError: invalid symbol in encoding US-ASCII :s\xEE\r
+org/jruby/RubyThread.java:1357:in 'Thread#inspect'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/to_s_spec.rb:19:in 'block (2 levels) in <top (required)>'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'Array#all?'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/to_s_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'Kernel#load'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+
+24)
+Thread#to_s has a binary encoding FAILED
+Expected #<Encoding:UTF-8> == #<Encoding:BINARY (ASCII-8BIT)>
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/to_s_spec.rb:25:in 'block (2 levels) in <top (required)>'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'Array#all?'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/core/thread/to_s_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'Kernel#load'
+org/jruby/RubyBasicObject.java:2783:in 'BasicObject#instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'Array#each'
+
+Finished in 24.359725 seconds
+
+55 files, 395 examples, 1025 expectations, 17 failures, 7 errors, 0 tagged

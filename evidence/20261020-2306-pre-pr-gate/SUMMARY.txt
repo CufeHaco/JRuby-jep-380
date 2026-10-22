@@ -1,0 +1,28 @@
+23:06:14 host valenthree nproc 40 patched=jruby 10.1.2.0-SNAPSHOT (4.0.0) 2026-10-21 0e6e01bae1 OpenJD stock=jruby 10.1.0.0 (4.0.0) 2026-04-20 32f988
+23:06:23 inet_probe patched-vs-MRI differing lines (ports normalized): 0
+23:06:23 addr_probe patched-vs-stock diff (path/pid-normalized): 2 differing lines
+23:06:27 eof_probe patched-vs-MRI differing lines (ports normalized): 2
+23:06:31 mspec unixsocket patched rc=0 15 files, 63 examples, 72 expectations, 0 failures, 0 errors, 1 tagged
+23:06:34 mspec unixsocket stock rc=1 15 files, 62 examples, 68 expectations, 2 failures, 4 errors, 1 tagged
+23:06:38 mspec unixserver patched rc=0 8 files, 28 examples, 32 expectations, 0 failures, 0 errors, 0 tagged
+23:06:42 mspec unixserver stock rc=1 8 files, 28 examples, 31 expectations, 2 failures, 1 error, 0 tagged
+23:06:45 mspec ancillarydata patched rc=1 12 files, 41 examples, 18 expectations, 0 failures, 101 errors, 0 tagged
+23:06:49 mspec ancillarydata stock rc=1 12 files, 41 examples, 18 expectations, 0 failures, 101 errors, 0 tagged
+23:06:54 mspec addrinfo patched rc=1 48 files, 507 examples, 623 expectations, 9 failures, 38 errors, 0 tagged
+23:06:58 mspec addrinfo stock rc=1 48 files, 507 examples, 623 expectations, 10 failures, 38 errors, 0 tagged
+23:09:19 mspec socket patched rc=1 43 files, 317 examples, 434 expectations, 35 failures, 174 errors, 8 tagged
+23:11:38 mspec socket stock rc=1 43 files, 317 examples, 427 expectations, 35 failures, 181 errors, 8 tagged
+23:11:43 mspec basicsocket patched rc=1 24 files, 297 examples, 365 expectations, 12 failures, 234 errors, 10 tagged
+23:16:43 mspec basicsocket stock rc=124 
+23:17:12 regression-patched-1 rc=1 PASS=135 FAIL=9 |     [32mPASS[0m  Wave thread total is 40 workers plus one governor 
+23:17:40 regression-stock-1 rc=1 PASS=135 FAIL=9 |     [32mPASS[0m  Wave thread total is 40 workers plus one governor 
+23:18:08 regression-patched-2 rc=1 PASS=135 FAIL=9 |     [32mPASS[0m  Wave thread total is 40 workers plus one governor 
+23:18:37 regression-stock-2 rc=1 PASS=135 FAIL=9 |     [32mPASS[0m  Wave thread total is 40 workers plus one governor 
+23:19:04 regression-patched-3 rc=1 PASS=135 FAIL=9 |     [32mPASS[0m  Wave thread total is 40 workers plus one governor 
+23:19:33 regression-stock-3 rc=1 PASS=135 FAIL=9 |     [32mPASS[0m  Wave thread total is 40 workers plus one governor 
+23:20:07 stress_uds-patched rc=0 PASS=0 FAIL=0 |   Modules: total=118  loaded=118  failed=0   ALL CLEAN — 0 errors across 30359678 operations. 
+23:20:43 stress-patched rc=0 PASS=0 FAIL=0 |   Modules: total=118  loaded=118  failed=0   ALL CLEAN — 0 errors across 256580247 operations. 
+23:21:17 stress_uds-stock rc=0 PASS=0 FAIL=0 |   Modules: total=118  loaded=118  failed=0   ALL CLEAN — 0 errors across 29964047 operations. 
+23:21:52 stress-stock rc=0 PASS=0 FAIL=0 |   Modules: total=118  loaded=118  failed=0   ALL CLEAN — 0 errors across 248921976 operations. 
+23:21:52 patched jar: 1cbca6fffe5680d9
+23:21:52 DONE

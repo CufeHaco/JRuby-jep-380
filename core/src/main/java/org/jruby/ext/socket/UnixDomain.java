@@ -1,9 +1,16 @@
 package org.jruby.ext.socket;
 
+import org.jruby.Ruby;
+import org.jruby.RubyString;
 import org.jruby.runtime.ThreadContext;
+import org.jruby.util.ByteList;
 import org.jruby.util.io.FilenoUtil;
+import org.jruby.util.io.OpenFile;
 
 import java.io.IOException;
+import java.lang.foreign.Arena;
+import java.lang.foreign.MemorySegment;
+import java.lang.foreign.ValueLayout;
 import java.net.ProtocolFamily;
 import java.net.SocketAddress;
 import java.net.StandardProtocolFamily;
@@ -35,6 +42,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * POSIX {@code sendmsg} path in {@link RubyUNIXSocket}. JDK Unix channels
  * implement {@code sun.nio.ch.SelChImpl}, so {@link FilenoUtil} already
  * recovers a real fd. FFM is the IPC connection side — see UnixDomainNative.
+ *
+ * @author Troy Mallory (CufeHaco) - JEP-380/FFM unix socket support (jruby/jruby#9040)
  */
 public final class UnixDomain {
     public static final int BIT_JEP380 = 1 << 0;
@@ -92,18 +101,24 @@ public final class UnixDomain {
             Path p = u.getPath();
             return p == null ? "" : p.toString();
         }
+        if (addr instanceof jnr.unixsocket.UnixSocketAddress jnr) {
+            String p = jnr.path();
+            return p == null ? "" : p;
+        }
         return "";
     }
 
     /**
-     * True for the address flavor every channel in this file's interpreter
-     * path produces: JEP-380's {@link UnixDomainSocketAddress}. (Used to
-     * also accept JNR's UnixSocketAddress, back when for_fd on a raw fd
-     * went through jnr.unixsocket.UnixSocketChannel.fromFD -- for_fd now
-     * uses UnixFdChannel instead, so that case no longer occurs here.)
+     * True for both unix address flavors a socket can still carry: JEP-380's
+     * {@link UnixDomainSocketAddress}, and JNR's UnixSocketAddress from the two
+     * call sites this patch deliberately leaves on JNR --
+     * Socket.new(:UNIX, :STREAM) and Socket.socketpair (RubySocket's
+     * UnixSocketChannel.open()/pair()). Dropping the JNR case broke
+     * remote_address/getpeername/local_address/getsockname on those sockets.
      */
     public static boolean isUnixAddress(SocketAddress addr) {
-        return addr instanceof UnixDomainSocketAddress;
+        return addr instanceof UnixDomainSocketAddress
+                || addr instanceof jnr.unixsocket.UnixSocketAddress;
     }
 
     public static SocketAddress localAddress(Channel channel) throws IOException {
@@ -116,7 +131,24 @@ public final class UnixDomain {
     }
 
     public static SocketAddress remoteAddress(Channel channel) throws IOException {
-        if (channel instanceof UnixFdChannel) return UnixDomainSocketAddress.of("");
+        if (channel instanceof UnixFdChannel ufc) {
+            // pair()/socketpair()/for_fd on an already-connected fd are all
+            // genuinely connected at the kernel level (just unnamed) --
+            // getpeername(2) succeeds for those. A raw Socket.new(:UNIX,
+            // :DGRAM) that was only bound, never connect()'d, is not --
+            // getpeername(2) is the one kernel-verified way to tell these
+            // apart, rather than assuming every UnixFdChannel is connected
+            // (true for the first two, wrong for the third). Falls back to
+            // the old always-connected assumption if FFM/getpeername isn't
+            // available at all (native access disabled).
+            if (!UnixDomainNative.hasGetpeername()) return UnixDomainSocketAddress.of("");
+            try {
+                return UnixDomainSocketAddress.of(UnixDomainNative.peerPathOf(ufc.fd()));
+            } catch (UnixDomainNative.NativeException ne) {
+                if (ne.errno == UnixDomainNative.ENOTCONN) return null;
+                return UnixDomainSocketAddress.of(""); // unexpected failure: don't regress prior behavior
+            }
+        }
         if (channel instanceof SocketChannel sc) return sc.getRemoteAddress();
         return null;
     }
@@ -149,10 +181,22 @@ public final class UnixDomain {
      * is off. Channel wrap of a raw fd uses jnr fromFD as an adapter only.
      */
     public static Channel[] pair() throws IOException {
+        return pair(UnixDomainNative.SOCK_STREAM);
+    }
+
+    /**
+     * A connected pair of unix sockets of the given type (SOCK_STREAM or
+     * SOCK_DGRAM) -- UNIXSocket.pair and Socket.socketpair. Only a stream
+     * pair has the JEP-380 temp-path fallback; JEP-380 has no unix datagrams.
+     */
+    public static Channel[] pair(int type) throws IOException {
+        if (type != UnixDomainNative.SOCK_STREAM && !UnixDomainNative.hasPair()) {
+            throw new UnsupportedOperationException("datagram socketpair needs native access");
+        }
         if (UnixDomainNative.hasPair()) {
             int[] fds = null;
             try {
-                fds = UnixDomainNative.pair();
+                fds = UnixDomainNative.pair(type);
                 return new Channel[] {
                     UnixDomainNative.channelFromFd(fds[0]),
                     UnixDomainNative.channelFromFd(fds[1])
@@ -162,6 +206,7 @@ public final class UnixDomain {
                     UnixDomainNative.close(fds[0]);
                     UnixDomainNative.close(fds[1]);
                 }
+                if (type != UnixDomainNative.SOCK_STREAM) throw new IOException(e.getMessage(), e);
             }
         }
         return pairViaTempPath();
@@ -194,5 +239,101 @@ public final class UnixDomain {
 
     public static int fileno(Channel channel) {
         return FilenoUtil.filenoFrom(channel);
+    }
+
+    /** One received datagram: payload plus sender path ("" if the kernel gave none). */
+    public static final class DgramReceived {
+        public final RubyString data;
+        public final String srcPath;
+        DgramReceived(RubyString data, String srcPath) { this.data = data; this.srcPath = srcPath; }
+    }
+
+    /**
+     * Blocking recvfrom(2) on a raw UnixFdChannel (Socket.new(:UNIX, :DGRAM),
+     * via rawSocket()/for_fd -- see RubySocket_unixDgram.java). Shared by
+     * RubyUNIXSocket#recvfrom (a for_fd-wrapped raw dgram fd) and
+     * RubyUDPSocket.recvfrom (a Socket object itself, when its channel is a
+     * UnixFdChannel) so the EAGAIN/waitReadable retry shape -- same as
+     * send_io/recv_io -- isn't duplicated between them.
+     */
+    public static DgramReceived recvFromBlocking(ThreadContext context, OpenFile fptr, int fd, int len) {
+        if (len < 0) throw org.jruby.api.Error.argumentError(context, "negative length " + len + " given");
+        Ruby runtime = context.runtime;
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment buf = arena.allocate(Math.max(len, 1));
+            UnixDomainNative.RecvFromResult result;
+            while (true) {
+                try {
+                    result = UnixDomainContext.blocking(context, fd, "recvfrom",
+                            () -> UnixDomainNative.recvFrom(fd, buf, len));
+                    break;
+                } catch (Exception e) {
+                    int errno = UnixDomainContext.lastErrno(context);
+                    if (errno == UnixDomainNative.EAGAIN && fptr.waitReadable(context)) continue;
+                    throw runtime.newErrnoFromInt(errno, "recvfrom(2)");
+                }
+            }
+            byte[] bytes = new byte[(int) result.n];
+            MemorySegment.copy(buf, ValueLayout.JAVA_BYTE, 0, bytes, 0, bytes.length);
+            RubyString data = runtime.newString(new ByteList(bytes, false));
+            return new DgramReceived(data, result.srcPath);
+        }
+    }
+
+    /**
+     * Single-attempt, non-blocking recvfrom(2) on a raw UnixFdChannel.
+     * Returns null if it would block (caller decides :wait_readable vs
+     * raising, matching #recv_nonblock/#recvfrom_nonblock's exception:
+     * false convention) rather than retrying like recvFromBlocking above.
+     *
+     * UnixFdChannel isn't a SelectableChannel, so none of the
+     * configureBlocking(false)-based nonblock machinery elsewhere in this
+     * codebase (DatagramChannel, RubyBasicSocket#doReadNonblock) applies to
+     * it -- confirmed by testing: doReadNonblock's `if (!(channel
+     * instanceof SelectableChannel))` check unconditionally raises EAGAIN
+     * for any UnixFdChannel, even when data is genuinely available. Real
+     * fix needs the raw fd toggled into actual OS-level O_NONBLOCK around
+     * the call (fcntl F_GETFL/F_SETFL), then restored -- the same shape as
+     * DatagramChannel#configureBlocking(false)/(oldBlocking), just done by
+     * hand since there's no Channel-level API for a plain fd.
+     */
+    public static DgramReceived recvFromNonBlocking(ThreadContext context, int fd, int len) {
+        if (len < 0) throw org.jruby.api.Error.argumentError(context, "negative length " + len + " given");
+        Ruby runtime = context.runtime;
+        int oldFlags = getFlagsOrRaise(runtime, fd);
+        setFlagsOrRaise(runtime, fd, oldFlags | UnixDomainNative.O_NONBLOCK);
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment buf = arena.allocate(Math.max(len, 1));
+            UnixDomainNative.RecvFromResult result;
+            try {
+                result = UnixDomainContext.blocking(context, fd, "recvfrom",
+                        () -> UnixDomainNative.recvFrom(fd, buf, len));
+            } catch (Exception e) {
+                int errno = UnixDomainContext.lastErrno(context);
+                if (errno == UnixDomainNative.EAGAIN) return null;
+                throw runtime.newErrnoFromInt(errno, "recvfrom(2)");
+            }
+            byte[] bytes = new byte[(int) result.n];
+            MemorySegment.copy(buf, ValueLayout.JAVA_BYTE, 0, bytes, 0, bytes.length);
+            return new DgramReceived(runtime.newString(new ByteList(bytes, false)), result.srcPath);
+        } finally {
+            setFlagsOrRaise(runtime, fd, oldFlags);
+        }
+    }
+
+    private static int getFlagsOrRaise(Ruby runtime, int fd) {
+        try {
+            return UnixDomainNative.getFlags(fd);
+        } catch (UnixDomainNative.NativeException ne) {
+            throw runtime.newErrnoFromInt(ne.errno, "fcntl(2)");
+        }
+    }
+
+    private static void setFlagsOrRaise(Ruby runtime, int fd, int flags) {
+        try {
+            UnixDomainNative.setFlags(fd, flags);
+        } catch (UnixDomainNative.NativeException ne) {
+            throw runtime.newErrnoFromInt(ne.errno, "fcntl(2)");
+        }
     }
 }

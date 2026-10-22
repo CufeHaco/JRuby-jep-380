@@ -1,0 +1,26 @@
+21:47:01 host valenthree nproc 40 patched=jruby 10.1.2.0-SNAPSHOT (4.0.0) 2026-10-21 0e6e01bae1 OpenJD stock=jruby 10.1.0.0 (4.0.0) 2026-04-20 32f988
+21:47:07 addr_probe patched-vs-stock diff (path/pid-normalized): 2 differing lines
+21:47:11 mspec unixsocket patched rc=0 15 files, 63 examples, 72 expectations, 0 failures, 0 errors, 1 tagged
+21:47:14 mspec unixsocket stock rc=1 15 files, 62 examples, 68 expectations, 2 failures, 4 errors, 1 tagged
+21:47:18 mspec unixserver patched rc=0 8 files, 28 examples, 32 expectations, 0 failures, 0 errors, 0 tagged
+21:47:22 mspec unixserver stock rc=1 8 files, 28 examples, 31 expectations, 2 failures, 1 error, 0 tagged
+21:47:25 mspec ancillarydata patched rc=1 12 files, 41 examples, 18 expectations, 0 failures, 101 errors, 0 tagged
+21:47:29 mspec ancillarydata stock rc=1 12 files, 41 examples, 18 expectations, 0 failures, 101 errors, 0 tagged
+21:47:34 mspec addrinfo patched rc=1 48 files, 507 examples, 623 expectations, 9 failures, 38 errors, 0 tagged
+21:47:38 mspec addrinfo stock rc=1 48 files, 507 examples, 623 expectations, 10 failures, 38 errors, 0 tagged
+21:49:59 mspec socket patched rc=1 43 files, 317 examples, 432 expectations, 37 failures, 176 errors, 8 tagged
+21:52:19 mspec socket stock rc=1 43 files, 317 examples, 427 expectations, 35 failures, 181 errors, 8 tagged
+21:57:19 mspec basicsocket patched rc=124 
+22:02:19 mspec basicsocket stock rc=124 
+22:02:49 regression-patched-1 rc=1 PASS=135 FAIL=9 |     [32mPASS[0m  Wave thread total is 40 workers plus one governor 
+22:03:17 regression-stock-1 rc=1 PASS=135 FAIL=9 |     [32mPASS[0m  Wave thread total is 40 workers plus one governor 
+22:03:45 regression-patched-2 rc=1 PASS=135 FAIL=9 |     [32mPASS[0m  Wave thread total is 40 workers plus one governor 
+22:04:14 regression-stock-2 rc=1 PASS=135 FAIL=9 |     [32mPASS[0m  Wave thread total is 40 workers plus one governor 
+22:04:42 regression-patched-3 rc=1 PASS=135 FAIL=9 |     [32mPASS[0m  Wave thread total is 40 workers plus one governor 
+22:05:10 regression-stock-3 rc=1 PASS=135 FAIL=9 |     [32mPASS[0m  Wave thread total is 40 workers plus one governor 
+22:05:45 stress_uds-patched rc=0 PASS=0 FAIL=0 |   Modules: total=118  loaded=118  failed=0   ALL CLEAN — 0 errors across 29972752 operations. 
+22:06:20 stress-patched rc=0 PASS=0 FAIL=0 |   Modules: total=118  loaded=118  failed=0   ALL CLEAN — 0 errors across 258702739 operations. 
+22:06:55 stress_uds-stock rc=0 PASS=0 FAIL=0 |   Modules: total=118  loaded=118  failed=0   ALL CLEAN — 0 errors across 29224610 operations. 
+22:07:30 stress-stock rc=0 PASS=0 FAIL=0 |   Modules: total=118  loaded=118  failed=0   ALL CLEAN — 0 errors across 226242486 operations. 
+22:07:30 patched jar: dbb50eceec22dcb5
+22:07:30 DONE

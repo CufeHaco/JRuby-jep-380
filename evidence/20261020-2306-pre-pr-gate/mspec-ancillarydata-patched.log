@@ -1,0 +1,1612 @@
+jruby 10.1.2.0-SNAPSHOT (4.0.0) 2026-10-21 0e6e01bae1 OpenJDK 64-Bit Server VM 25.0.4.1+1-1-24.04.4-Ubuntu on 25.0.4.1+1-1-24.04.4-Ubuntu +indy +jit [x86_64-linux]
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+
+1)
+An exception occurred during: before :each
+Socket::AncillaryData#cmsg_is? using :INET, :IP, :TTL as the family, level, and type returns true when comparing with IPPROTO_IP and IP_TTL ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/cmsg_is_spec.rb:7:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/cmsg_is_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/cmsg_is_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+2)
+An exception occurred during: before :each
+Socket::AncillaryData#cmsg_is? using :INET, :IP, :TTL as the family, level, and type returns true when comparing with :IP and :TTL ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/cmsg_is_spec.rb:7:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/cmsg_is_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/cmsg_is_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+3)
+An exception occurred during: before :each
+Socket::AncillaryData#cmsg_is? using :INET, :IP, :TTL as the family, level, and type returns false when comparing with :IP and :PKTINFO ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/cmsg_is_spec.rb:7:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/cmsg_is_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/cmsg_is_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+4)
+An exception occurred during: before :each
+Socket::AncillaryData#cmsg_is? using :INET, :IP, :TTL as the family, level, and type returns false when comparing with :SOCKET and :RIGHTS ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/cmsg_is_spec.rb:7:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/cmsg_is_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/cmsg_is_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+5)
+An exception occurred during: before :each
+Socket::AncillaryData#cmsg_is? using :INET, :IP, :TTL as the family, level, and type raises SocketError when comparing with :IPV6 and :RIGHTS ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/cmsg_is_spec.rb:7:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/cmsg_is_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/cmsg_is_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+6)
+Socket::AncillaryData#data returns the data as a String ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/data_spec.rb:6:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/data_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/data_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+7)
+Socket::AncillaryData#family returns the family as an Integer ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/family_spec.rb:6:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/family_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/family_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+8)
+An exception occurred during: before :each
+Socket::AncillaryData#initialize using Integers for the family, level, and type sets the address family ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:7:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+9)
+An exception occurred during: before :each
+Socket::AncillaryData#initialize using Integers for the family, level, and type sets the message level ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:7:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+10)
+An exception occurred during: before :each
+Socket::AncillaryData#initialize using Integers for the family, level, and type sets the message type ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:7:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+11)
+An exception occurred during: before :each
+Socket::AncillaryData#initialize using Integers for the family, level, and type sets the data ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:7:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+12)
+An exception occurred during: before :each
+Socket::AncillaryData#initialize using Symbols for the family, level, and type sets the address family ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:30:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+13)
+An exception occurred during: before :each
+Socket::AncillaryData#initialize using Symbols for the family, level, and type sets the message level ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:30:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+14)
+An exception occurred during: before :each
+Socket::AncillaryData#initialize using Symbols for the family, level, and type sets the message type ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:30:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+15)
+An exception occurred during: before :each
+Socket::AncillaryData#initialize using Symbols for the family, level, and type sets the data ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:30:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+16)
+An exception occurred during: before :each
+Socket::AncillaryData#initialize using Strings for the family, level, and type sets the address family ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:52:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+17)
+An exception occurred during: before :each
+Socket::AncillaryData#initialize using Strings for the family, level, and type sets the message level ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:52:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+18)
+An exception occurred during: before :each
+Socket::AncillaryData#initialize using Strings for the family, level, and type sets the message type ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:52:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+19)
+An exception occurred during: before :each
+Socket::AncillaryData#initialize using Strings for the family, level, and type sets the data ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:52:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+20)
+An exception occurred during: before :each
+Socket::AncillaryData#initialize using custom objects with a to_str method for the family, level, and type sets the address family ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:84:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+21)
+An exception occurred during: before :each
+Socket::AncillaryData#initialize using custom objects with a to_str method for the family, level, and type sets the message level ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:84:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+22)
+An exception occurred during: before :each
+Socket::AncillaryData#initialize using custom objects with a to_str method for the family, level, and type sets the message type ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:84:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+23)
+An exception occurred during: before :each
+Socket::AncillaryData#initialize using custom objects with a to_str method for the family, level, and type sets the data ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:84:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+24)
+Socket::AncillaryData#initialize using :AF_INET as the family and :SOCKET as the level sets the type to SCM_RIGHTS when using :RIGHTS as the type argument ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:106:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+25)
+Socket::AncillaryData#initialize using :AF_INET as the family and :SOCKET as the level sets the type to SCM_TIMESTAMP when using :TIMESTAMP as the type argument ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:111:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+26)
+Socket::AncillaryData#initialize using :AF_INET as the family and :SOCKET as the level raises TypeError when using a numeric string as the type argument ERROR
+Expected TypeError
+but got: NameError
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:117:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:118:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+27)
+Socket::AncillaryData#initialize using :AF_INET as the family and :SOCKET as the level raises SocketError when using :RECVTTL as the type argument ERROR
+Expected SocketError
+but got: NameError
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:123:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:124:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+28)
+Socket::AncillaryData#initialize using :AF_INET as the family and :SOCKET as the level raises SocketError when using :MOO as the type argument ERROR
+Expected SocketError
+but got: NameError
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:129:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:130:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+29)
+Socket::AncillaryData#initialize using :AF_INET as the family and :SOCKET as the level raises SocketError when using :IP_RECVTTL as the type argument ERROR
+Expected SocketError
+but got: NameError
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:135:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:136:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+30)
+Socket::AncillaryData#initialize using :AF_INET as the family and :SOCKET as the level sets the type to SCM_RIGHTS when using :RIGHTS as the type argument ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:142:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+31)
+Socket::AncillaryData#initialize using :AF_INET as the family and :IP as the level sets the type to IP_RECVTTL when using :RECVTTL as the type argument ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:148:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+32)
+Socket::AncillaryData#initialize using :AF_INET as the family and :IP as the level sets the type to IP_MTU when using :MTU as the type argument ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:153:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+33)
+Socket::AncillaryData#initialize using :AF_INET as the family and :IP as the level raises SocketError when using :RIGHTS as the type argument ERROR
+Expected SocketError
+but got: NameError
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:159:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:160:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+34)
+Socket::AncillaryData#initialize using :AF_INET as the family and :IP as the level raises SocketError when using :MOO as the type argument ERROR
+Expected SocketError
+but got: NameError
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:165:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:166:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+35)
+Socket::AncillaryData#initialize using :AF_INET as the family and :IPV6 as the level sets the type to IPV6_CHECKSUM when using :CHECKSUM as the type argument ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:172:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+36)
+Socket::AncillaryData#initialize using :AF_INET as the family and :IPV6 as the level sets the type to IPV6_NEXTHOP when using :NEXTHOP as the type argument ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:177:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+37)
+Socket::AncillaryData#initialize using :AF_INET as the family and :IPV6 as the level raises SocketError when using :RIGHTS as the type argument ERROR
+Expected SocketError
+but got: NameError
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:183:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:184:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+38)
+Socket::AncillaryData#initialize using :AF_INET as the family and :IPV6 as the level raises SocketError when using :MOO as the type argument ERROR
+Expected SocketError
+but got: NameError
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:189:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:190:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+39)
+Socket::AncillaryData#initialize using :AF_INET as the family and :TCP as the level sets the type to TCP_CORK when using :CORK as the type argument ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:197:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+40)
+Socket::AncillaryData#initialize using :AF_INET as the family and :TCP as the level sets the type to TCP_INFO when using :INFO as the type argument ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:203:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+41)
+Socket::AncillaryData#initialize using :AF_INET as the family and :TCP as the level raises SocketError when using :RIGHTS as the type argument ERROR
+Expected SocketError
+but got: NameError
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:209:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:210:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+42)
+Socket::AncillaryData#initialize using :AF_INET as the family and :TCP as the level raises SocketError when using :MOO as the type argument ERROR
+Expected SocketError
+but got: NameError
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:215:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:216:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+43)
+Socket::AncillaryData#initialize using :AF_INET as the family and :UDP as the level sets the type to UDP_CORK when using :CORK as the type argument ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:223:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+44)
+Socket::AncillaryData#initialize using :AF_INET as the family and :UDP as the level raises SocketError when using :RIGHTS as the type argument ERROR
+Expected SocketError
+but got: NameError
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:229:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:230:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+45)
+Socket::AncillaryData#initialize using :AF_INET as the family and :UDP as the level raises SocketError when using :MOO as the type argument ERROR
+Expected SocketError
+but got: NameError
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:235:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:236:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+46)
+Socket::AncillaryData#initialize using :AF_UNIX as the family and :SOCKET as the level sets the type to SCM_RIGHTS when using :RIGHTS as the type argument ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:242:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+47)
+Socket::AncillaryData#initialize using :AF_UNIX as the family and :SOCKET as the level raises SocketError when using :CORK sa the type argument ERROR
+Expected SocketError
+but got: NameError
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:247:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:248:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+48)
+Socket::AncillaryData#initialize using :AF_UNIX as the family and :IP as the level raises SocketError ERROR
+Expected SocketError
+but got: NameError
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:255:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:256:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+49)
+Socket::AncillaryData#initialize using :AF_UNIX as the family and :IPV6 as the level raises SocketError ERROR
+Expected SocketError
+but got: NameError
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:263:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:264:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+50)
+Socket::AncillaryData#initialize using :AF_UNIX as the family and :TCP as the level raises SocketError ERROR
+Expected SocketError
+but got: NameError
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:271:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:272:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+51)
+Socket::AncillaryData#initialize using :AF_UNIX as the family and :UDP as the level raises SocketError ERROR
+Expected SocketError
+but got: NameError
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:279:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:280:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+52)
+An exception occurred during: before :each
+Socket::AncillaryData.int returns a Socket::AncillaryData ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/int_spec.rb:6:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/int_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/int_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+53)
+An exception occurred during: before :each
+Socket::AncillaryData.int sets the family to AF_INET ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/int_spec.rb:6:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/int_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/int_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+54)
+An exception occurred during: before :each
+Socket::AncillaryData.int sets the level SOL_SOCKET ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/int_spec.rb:6:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/int_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/int_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+55)
+An exception occurred during: before :each
+Socket::AncillaryData.int sets the type SCM_RIGHTS ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/int_spec.rb:6:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/int_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/int_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+56)
+An exception occurred during: before :each
+Socket::AncillaryData.int sets the data to a packed String ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/int_spec.rb:6:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/int_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/int_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+57)
+Socket::AncillaryData#int returns the data as an Integer ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/int_spec.rb:32:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/int_spec.rb:30:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/int_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+58)
+Socket::AncillaryData#int raises when the data is not an Integer ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/int_spec.rb:38:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/int_spec.rb:30:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/int_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+59)
+An exception occurred during: before :each
+Socket::AncillaryData.ip_pktinfo with a source address and index returns a Socket::AncillaryData ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:7:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+60)
+An exception occurred during: before :each
+Socket::AncillaryData.ip_pktinfo with a source address and index sets the family to AF_INET ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:7:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+61)
+An exception occurred during: before :each
+Socket::AncillaryData.ip_pktinfo with a source address and index sets the level to IPPROTO_IP ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:7:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+62)
+An exception occurred during: before :each
+Socket::AncillaryData.ip_pktinfo with a source address and index sets the type to IP_PKTINFO ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:7:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+63)
+An exception occurred during: before :each
+Socket::AncillaryData.ip_pktinfo with a source address, index, and destination address returns a Socket::AncillaryData ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:31:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+64)
+An exception occurred during: before :each
+Socket::AncillaryData.ip_pktinfo with a source address, index, and destination address sets the family to AF_INET ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:31:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+65)
+An exception occurred during: before :each
+Socket::AncillaryData.ip_pktinfo with a source address, index, and destination address sets the level to IPPROTO_IP ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:31:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+66)
+An exception occurred during: before :each
+Socket::AncillaryData.ip_pktinfo with a source address, index, and destination address sets the type to IP_PKTINFO ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:31:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+67)
+An exception occurred during: before :each
+Socket::AncillaryData#ip_pktinfo using an Addrinfo without a port number returns an Array ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:57:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:52:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+68)
+An exception occurred during: before :each
+Socket::AncillaryData#ip_pktinfo using an Addrinfo without a port number the returned Array stores an Addrinfo at index 0 ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:57:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:52:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+69)
+An exception occurred during: before :each
+Socket::AncillaryData#ip_pktinfo using an Addrinfo without a port number the returned Array stores the ifindex at index 1 ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:57:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:52:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+70)
+An exception occurred during: before :each
+Socket::AncillaryData#ip_pktinfo using an Addrinfo without a port number the returned Array stores an Addrinfo at index 2 ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:57:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:52:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+71)
+An exception occurred during: before :each
+Socket::AncillaryData#ip_pktinfo using an Addrinfo without a port number the source Addrinfo uses the correct IP address ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:57:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:52:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+72)
+An exception occurred during: before :each
+Socket::AncillaryData#ip_pktinfo using an Addrinfo without a port number the source Addrinfo is not the same object as the input Addrinfo ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:57:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:52:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+73)
+An exception occurred during: before :each
+Socket::AncillaryData#ip_pktinfo using an Addrinfo without a port number the ifindex is an Integer ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:57:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:52:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+74)
+An exception occurred during: before :each
+Socket::AncillaryData#ip_pktinfo using an Addrinfo without a port number the destination Addrinfo uses the correct IP address ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:57:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:52:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+75)
+An exception occurred during: before :each
+Socket::AncillaryData#ip_pktinfo using an Addrinfo without a port number the destination Addrinfo is not the same object as the input Addrinfo ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:57:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:52:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+76)
+An exception occurred during: before :each
+Socket::AncillaryData#ip_pktinfo using an Addrinfo with a port number the source Addrinfo does not contain a port number ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:121:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:52:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+77)
+An exception occurred during: before :each
+Socket::AncillaryData#ip_pktinfo using an Addrinfo with a port number the destination Addrinfo does not contain a port number ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:121:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:52:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ip_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+78)
+Socket::AncillaryData#ipv6_pktinfo_addr returns an Addrinfo ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_addr_spec.rb:6:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_addr_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_addr_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+79)
+Socket::AncillaryData#ipv6_pktinfo_ifindex returns an Addrinfo ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_ifindex_spec.rb:6:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_ifindex_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_ifindex_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+80)
+An exception occurred during: before :each
+Socket::AncillaryData.ipv6_pktinfo returns a Socket::AncillaryData ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:6:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+81)
+An exception occurred during: before :each
+Socket::AncillaryData.ipv6_pktinfo sets the family to AF_INET ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:6:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+82)
+An exception occurred during: before :each
+Socket::AncillaryData.ipv6_pktinfo sets the level to IPPROTO_IP ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:6:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+83)
+An exception occurred during: before :each
+Socket::AncillaryData.ipv6_pktinfo sets the type to IP_PKTINFO ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:6:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+84)
+An exception occurred during: before :each
+Socket::AncillaryData#ipv6_pktinfo using an Addrinfo without a port number returns an Array ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:30:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:26:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+85)
+An exception occurred during: before :each
+Socket::AncillaryData#ipv6_pktinfo using an Addrinfo without a port number the returned Array stores an Addrinfo at index 0 ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:30:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:26:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+86)
+An exception occurred during: before :each
+Socket::AncillaryData#ipv6_pktinfo using an Addrinfo without a port number the returned Array stores the ifindex at index 1 ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:30:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:26:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+87)
+An exception occurred during: before :each
+Socket::AncillaryData#ipv6_pktinfo using an Addrinfo without a port number the source Addrinfo uses the correct IP address ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:30:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:26:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+88)
+An exception occurred during: before :each
+Socket::AncillaryData#ipv6_pktinfo using an Addrinfo without a port number the source Addrinfo is not the same object as the input Addrinfo ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:30:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:26:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+89)
+An exception occurred during: before :each
+Socket::AncillaryData#ipv6_pktinfo using an Addrinfo without a port number the ifindex is an Integer ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:30:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:26:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+90)
+An exception occurred during: before :each
+Socket::AncillaryData#ipv6_pktinfo using an Addrinfo with a port number the source Addrinfo does not contain a port number ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:75:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:26:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/ipv6_pktinfo_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+91)
+Socket::AncillaryData#level returns the level as an Integer ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/level_spec.rb:6:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/level_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/level_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+92)
+Socket::AncillaryData#type returns the type as an Integer ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/type_spec.rb:6:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/type_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/type_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+93)
+An exception occurred during: before :each
+Socket::AncillaryData.unix_rights using a list of IO objects sets the family to AF_UNIX ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:7:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+94)
+An exception occurred during: before :each
+Socket::AncillaryData.unix_rights using a list of IO objects sets the level to SOL_SOCKET ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:7:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+95)
+An exception occurred during: before :each
+Socket::AncillaryData.unix_rights using a list of IO objects sets the type to SCM_RIGHTS ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:7:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+96)
+An exception occurred during: before :each
+Socket::AncillaryData.unix_rights using a list of IO objects sets the data to a String containing the file descriptors ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:7:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+97)
+Socket::AncillaryData.unix_rights using non IO objects raises TypeError ERROR
+Expected TypeError
+but got: NameError
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:29:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:29:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:4:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+98)
+Socket::AncillaryData#unix_rights returns the data as an Array of IO objects ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:36:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:34:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+99)
+Socket::AncillaryData#unix_rights returns nil when the data is not a list of file descriptors ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:42:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:34:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+100)
+Socket::AncillaryData#unix_rights raises TypeError when the level is not SOL_SOCKET ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:48:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:34:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+101)
+Socket::AncillaryData#unix_rights raises TypeError when the type is not SCM_RIGHTS ERROR
+NameError: uninitialized constant Socket::AncillaryData
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:55:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:34:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ancillarydata/unix_rights_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+Finished in 0.449587 seconds
+
+12 files, 41 examples, 18 expectations, 0 failures, 101 errors, 0 tagged

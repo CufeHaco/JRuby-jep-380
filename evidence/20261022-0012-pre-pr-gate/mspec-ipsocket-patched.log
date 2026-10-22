@@ -1,0 +1,6 @@
+jruby 10.1.2.0-SNAPSHOT (4.0.0) 2026-10-22 0e6e01bae1 OpenJDK 64-Bit Server VM 25.0.4.1+1-1-24.04.4-Ubuntu on 25.0.4.1+1-1-24.04.4-Ubuntu +indy +jit [x86_64-linux]
+...........................................
+
+Finished in 0.599892 seconds
+
+5 files, 47 examples, 65 expectations, 0 failures, 0 errors, 4 tagged

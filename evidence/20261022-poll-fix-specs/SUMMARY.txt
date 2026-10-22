@@ -1,0 +1,15 @@
+core/io patched rc=1 104 files, 1644 examples, 2483 expectations, 115 failures, 57 errors, 4 tagged
+core/io stock rc=1 104 files, 1644 examples, 2456 expectations, 138 failures, 63 errors, 4 tagged
+core/thread patched rc=1 55 files, 395 examples, 1025 expectations, 17 failures, 7 errors, 0 tagged
+core/thread stock rc=1 55 files, 395 examples, 1177 expectations, 57 failures, 7 errors, 0 tagged
+core/kernel/select_spec.rb patched rc=0 1 file, 3 examples, 4 expectations, 0 failures, 0 errors, 0 tagged
+core/kernel/select_spec.rb stock rc=0 1 file, 3 examples, 4 expectations, 0 failures, 0 errors, 0 tagged
+core/kernel/sleep_spec.rb patched rc=0 1 file, 15 examples, 16 expectations, 0 failures, 0 errors, 0 tagged
+core/kernel/sleep_spec.rb stock rc=124 
+library/socket patched rc=0 188 files, 1877 examples, 2600 expectations, 0 failures, 0 errors, 26 tagged
+library/socket stock rc=124 
+library/timeout patched rc=0 2 files, 7 examples, 7 expectations, 0 failures, 0 errors, 0 tagged
+library/timeout stock rc=0 2 files, 7 examples, 7 expectations, 0 failures, 0 errors, 0 tagged
+library/io-wait patched rc=0 3 files, 39 examples, 50 expectations, 0 failures, 0 errors, 0 tagged
+library/io-wait stock rc=124 
+SPECDONE

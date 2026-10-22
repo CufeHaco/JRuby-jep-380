@@ -1,0 +1,11 @@
+jruby 10.1.2.0-SNAPSHOT (4.0.0) 2026-10-05 0e6e01bae1 OpenJDK 64-Bit Server VM 25.0.4.1+1-1-24.04.4-Ubuntu on 25.0.4.1+1-1-24.04.4-Ubuntu +indy +jit [x86_64-linux]
+...............F.FF.F......F......................EE.E..........E...E..E.E..E..
+be_false is deprecated, use .should == false instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/basicsocket/getsockopt_spec.rb:206:in 'block in <main>'
+
+raise_error is deprecated, use .should.raise instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/basicsocket/getsockopt_spec.rb:207:in 'block in <main>'
+
+be_true is deprecated, use .should == true instead.
+from /data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/basicsocket/getsockopt_spec.rb:208:in 'block in <main>'
+..E.E.......F........F...............F...F...F.EEEEEE....F......F..FF

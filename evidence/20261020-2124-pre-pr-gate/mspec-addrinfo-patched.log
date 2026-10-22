@@ -1,0 +1,746 @@
+jruby 10.1.2.0-SNAPSHOT (4.0.0) 2026-10-05 0e6e01bae1 OpenJDK 64-Bit Server VM 25.0.4.1+1-1-24.04.4-Ubuntu on 25.0.4.1+1-1-24.04.4-Ubuntu +indy +jit [x86_64-linux]
+.....................................................................F................................................................................................................................EEEEEEEEEEEEEEEEEEEEEEEEEEE........................F.................................................................................................................................................................................................................FF.FEEEEEEFEEEEEFF.............................F...........................
+
+1)
+Addrinfo.getaddrinfo sets a custom socket protocol of the Addrinfo instances FAILED
+Expected 6 == 17
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/getaddrinfo_spec.rb:79:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/getaddrinfo_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+2)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_AH ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+3)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_PUP ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+4)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_ENCAP ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+5)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_FRAGMENT ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+6)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_TP ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+7)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_ICMP ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+8)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_DSTOPTS ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+9)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_IPV6 ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+10)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_IDP ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+11)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_GRE ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+12)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_RSVP ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+13)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_TCP ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+14)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_ROUTING ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+15)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_IP ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+16)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_EGP ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+17)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_IPIP ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+18)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_RAW ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+19)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_SCTP ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+20)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_NONE ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+21)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_IGMP ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+22)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_PIM ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+23)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_HOPOPTS ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+24)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_ESP ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+25)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_COMP ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+26)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_MTP ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+27)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_UDP ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+28)
+An exception occurred during: before :each
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_PACKET raises SocketError when using IPPROTO_ICMPV6 ERROR
+NameError: uninitialized constant Socket::SOCK_PACKET
+org/jruby/RubyModule.java:4862:in 'const_missing'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:408:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+29)
+Addrinfo#initialize using an Array with extra arguments with the AF_INET address family and an explicit socket protocol and the socket type is set to SOCK_RAW overwrites the protocol when using IPPROTO_MTP FAILED
+Expected 255 == 92
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:432:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/initialize_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+30)
+Addrinfo#listen returns a Socket when no block is given FAILED
+Expected #<ServerSocket:fd 7>.instance_of? Socket
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/listen_spec.rb:16:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/listen_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+31)
+Addrinfo#listen yields the Socket if a block is given FAILED
+Expected #<ServerSocket:fd 7>.instance_of? Socket
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/listen_spec.rb:21:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/lib/ruby/stdlib/socket.rb:214:in 'listen'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/listen_spec.rb:20:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/listen_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+32)
+Addrinfo#marshal_dump using an IP Addrinfo returns an Array FAILED
+Expected nil.instance_of? Array
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:11:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+33)
+Addrinfo#marshal_dump using an IP Addrinfo the returned Array includes the address family as the 1st value ERROR
+NoMethodError: undefined method '[]' for nil
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:20:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+34)
+Addrinfo#marshal_dump using an IP Addrinfo the returned Array includes the IP address as the 2nd value ERROR
+NoMethodError: undefined method '[]' for nil
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:24:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+35)
+Addrinfo#marshal_dump using an IP Addrinfo the returned Array includes the protocol family as the 3rd value ERROR
+NoMethodError: undefined method '[]' for nil
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:28:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+36)
+Addrinfo#marshal_dump using an IP Addrinfo the returned Array includes the socket type as the 4th value ERROR
+NoMethodError: undefined method '[]' for nil
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:32:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+37)
+Addrinfo#marshal_dump using an IP Addrinfo the returned Array includes the protocol as the 5th value ERROR
+NoMethodError: undefined method '[]' for nil
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:36:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+38)
+Addrinfo#marshal_dump using an IP Addrinfo the returned Array includes the canonical name as the 6th value ERROR
+NoMethodError: undefined method '[]' for nil
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:40:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+39)
+Addrinfo#marshal_dump using a UNIX Addrinfo returns an Array FAILED
+Expected nil.instance_of? Array
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:51:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+40)
+Addrinfo#marshal_dump using a UNIX Addrinfo the returned Array includes the address family as the 1st value ERROR
+NoMethodError: undefined method '[]' for nil
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:60:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+41)
+Addrinfo#marshal_dump using a UNIX Addrinfo the returned Array includes the UNIX path as the 2nd value ERROR
+NoMethodError: undefined method '[]' for nil
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:64:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+42)
+Addrinfo#marshal_dump using a UNIX Addrinfo the returned Array includes the protocol family as the 3rd value ERROR
+NoMethodError: undefined method '[]' for nil
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:68:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+43)
+Addrinfo#marshal_dump using a UNIX Addrinfo the returned Array includes the socket type as the 4th value ERROR
+NoMethodError: undefined method '[]' for nil
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:72:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+44)
+Addrinfo#marshal_dump using a UNIX Addrinfo the returned Array includes the protocol as the 5th value ERROR
+NoMethodError: undefined method '[]' for nil
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:76:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_dump_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+45)
+Addrinfo#marshal_load using an IP address returns a new Addrinfo FAILED
+Expected 0 == 2
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_load_spec.rb:11:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_load_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+46)
+Addrinfo#marshal_load using a UNIX socket returns a new Addrinfo FAILED
+Expected 0 == 1
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_load_spec.rb:26:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/marshal_load_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+47)
+Addrinfo#to_sockaddr using a Addrinfo without an IP and port returns a String FAILED
+Expected "\x00\x02\x00\x00\x7F\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00" == "\x00\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/to_sockaddr_spec.rb:46:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/addrinfo/to_sockaddr_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+Finished in 1.338662 seconds
+
+48 files, 507 examples, 623 expectations, 9 failures, 38 errors, 0 tagged

@@ -1,0 +1,61 @@
+tcp recv_nonblock no data            IO::EAGAINWaitReadable
+tcp recv_nonblock no data ex:false   :wait_readable
+tcp read_nonblock no data            IO::EAGAINWaitReadable
+tcp recv_nonblock data               "hi"
+tcp read_nonblock data               "yo"
+tcp write_nonblock until full        IO::EAGAINWaitWritable
+tcp write_nonblock full ex:false     :wait_writable
+tcp drain                            IO::EAGAINWaitReadable
+tcp recv_nonblock EOF                nil
+tcp recv_nonblock EOF ex:false       nil
+tcp read_nonblock EOF                EOFError
+tcp read_nonblock EOF ex:false       nil
+tcp recv EOF                         nil
+unix named recv_nonblock no data     IO::EAGAINWaitReadable
+unix named recv_nonblock no data ex:false :wait_readable
+unix named read_nonblock no data     IO::EAGAINWaitReadable
+unix named recv_nonblock data        "hi"
+unix named read_nonblock data        "yo"
+unix named write_nonblock until full IO::EAGAINWaitWritable
+unix named write_nonblock full ex:false :wait_writable
+unix named drain                     IO::EAGAINWaitReadable
+unix named recv_nonblock EOF         nil
+unix named recv_nonblock EOF ex:false nil
+unix named read_nonblock EOF         EOFError
+unix named read_nonblock EOF ex:false nil
+unix named recv EOF                  nil
+UNIXSocket.pair recv_nonblock no data IO::EAGAINWaitReadable
+UNIXSocket.pair recv_nonblock no data ex:false :wait_readable
+UNIXSocket.pair read_nonblock no data IO::EAGAINWaitReadable
+UNIXSocket.pair recv_nonblock data   "hi"
+UNIXSocket.pair read_nonblock data   "yo"
+UNIXSocket.pair write_nonblock until full IO::EAGAINWaitWritable
+UNIXSocket.pair write_nonblock full ex:false :wait_writable
+UNIXSocket.pair drain                IO::EAGAINWaitReadable
+UNIXSocket.pair recv_nonblock EOF    nil
+UNIXSocket.pair recv_nonblock EOF ex:false nil
+UNIXSocket.pair read_nonblock EOF    EOFError
+UNIXSocket.pair read_nonblock EOF ex:false nil
+UNIXSocket.pair recv EOF             nil
+Socket.socketpair recv_nonblock no data IO::EAGAINWaitReadable
+Socket.socketpair recv_nonblock no data ex:false :wait_readable
+Socket.socketpair read_nonblock no data IO::EAGAINWaitReadable
+Socket.socketpair recv_nonblock data "hi"
+Socket.socketpair read_nonblock data "yo"
+Socket.socketpair write_nonblock until full IO::EAGAINWaitWritable
+Socket.socketpair write_nonblock full ex:false :wait_writable
+Socket.socketpair drain              IO::EAGAINWaitReadable
+Socket.socketpair recv_nonblock EOF  nil
+Socket.socketpair recv_nonblock EOF ex:false nil
+Socket.socketpair read_nonblock EOF  EOFError
+Socket.socketpair read_nonblock EOF ex:false nil
+Socket.socketpair recv EOF           nil
+udp empty datagram recv_nonblock     ""
+unix dgram empty recv_nonblock       ""
+udp read_nonblock empty datagram     EOFError
+udp recv_nonblock no data            IO::EAGAINWaitReadable
+tcp local_address                    #<Addrinfo: 127.0.0.1:41410 TCP> protocol=0
+tcp remote_address                   #<Addrinfo: 127.0.0.1:40297 TCP> protocol=0
+udp local_address                    #<Addrinfo: 127.0.0.1:53848 UDP> protocol=0
+udp remote_address                   #<Addrinfo: 127.0.0.1:40297 UDP> protocol=0
+tcp6 local_address                   #<Addrinfo: [::1]:59784 TCP> protocol=0

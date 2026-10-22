@@ -1,0 +1,45 @@
+jruby 10.1.0.0 (4.0.0) 2026-04-20 32f988b78c OpenJDK 64-Bit Server VM 25.0.4.1+1-1-24.04.4-Ubuntu on 25.0.4.1+1-1-24.04.4-Ubuntu +indy +jit [x86_64-linux]
+..............EE.....E.......
+
+1)
+Socket::Option.int returns a Socket::Option ERROR
+SocketError: invalid socket option: TTL
+org/jruby/ext/socket/Option.java:175:in 'int'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/option/int_spec.rb:15:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/option/int_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1240:in 'load'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+2)
+Socket::Option#int returns int value ERROR
+SocketError: invalid socket option: TTL
+org/jruby/ext/socket/Option.java:175:in 'int'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/option/int_spec.rb:34:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/option/int_spec.rb:26:in '<main>'
+org/jruby/RubyKernel.java:1240:in 'load'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+3)
+Socket::Option#linger raises TypeError when called on a non SOL_SOCKET/SO_LINGER option ERROR
+SocketError: invalid socket option: TTL
+org/jruby/ext/socket/Option.java:175:in 'int'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/option/linger_spec.rb:59:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/option/linger_spec.rb:30:in '<main>'
+org/jruby/RubyKernel.java:1240:in 'load'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+Finished in 0.217651 seconds
+
+6 files, 29 examples, 71 expectations, 0 failures, 3 errors, 0 tagged

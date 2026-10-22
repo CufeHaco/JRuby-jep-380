@@ -1,0 +1,40 @@
+12:08:05 host valenthree nproc 40 patched=jruby 10.1.2.0-SNAPSHOT (4.0.0) 2026-10-21 0e6e01bae1 OpenJD stock=jruby 10.1.0.0 (4.0.0) 2026-04-20 32f988
+12:08:14 inet_probe patched-vs-MRI differing lines (ports normalized): 0
+12:08:14 addr_probe patched-vs-stock diff (path/pid-normalized): 6 differing lines
+12:08:18 eof_probe patched-vs-MRI differing lines (ports normalized): 0
+12:08:22 mspec unixsocket patched rc=0 15 files, 63 examples, 72 expectations, 0 failures, 0 errors, 1 tagged
+12:08:26 mspec unixsocket stock rc=1 15 files, 62 examples, 68 expectations, 2 failures, 4 errors, 1 tagged
+12:08:29 mspec unixserver patched rc=0 8 files, 28 examples, 32 expectations, 0 failures, 0 errors, 0 tagged
+12:08:33 mspec unixserver stock rc=1 8 files, 28 examples, 31 expectations, 2 failures, 1 error, 0 tagged
+12:08:36 mspec ancillarydata patched rc=0 12 files, 101 examples, 101 expectations, 0 failures, 0 errors, 0 tagged
+12:08:40 mspec ancillarydata stock rc=1 12 files, 41 examples, 18 expectations, 0 failures, 101 errors, 0 tagged
+12:08:45 mspec addrinfo patched rc=0 48 files, 534 examples, 674 expectations, 0 failures, 0 errors, 0 tagged
+12:08:49 mspec addrinfo stock rc=1 48 files, 507 examples, 623 expectations, 10 failures, 38 errors, 0 tagged
+12:11:10 mspec socket patched rc=0 43 files, 385 examples, 607 expectations, 0 failures, 0 errors, 8 tagged
+12:13:30 mspec socket stock rc=1 43 files, 317 examples, 427 expectations, 35 failures, 181 errors, 8 tagged
+12:13:35 mspec basicsocket patched rc=0 24 files, 415 examples, 595 expectations, 0 failures, 0 errors, 10 tagged
+12:18:35 mspec basicsocket stock rc=124 
+12:18:38 mspec constants patched rc=0 1 file, 13 examples, 41 expectations, 0 failures, 0 errors, 0 tagged
+12:18:42 mspec constants stock rc=1 1 file, 13 examples, 40 expectations, 2 failures, 0 errors, 0 tagged
+12:18:45 mspec ipsocket patched rc=0 5 files, 47 examples, 65 expectations, 0 failures, 0 errors, 4 tagged
+12:18:49 mspec ipsocket stock rc=1 5 files, 47 examples, 65 expectations, 12 failures, 1 error, 4 tagged
+12:18:52 mspec option patched rc=0 6 files, 29 examples, 78 expectations, 0 failures, 0 errors, 0 tagged
+12:18:56 mspec option stock rc=1 6 files, 29 examples, 71 expectations, 0 failures, 3 errors, 0 tagged
+12:18:59 mspec tcpserver patched rc=1 7 files, 57 examples, 91 expectations, 1 failure, 0 errors, 0 tagged
+12:19:03 mspec tcpserver stock rc=1 7 files, 53 examples, 68 expectations, 6 failures, 12 errors, 0 tagged
+12:19:07 mspec tcpsocket patched rc=0 9 files, 103 examples, 121 expectations, 0 failures, 0 errors, 0 tagged
+12:23:39 mspec tcpsocket stock rc=1 9 files, 101 examples, 115 expectations, 8 failures, 10 errors, 0 tagged
+12:23:43 mspec udpsocket patched rc=0 10 files, 102 examples, 122 expectations, 0 failures, 0 errors, 3 tagged
+12:23:47 mspec udpsocket stock rc=1 10 files, 102 examples, 114 expectations, 9 failures, 5 errors, 3 tagged
+12:24:15 regression-patched-1 rc=1 PASS=135 FAIL=9 |     [32mPASS[0m  Wave thread total is 40 workers plus one governor 
+12:24:44 regression-stock-1 rc=1 PASS=135 FAIL=9 |     [32mPASS[0m  Wave thread total is 40 workers plus one governor 
+12:25:12 regression-patched-2 rc=1 PASS=135 FAIL=9 |     [32mPASS[0m  Wave thread total is 40 workers plus one governor 
+12:25:40 regression-stock-2 rc=1 PASS=135 FAIL=9 |     [32mPASS[0m  Wave thread total is 40 workers plus one governor 
+12:26:08 regression-patched-3 rc=1 PASS=135 FAIL=9 |     [32mPASS[0m  Wave thread total is 40 workers plus one governor 
+12:26:36 regression-stock-3 rc=1 PASS=135 FAIL=9 |     [32mPASS[0m  Wave thread total is 40 workers plus one governor 
+12:27:11 stress_uds-patched rc=0 PASS=0 FAIL=0 |   Modules: total=118  loaded=118  failed=0   ALL CLEAN — 0 errors across 29772764 operations. 
+12:27:46 stress-patched rc=0 PASS=0 FAIL=0 |   Modules: total=118  loaded=118  failed=0   ALL CLEAN — 0 errors across 267959207 operations. 
+12:28:21 stress_uds-stock rc=0 PASS=0 FAIL=0 |   Modules: total=118  loaded=118  failed=0   ALL CLEAN — 0 errors across 29518132 operations. 
+12:28:56 stress-stock rc=0 PASS=0 FAIL=0 |   Modules: total=118  loaded=118  failed=0   ALL CLEAN — 0 errors across 258151223 operations. 
+12:28:56 patched jar: 5f568e7d34fb87c5
+12:28:56 DONE

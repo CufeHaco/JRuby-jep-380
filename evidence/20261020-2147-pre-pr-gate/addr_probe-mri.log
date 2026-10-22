@@ -1,0 +1,11 @@
+holdout client remote_address      "#<Addrinfo: /tmp/kj380addr-790856.sock SOCK_STREAM>"
+holdout client getpeername         "/tmp/kj380addr-790856.sock"
+holdout client local_address       "#<Addrinfo: empty-path-AF_UNIX-sockaddr SOCK_STREAM>"
+holdout bound local_address        "#<Addrinfo: /tmp/kj380addr-790856.sock.b SOCK_STREAM>"
+holdout bound getsockname          "/tmp/kj380addr-790856.sock.b"
+socketpair local_address           "#<Addrinfo: empty-path-AF_UNIX-sockaddr SOCK_STREAM>"
+UNIXSocket#peeraddr                ["AF_UNIX", "/tmp/kj380addr-790856.sock"]
+UNIXSocket#remote_address          "#<Addrinfo: /tmp/kj380addr-790856.sock SOCK_STREAM>"
+UNIXServer#local_address           "#<Addrinfo: /tmp/kj380addr-790856.sock SOCK_STREAM>"
+UNIXServer#path                    "/tmp/kj380addr-790856.sock"
+unbound INET local_address         "#<Addrinfo: 0.0.0.0 TCP>"

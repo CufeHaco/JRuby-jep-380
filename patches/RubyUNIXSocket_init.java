@@ -102,6 +102,89 @@
         }
     }
 
+    // WHY: two pre-existing bugs, unrelated to JEP-380.
+    //
+    // (1) recvfrom only accepted 1-2 args (length, flags), so MRI's
+    // documented 3-arg form recvfrom(maxlen, flags = 0, outbuf = nil)
+    // raised ArgumentError on the 3rd arg. outbuf keeps its own encoding
+    // (matches IO#read(len, buf)); setValue replaces the byte content
+    // only, then restore the caller's original encoding over it.
+    //
+    // (2) recvfrom always reported the address via peeraddr() (the
+    // connected-peer lookup), which is correct for every real
+    // UNIXSocket/UNIXServer stream socket but wrong for a raw
+    // Socket.new(:UNIX, :DGRAM) fd wrapped via UNIXSocket.for_fd (see
+    // RubySocket_unixDgram.java) -- an unconnected datagram socket has no
+    // "peer," it has a different sender per packet, which only a real
+    // recvfrom(2) syscall can report. Fixed by branching on the real
+    // socket type (getsockopt(SO_TYPE), the one side-effect-free way to
+    // tell a bare fd's real type): SOCK_DGRAM takes a new native
+    // recvfrom(2) path (through UnixDomainContext.blocking, same
+    // EAGAIN/waitReadable retry shape as send_io/recv_io); every existing
+    // stream case is completely untouched, on the same recv()+peeraddr()
+    // it always used. This split exists because AF_UNIX SOCK_STREAM
+    // sockets don't reliably populate recvfrom(2)'s source address on
+    // Linux the way SOCK_DGRAM does -- switching stream sockets to the
+    // new path too would have risked the already-passing peeraddr-based
+    // specs on unverified kernel behavior for no benefit.
+    //
+    // The `len < 0` guard below is load-bearing, not defensive filler:
+    // without it, recvfrom(-1) allocates a 1-byte native buffer
+    // (Math.max(len, 1)) but hands recvfrom(2) the same -1 widened to a
+    // ~2^64 size_t, letting the kernel write the received datagram past
+    // that 1-byte buffer into whatever native memory follows it. Found by
+    // code review, not a failing spec -- MRI's own IO#read(-1) raises the
+    // same ArgumentError, so this matches existing behavior rather than
+    // inventing a new error class.
+    //
+    // Benchmarked: the socket-type check below used to be a raw
+    // UnixDomainNative.socketType(fd) call every time (~1.2us/call
+    // isolated) -- moved into UnixFdChannel#sockType(), which caches it,
+    // since a socket's type is fixed at socket(2) creation and can never
+    // change. instanceof also skips UnixDomain.fileno()'s reflective
+    // lookup entirely for the (common) non-UnixFdChannel case. Confirmed
+    // with a pair()-ping-pong benchmark: recvfrom throughput now tracks
+    // plain read/write instead of trailing it by a syscall per call.
+    //
+    // The native recvfrom(2)+retry-loop itself lives in
+    // UnixDomain.recvFromBlocking -- shared with RubyUDPSocket.recvfrom,
+    // which needs the exact same fix for the same reason: Socket.new(:UNIX,
+    // :DGRAM) called directly (not wrapped via UNIXSocket.for_fd) hits that
+    // code path instead of this one. See RubyUDPSocket_unixDgram.java.
+    @JRubyMethod(name = "recvfrom", required = 1, optional = 2, checkArity = false)
+    public IRubyObject recvfrom(ThreadContext context, IRubyObject[] args) {
+        int argc = Arity.checkArgumentCount(context, args, 1, 3);
+        IRubyObject _length = args[0];
+        IRubyObject _flags = argc >= 2 ? args[1] : context.nil;
+        IRubyObject _buf = argc == 3 ? args[2] : context.nil;
+        int flags = _flags.isNil() ? 0 : toInt(context, _flags); // TODO
+
+        IRubyObject received;
+        IRubyObject address;
+
+        if (getChannel() instanceof UnixFdChannel ufc && ufc.sockType() == UnixDomainNative.SOCK_DGRAM) {
+            UnixDomain.DgramReceived result = UnixDomain.recvFromBlocking(
+                    context, getOpenFileChecked(), ufc.fd(), toInt(context, _length));
+            received = result.data;
+            RubyString path = result.srcPath.isEmpty() ? newEmptyString(context) : newString(context, result.srcPath);
+            address = newArray(context, newString(context, "AF_UNIX"), path);
+        } else {
+            received = recv(context, _length);
+            address = peeraddr(context);
+        }
+
+        IRubyObject data = received;
+        if (!_buf.isNil() && received instanceof RubyString receivedStr) {
+            RubyString buf = (RubyString) _buf;
+            org.jcodings.Encoding keepEncoding = buf.getEncoding();
+            buf.setValue(receivedStr.getByteList());
+            buf.setEncoding(keepEncoding);
+            data = buf;
+        }
+
+        return newArray(context, data, address);
+    }
+
     // WHY: getUnixRemoteSocket(context) can now return a JEP-380
     // UnixDomainSocketAddress, not just JNR's UnixSocketAddress — .path()
     // only exists on the JNR type. Use UnixDomain.pathOf, which handles both.
@@ -153,6 +236,70 @@
             return newArray(context, sock, sock2);
         } catch (IOException ioe) {
             throw runtime.newIOErrorFromException(ioe);
+        }
+    }
+
+    // WHY: this pre-existing init_sock built its OpenFile directly and never
+    // called setAscii8bitBinmode() (unlike RubyBasicSocket#initSocket, which
+    // this class bypasses), made #binmode? report false on every
+    // UNIXSocket/UNIXServer (this method is inherited by both -- UNIXServer
+    // < UNIXSocket, same as MRI).
+    //
+    // The non-blocking question below has a longer history than it looks:
+    // MRI runs every fd non-blocking internally (rb_thread_io_blocking_region)
+    // and emulates Ruby-level blocking on top; JRuby's own OpenFile/fptr wait
+    // machinery does the same for real SelectableChannels (TCP/UDP).
+    // UnixFdChannel (pair()/for_fd/SCM_RIGHTS) is NOT selectable -- it's a
+    // plain FFM ByteChannel with no select-based retry path -- so marking it
+    // non-blocking here just breaks the EAGAIN/wait_readable machinery into
+    // a CPU-spinning busy loop instead of a real blocking read(2) (caught by
+    // UNIXSocket.pair's own spec hanging in mspec, not silent).
+    //
+    // A JEP-380 unix-domain SocketChannel IS selectable, so naively this
+    // would flip it non-blocking too (both the fptr.nonblock flag AND the
+    // real channel's OS mode, via setBlocking) -- but don't flip the real
+    // channel's mode. ChannelFD now routes this channel's actual read/write
+    // through UnixSocketNativeChannel's raw FFM read(2)/write(2) instead of
+    // sun.nio.ch.SocketChannelImpl's own interruptible ones (see
+    // ChannelFD_jepUnixNativeChannel.java), specifically so that path can
+    // use a genuinely blocking fd without the AbstractInterruptibleChannel
+    // close-on-interrupt hazard that bit the first two attempts at this
+    // (INTERPRETER.md Landmine 12/13): flipping the real channel non-blocking
+    // here would undo that by forcing the connect-path select() back into
+    // the hot loop (OpenFile#waitReadable has no chNative guard, by design).
+    //
+    // The fptr.nonblock FLAG is a different matter: IO#nonblock? must still
+    // report true here (spec/ruby/library/socket/unixsocket/initialize_spec.rb's
+    // "sets the socket to nonblock", the same MRI rationale this comment
+    // opened with -- every fd is non-blocking internally, which this
+    // socket's real fd now ISN'T, but Ruby-level code neither knows nor
+    // should care). setNonblockFlag (new method -- see
+    // OpenFile_setNonblockFlag.java) sets just the bookkeeping flag, not the
+    // real channel mode -- safe for performRead/performWrite's own nonblock
+    // branch too, since UnixSocketNativeChannel already translates real EOF
+    // to -1 (the ReadableByteChannel contract), so it never produces the
+    // literal 0 return that branch treats as EAGAIN.
+    protected void init_sock(Ruby runtime, Channel channel, String path) {
+        MakeOpenFile();
+
+        ModeFlags modes = newModeFlags(runtime, ModeFlags.RDWR);
+
+        openFile.setFD(newChannelFD(runtime, channel));
+        openFile.setMode(modes.getOpenFileFlags());
+        openFile.setSync(true);
+        openFile.setPath(path);
+
+        // see rsock_init_sock in MRI; sockets are initialized to binary
+        // (matches RubyBasicSocket#initSocket, which this class doesn't
+        // go through since it builds its own OpenFile above)
+        setAscii8bitBinmode();
+
+        if (channel instanceof java.nio.channels.SelectableChannel) {
+            if (UnixDomain.isUnixChannel(channel)) {
+                openFile.setNonblockFlag(true);
+            } else {
+                openFile.setBlocking(runtime, false);
+            }
         }
     }
 

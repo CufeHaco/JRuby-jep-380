@@ -1,0 +1,11 @@
+INET STREAM 0              #<Addrinfo: 0.0.0.0 TCP> afamily=2 pfamily=2 socktype=1 protocol=0 ip=0.0.0.0 port=0
+  getsockname unpack       [0, "0.0.0.0"]
+INET STREAM 6              #<Addrinfo: 0.0.0.0 TCP> afamily=2 pfamily=2 socktype=1 protocol=0 ip=0.0.0.0 port=0
+  getsockname unpack       [0, "0.0.0.0"]
+INET DGRAM 0               #<Addrinfo: 0.0.0.0 UDP> afamily=2 pfamily=2 socktype=2 protocol=0 ip=0.0.0.0 port=0
+  getsockname unpack       [0, "0.0.0.0"]
+INET6 STREAM 0             #<Addrinfo: :: TCP> afamily=10 pfamily=10 socktype=1 protocol=0 ip=:: port=0
+  getsockname unpack       [0, "::"]
+INET6 DGRAM 0              #<Addrinfo: :: UDP> afamily=10 pfamily=10 socktype=2 protocol=0 ip=:: port=0
+  getsockname unpack       [0, "::"]
+bound INET                 #<Addrinfo: 127.0.0.1:38603 TCP> protocol=0

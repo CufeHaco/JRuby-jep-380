@@ -1,0 +1,24 @@
+jruby 10.1.2.0-SNAPSHOT (4.0.0) 2026-10-21 0e6e01bae1 OpenJDK 64-Bit Server VM 25.0.4.1+1-1-24.04.4-Ubuntu on 25.0.4.1+1-1-24.04.4-Ubuntu +indy +jit [x86_64-linux]
+...........warning: thread "Ruby-0-Thread-4: /data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/tcpserver/accept_spec.rb:62" terminated with exception (report_on_exception is true):FIOError: stream closed in another thread
+  accept at org/jruby/ext/socket/RubyTCPServer.java:156
+  <main> at /data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/tcpserver/accept_spec.rb:63
+.............................................
+
+1)
+TCPServer#accept is automatically retried when interrupted by SIGVTALRM FAILED
+Expected 
+"/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/tcpserver/accept_spec.rb:63:in 'block in accept'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/tcpserver/accept_spec.rb:63:in 'block in <main>'" =~ /in [`'](?:TCPServer#)?accept'/
+to be truthy but was nil
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/tcpserver/accept_spec.rb:72:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/tcpserver/accept_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1403:in 'load'
+org/jruby/RubyBasicObject.java:2783:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+Finished in 0.622346 seconds
+
+7 files, 57 examples, 91 expectations, 1 failure, 0 errors, 0 tagged

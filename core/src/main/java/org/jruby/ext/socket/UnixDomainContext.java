@@ -2,13 +2,13 @@ package org.jruby.ext.socket;
 
 import org.jruby.runtime.ThreadContext;
 import org.jruby.runtime.builtin.IRubyObject;
+import org.jruby.util.collections.ConcurrentWeakHashMap;
 
 import java.lang.foreign.FunctionDescriptor;
 import java.lang.foreign.Linker;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
 import java.lang.invoke.MethodHandle;
-import java.util.WeakHashMap;
 
 /**
  * CRuby-like per-execution-context frame for Unix-domain IPC.
@@ -24,6 +24,8 @@ import java.util.WeakHashMap;
  * JRuby already has the execution context: ThreadContext.
  * Fibers swap it. Do not hang this off java.lang.ThreadLocal.
  * That follows the carrier thread and lies when a fiber migrates.
+ *
+ * @author Troy Mallory (CufeHaco) - JEP-380/FFM unix socket support (jruby/jruby#9040)
  */
 public final class UnixDomainContext {
     public static final Object KEY = new Object();
@@ -38,14 +40,34 @@ public final class UnixDomainContext {
 
     private static volatile MethodHandle MH_ERRNO_LOC;
     private static volatile boolean ERRNO_PROBED;
-    private static final WeakHashMap<ThreadContext, Frame> FRAMES = new WeakHashMap<>();
+
+    // ConcurrentWeakHashMap (already in JRuby's util.collections, Doug Lea /
+    // JSR-166, public domain), not WeakHashMap+synchronized: get() doesn't
+    // lock at all, and put/remove only lock their own segment (16 by
+    // default), not the whole table -- no single monitor shared by every
+    // thread/fiber doing send_io/recv_io/dgram-recvfrom across the process.
+    // Still weak-keyed, so a dead ThreadContext's Frame is still reclaimed
+    // automatically (via each segment's own ReferenceQueue, drained
+    // opportunistically on put/remove) -- same cleanup guarantee the old
+    // WeakHashMap had, just without needing a shared lock to get it.
+    private static final ConcurrentWeakHashMap<ThreadContext, Frame> FRAMES = new ConcurrentWeakHashMap<>();
 
     private UnixDomainContext() {}
 
     public static Frame current(ThreadContext context) {
-        synchronized (FRAMES) {
-            return FRAMES.computeIfAbsent(context, ignored -> new Frame());
-        }
+        // Not FRAMES.computeIfAbsent: ConcurrentWeakHashMap doesn't override
+        // it, so it would fall back to Map's default implementation, which
+        // is a plain get()-then-put() -- not atomic, and this map is read
+        // and written from multiple threads (one thread's blocking() vs.
+        // another thread inspecting its waitingFd). get()+putIfAbsent()
+        // below are both real, lock-scoped ConcurrentMap operations, so two
+        // threads racing to create the first Frame for the same context
+        // can't clobber each other's instance.
+        Frame frame = FRAMES.get(context);
+        if (frame != null) return frame;
+        Frame created = new Frame();
+        Frame existing = FRAMES.putIfAbsent(context, created);
+        return existing != null ? existing : created;
     }
 
     public static <T> T blocking(ThreadContext context, int fd, String op, Call<T> body) throws Exception {
@@ -60,7 +82,13 @@ public final class UnixDomainContext {
             frame.lastErrno = 0;
             return value;
         } catch (Exception e) {
-            frame.lastErrno = captureErrno();
+            // NativeException already carries a reliably-captured errno (via
+            // Linker.Option.captureCallState, read the instant the syscall
+            // returned) -- prefer it over a fresh __errno_location() call
+            // here, which runs after this frame's Arena.close() and other
+            // JVM-internal native calls have had a chance to clobber errno.
+            frame.lastErrno = (e instanceof UnixDomainNative.NativeException ne && ne.errno != 0)
+                    ? ne.errno : captureErrno();
             frame.lastRc = -1;
             throw e;
         } finally {

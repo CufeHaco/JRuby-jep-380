@@ -1,0 +1,202 @@
+jruby 10.1.0.0 (4.0.0) 2026-04-20 32f988b78c OpenJDK 64-Bit Server VM 25.0.4.1+1-1-24.04.4-Ubuntu on 25.0.4.1+1-1-24.04.4-Ubuntu +indy +jit [x86_64-linux]
+........FFF.F....F...E........FFF.F...F..FF
+
+1)
+Socket::IPSocket#addr using IPv6 without reverse lookups returns an Array containing address information FAILED
+Expected ["AF_INET6", 44501, "0:0:0:0:0:0:0:1", "0:0:0:0:0:0:0:1"] == ["AF_INET6", 44501, "0:0:0:0:0:0:0:1", "::1"]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/addr_spec.rb:61:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/addr_spec.rb:44:in '<main>'
+org/jruby/RubyKernel.java:1240:in 'load'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+2)
+Socket::IPSocket#addr using IPv6 with reverse lookups using true as the argument returns an Array containing address information FAILED
+Expected ["AF_INET6", 42899, "0:0:0:0:0:0:0:1", "0:0:0:0:0:0:0:1"] == ["AF_INET6", 42899, "0:0:0:0:0:0:0:1", "::1"]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/addr_spec.rb:72:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/addr_spec.rb:44:in '<main>'
+org/jruby/RubyKernel.java:1240:in 'load'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+3)
+Socket::IPSocket#addr using IPv6 with reverse lookups using :hostname as the argument returns an Array containing address information FAILED
+Expected ["AF_INET6", 44727, "0:0:0:0:0:0:0:1", "0:0:0:0:0:0:0:1"] == ["AF_INET6", 44727, "0:0:0:0:0:0:0:1", "::1"]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/addr_spec.rb:78:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/addr_spec.rb:44:in '<main>'
+org/jruby/RubyKernel.java:1240:in 'load'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+4)
+Socket::IPSocket#addr using IPv6 with do_not_reverse_lookup disabled on socket level returns an Array containing address information FAILED
+Expected ["AF_INET6", 35763, "0:0:0:0:0:0:0:1", "0:0:0:0:0:0:0:1"] == ["AF_INET6", 35763, "0:0:0:0:0:0:0:1", "::1"]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/addr_spec.rb:101:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/addr_spec.rb:44:in '<main>'
+org/jruby/RubyKernel.java:1240:in 'load'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+5)
+IPSocket#inspect returns a String with the fd, family, address and port for TCPSocket FAILED
+Expected "#<TCPSocket:fd 9>" == "#<TCPSocket:fd 9, AF_INET, 127.0.0.1, 35928>"
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/inspect_spec.rb:9:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/inspect_spec.rb:3:in '<main>'
+org/jruby/RubyKernel.java:1240:in 'load'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+6)
+Socket::IPSocket#peeraddr raises error if socket is not connected ERROR
+Expected Errno::ENOTCONN
+but got: NotImplementedError
+org/jruby/ext/socket/RubyTCPServer.java:270:in 'peeraddr'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/peeraddr_spec.rb:20:in 'block in <main>'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/peeraddr_spec.rb:21:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/peeraddr_spec.rb:4:in '<main>'
+org/jruby/RubyKernel.java:1240:in 'load'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+7)
+Socket::IPSocket#peeraddr using IPv6 without reverse lookups returns an Array containing address information FAILED
+Expected ["AF_INET6", 40975, "0:0:0:0:0:0:0:1", "0:0:0:0:0:0:0:1"] == ["AF_INET6", 40975, "0:0:0:0:0:0:0:1", "::1"]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/peeraddr_spec.rb:72:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/peeraddr_spec.rb:53:in '<main>'
+org/jruby/RubyKernel.java:1240:in 'load'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+8)
+Socket::IPSocket#peeraddr using IPv6 with reverse lookups using true as the argument returns an Array containing address information FAILED
+Expected ["AF_INET6", 46373, "0:0:0:0:0:0:0:1", "0:0:0:0:0:0:0:1"] == ["AF_INET6", 46373, "0:0:0:0:0:0:0:1", "::1"]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/peeraddr_spec.rb:83:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/peeraddr_spec.rb:53:in '<main>'
+org/jruby/RubyKernel.java:1240:in 'load'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+9)
+Socket::IPSocket#peeraddr using IPv6 with reverse lookups using :hostname as the argument returns an Array containing address information FAILED
+Expected ["AF_INET6", 44927, "0:0:0:0:0:0:0:1", "0:0:0:0:0:0:0:1"] == ["AF_INET6", 44927, "0:0:0:0:0:0:0:1", "::1"]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/peeraddr_spec.rb:89:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/peeraddr_spec.rb:53:in '<main>'
+org/jruby/RubyKernel.java:1240:in 'load'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+10)
+Socket::IPSocket#peeraddr using IPv6 with do_not_reverse_lookup disabled on socket level returns an Array containing address information FAILED
+Expected ["AF_INET6", 36394, "0:0:0:0:0:0:0:1", "0:0:0:0:0:0:0:1"] == ["AF_INET6", 36394, "0:0:0:0:0:0:0:1", "::1"]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/peeraddr_spec.rb:113:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/peeraddr_spec.rb:53:in '<main>'
+org/jruby/RubyKernel.java:1240:in 'load'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+11)
+Socket::IPSocket#recvfrom when recvfrom(2) returns 0 (if no messages are available to be received and the peer has performed an orderly shutdown) stream socket returns nil on a closed stream socket FAILED
+Expected [nil, ["AF_INET", 39382, "localhost", "127.0.0.1"]] == nil
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/recvfrom_spec.rb:100:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/recvfrom_spec.rb:72:in '<main>'
+org/jruby/RubyKernel.java:1240:in 'load'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+12)
+Socket::IPSocket#recvfrom using IPv6 returns an Array containing up to N bytes and address information FAILED
+Expected ["he", ["AF_INET6", 34121, "0:0:0:0:0:0:0:1", "0:0:0:0:0:0:0:1"]] == ["he", ["AF_INET6", 34121, "0:0:0:0:0:0:0:1", "::1"]]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/recvfrom_spec.rb:155:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/recvfrom_spec.rb:132:in '<main>'
+org/jruby/RubyKernel.java:1240:in 'load'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+13)
+Socket::IPSocket#recvfrom using IPv6 using reverse lookups includes the hostname in the address Array FAILED
+Expected ["he", ["AF_INET6", 53493, "0:0:0:0:0:0:0:1", "0:0:0:0:0:0:0:1"]] == ["he", ["AF_INET6", 53493, "0:0:0:0:0:0:0:1", "::1"]]
+to be truthy but was false
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/recvfrom_spec.rb:179:in 'block in <main>'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:4226:in 'all?'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+/data/valen-systems-shared/worktrees/cufehaco/jruby-upstream/spec/ruby/library/socket/ipsocket/recvfrom_spec.rb:132:in '<main>'
+org/jruby/RubyKernel.java:1240:in 'load'
+org/jruby/RubyBasicObject.java:2777:in 'instance_exec'
+org/jruby/RubyArrayNative.java:1729:in 'each'
+
+Finished in 0.596466 seconds
+
+5 files, 47 examples, 65 expectations, 12 failures, 1 error, 4 tagged
