@@ -1,4 +1,4 @@
-From 4b67307e3a9ca2a760ddfc4e8561937f8c3af7e7 Mon Sep 17 00:00:00 2001
+From 6c2656feacb1d48b9348cb77de2e5b09759e7149 Mon Sep 17 00:00:00 2001
 From: CufeHaco <redeagleteam2005@gmail.com>
 Date: Thu, 22 Oct 2026 16:07:08 -0400
 Subject: [PATCH 5/5] Qualified backtrace labels for Ruby 3.4+

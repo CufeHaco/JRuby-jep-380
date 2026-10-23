@@ -1,4 +1,4 @@
-From 9e10e4fc5fac8b2715e86cdf93e578a65da99811 Mon Sep 17 00:00:00 2001
+From 18130a97d03b130fafbc4a058b12c83d3d7d0244 Mon Sep 17 00:00:00 2001
 From: CufeHaco <redeagleteam2005@gmail.com>
 Date: Thu, 22 Oct 2026 16:38:16 -0400
 Subject: [PATCH 4/5] Poll native fds before registering a Selector in

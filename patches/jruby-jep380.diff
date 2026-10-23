@@ -210,7 +210,7 @@ index 619298f127..adbfa91b7e 100644
              SelectableChannel selectable = (SelectableChannel)channel;
  
 diff --git a/core/src/main/java/org/jruby/ext/socket/Addrinfo.java b/core/src/main/java/org/jruby/ext/socket/Addrinfo.java
-index e2e5d31951..b359551ae6 100644
+index e2e5d31951..2a8eb8eac4 100644
 --- a/core/src/main/java/org/jruby/ext/socket/Addrinfo.java
 +++ b/core/src/main/java/org/jruby/ext/socket/Addrinfo.java
 @@ -84,6 +84,7 @@ public class Addrinfo extends RubyObject {
@@ -308,22 +308,23 @@ index e2e5d31951..b359551ae6 100644
          return RubyArray.newArray(context.runtime, SocketUtils.getaddrinfoList(context, args));
      }
  
-@@ -442,11 +483,14 @@ public class Addrinfo extends RubyObject {
+@@ -442,11 +483,15 @@ public class Addrinfo extends RubyObject {
  
      @JRubyMethod
      public IRubyObject afamily(ThreadContext context) {
-+        // a getifaddrs link-layer entry is AF_PACKET on Linux (MRI), not AF_UNSPEC
-+        if (interfaceLink) return asFixnum(context, AF_PACKET);
++        // a getifaddrs link-layer entry is AF_PACKET on Linux (MRI), not AF_UNSPEC; other
++        // platforms keep AF_UNSPEC, as Socket::AF_PACKET is only defined on Linux
++        if (interfaceLink && org.jruby.platform.Platform.IS_LINUX) return asFixnum(context, AF_PACKET);
          return asFixnum(context, getAddressFamily().intValue());
      }
  
      @JRubyMethod
      public IRubyObject pfamily(ThreadContext context) {
-+        if (interfaceLink) return asFixnum(context, AF_PACKET); // PF_PACKET == AF_PACKET
++        if (interfaceLink && org.jruby.platform.Platform.IS_LINUX) return asFixnum(context, AF_PACKET); // PF_PACKET == AF_PACKET
          return asFixnum(context, pfamily.intValue());
      }
  
-@@ -458,11 +502,13 @@ public class Addrinfo extends RubyObject {
+@@ -458,11 +503,13 @@ public class Addrinfo extends RubyObject {
      @JRubyMethod
      public IRubyObject protocol(ThreadContext context) {
          // Any unknown protocol will end up null but the one case we see is IPPROTO_RAW is not listed in /etc/protocols
@@ -337,7 +338,7 @@ index e2e5d31951..b359551ae6 100644
          if (!displaysCanonical) return context.nil;
  
          if (socketAddress instanceof InetSocketAddress) {
-@@ -871,23 +917,19 @@ public class Addrinfo extends RubyObject {
+@@ -871,23 +918,19 @@ public class Addrinfo extends RubyObject {
          } else if (unix) {
              serviceName = getUnixSocketAddress().path();
          } else {
@@ -368,7 +369,7 @@ index e2e5d31951..b359551ae6 100644
      }
  
      @JRubyMethod
-@@ -956,6 +998,8 @@ public class Addrinfo extends RubyObject {
+@@ -956,6 +999,8 @@ public class Addrinfo extends RubyObject {
      private SocketType socketType;
      private String interfaceName;
      private boolean interfaceLink;

@@ -234,7 +234,8 @@ Evidence for each run is under `evidence/`.
 
 ## 8. First CI round on the PR (2026-10-22/23)
 
-The first push (`768f727`) got 48 checks passing and 63 failing. Everything earlier in these
+The first push (`768f727`) got 48 checks passing and 63 failing; the second (`4b67307`) got 135
+passing and 1 failing (Windows, the AF_PACKET row below). Everything earlier in these
 notes had been tested on JDK 25 only: valenthree's default `java`, and `source`/`target 21`
 compiles against the running JDK's class library, so JDK 25's javac accepted `java.lang.foreign`.
 Fixed on the branch, each in the commit it belongs to:
@@ -252,4 +253,5 @@ Fixed on the branch, each in the commit it belongs to:
 | Java exceptions' backtraces showed `RubyFixnum.Integer#times` | the qualified Ruby label leaked into Java-format frames | Java-format frames use the bare method name | 5 |
 | 7 jruby tests (`test_caller`, `test_thread_backtrace`) failed | they asserted pre-3.4 labels; MRI 4.0.5 fails them identically | updated to what MRI prints | 5 |
 | 4 jruby tests (`test_addrinfo`, `test_socket`) failed | they expected link-layer ifaddrs as AF_UNSPEC (with a TODO for AF_PACKET) | expect AF_PACKET where defined, as MRI | 3 |
+| 4 jruby tests failed on Windows (second push: 135 passed, 1 failed) | link-layer ifaddrs reported AF_PACKET on every OS, but `Socket::AF_PACKET` is Linux-only | AF_PACKET on Linux only; AF_UNSPEC elsewhere, as on master | 3 |
 | `File.identical?(pipe, pipe)` was false | pre-existing; reached by MRI's socket tests once fd passing works | IO arguments are statted through their fd | 1 |
