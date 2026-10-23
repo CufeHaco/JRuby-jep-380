@@ -2,15 +2,13 @@ package org.jruby.ext.socket;
 
 import org.jruby.Ruby;
 import org.jruby.RubyString;
+import org.jruby.RubyThread;
 import org.jruby.runtime.ThreadContext;
 import org.jruby.util.ByteList;
 import org.jruby.util.io.FilenoUtil;
 import org.jruby.util.io.OpenFile;
 
 import java.io.IOException;
-import java.lang.foreign.Arena;
-import java.lang.foreign.MemorySegment;
-import java.lang.foreign.ValueLayout;
 import java.net.ProtocolFamily;
 import java.net.SocketAddress;
 import java.net.StandardProtocolFamily;
@@ -121,7 +119,14 @@ public final class UnixDomain {
                 || addr instanceof jnr.unixsocket.UnixSocketAddress;
     }
 
+    // Ends of a temporary-path pair (pairViaTempPath): connected but unnamed to Ruby, like the
+    // ends of socketpair(2), so both addresses read as "" (MRI). Weak keys: entries go with
+    // the channels.
+    private static final java.util.Set<Channel> UNNAMED =
+            java.util.Collections.newSetFromMap(new org.jruby.util.collections.ConcurrentWeakHashMap<>());
+
     public static SocketAddress localAddress(Channel channel) throws IOException {
+        if (UNNAMED.contains(channel)) return UnixDomainSocketAddress.of("");
         // UnixFdChannel (UNIXSocket.pair/for_fd) is a connected socket with
         // no path -- MRI reports that as ["AF_UNIX", ""], not ENOTCONN, so
         // this must return a real (if empty) address, not null.
@@ -131,6 +136,7 @@ public final class UnixDomain {
     }
 
     public static SocketAddress remoteAddress(Channel channel) throws IOException {
+        if (UNNAMED.contains(channel)) return UnixDomainSocketAddress.of("");
         if (channel instanceof UnixFdChannel ufc) {
             // pair()/socketpair()/for_fd on an already-connected fd are all
             // genuinely connected at the kernel level (just unnamed) --
@@ -169,6 +175,45 @@ public final class UnixDomain {
         return ch;
     }
 
+/**
+ * Interruptible wait until fd is ready for events (UnixDomainNative.POLLIN/POLLOUT), or timeoutMs
+ * passes (negative: no limit). poll(2) runs as a RubyThread task, so the thread shows as "sleep"
+ * and Thread#kill/raise/Timeout wake it (executeTask's pollThreadEvents raises them). poll(2)
+ * can't be woken from Java, so it waits in slices backing off from 1ms to 100ms, the same
+ * governor shape as Kestowv's Wave and UnixFdChannel's SCRATCH: readiness is never delayed, an
+ * idle wait costs ~10 wakeups/s, and an interrupt is seen within one slice.
+ *
+ * @return true when the fd became ready, false on timeout
+ */
+public static boolean waitFd(ThreadContext context, int fd, short events, long timeoutMs) {
+    long deadline = timeoutMs < 0 ? Long.MAX_VALUE : System.nanoTime() + timeoutMs * 1_000_000L;
+    try {
+        Integer rc = context.getThread().executeTask(context, fd, new RubyThread.Task<Integer, Integer>() {
+            private volatile boolean woken;
+
+            @Override
+            public Integer run(ThreadContext ctx, Integer f) {
+                int slice = 1;
+                while (!woken) {
+                    long left = deadline == Long.MAX_VALUE ? slice : (deadline - System.nanoTime()) / 1_000_000L;
+                    int rc = UnixDomainNative.poll(f, events, (int) Math.max(0, Math.min(left, slice)));
+                    if (rc != 0 || (deadline != Long.MAX_VALUE && left <= slice)) return rc;
+                    slice = Math.min(slice * 2, 100);
+                }
+                return 0;
+            }
+
+            @Override
+            public void wakeup(RubyThread thread, Integer f) {
+                woken = true;
+            }
+        });
+        return rc != null && rc > 0;
+    } catch (InterruptedException ie) {
+        return false; // executeTask's own pollThreadEvents raises any pending kill/raise
+    }
+}
+
     public static SocketChannel accept(ServerSocketChannel server) throws IOException {
         SocketChannel ch = server.accept();
         if (ch != null) ch.configureBlocking(true);
@@ -191,7 +236,7 @@ public final class UnixDomain {
      */
     public static Channel[] pair(int type) throws IOException {
         if (type != UnixDomainNative.SOCK_STREAM && !UnixDomainNative.hasPair()) {
-            throw new UnsupportedOperationException("datagram socketpair needs native access");
+            throw new UnsupportedOperationException("a non-stream socketpair needs native access");
         }
         if (UnixDomainNative.hasPair()) {
             int[] fds = null;
@@ -223,6 +268,8 @@ public final class UnixDomain {
             a.connect(UnixDomainSocketAddress.of(tmp));
             SocketChannel b = server.accept();
             b.configureBlocking(true);
+            UNNAMED.add(a);
+            UNNAMED.add(b);
             return new SocketChannel[] { a, b };
         } finally {
             try { server.close(); } catch (IOException ignored) {}
@@ -259,25 +306,20 @@ public final class UnixDomain {
     public static DgramReceived recvFromBlocking(ThreadContext context, OpenFile fptr, int fd, int len) {
         if (len < 0) throw org.jruby.api.Error.argumentError(context, "negative length " + len + " given");
         Ruby runtime = context.runtime;
-        try (Arena arena = Arena.ofConfined()) {
-            MemorySegment buf = arena.allocate(Math.max(len, 1));
-            UnixDomainNative.RecvFromResult result;
-            while (true) {
-                try {
-                    result = UnixDomainContext.blocking(context, fd, "recvfrom",
-                            () -> UnixDomainNative.recvFrom(fd, buf, len));
-                    break;
-                } catch (Exception e) {
-                    int errno = UnixDomainContext.lastErrno(context);
-                    if (errno == UnixDomainNative.EAGAIN && fptr.waitReadable(context)) continue;
-                    throw runtime.newErrnoFromInt(errno, "recvfrom(2)");
-                }
+        UnixDomainNative.RecvFromResult result;
+        while (true) {
+            try {
+                result = UnixDomainContext.blocking(context, fd, "recvfrom",
+                        () -> UnixDomainNative.recvFrom(fd, len));
+                break;
+            } catch (Exception e) {
+                int errno = UnixDomainContext.lastErrno(context);
+                if (errno == UnixDomainNative.EAGAIN && fptr.waitReadable(context)) continue;
+                throw runtime.newErrnoFromInt(errno, "recvfrom(2)");
             }
-            byte[] bytes = new byte[(int) result.n];
-            MemorySegment.copy(buf, ValueLayout.JAVA_BYTE, 0, bytes, 0, bytes.length);
-            RubyString data = runtime.newString(new ByteList(bytes, false));
-            return new DgramReceived(data, result.srcPath);
         }
+        RubyString data = runtime.newString(new ByteList(result.data, false));
+        return new DgramReceived(data, result.srcPath);
     }
 
     /**
@@ -302,20 +344,17 @@ public final class UnixDomain {
         Ruby runtime = context.runtime;
         int oldFlags = getFlagsOrRaise(runtime, fd);
         setFlagsOrRaise(runtime, fd, oldFlags | UnixDomainNative.O_NONBLOCK);
-        try (Arena arena = Arena.ofConfined()) {
-            MemorySegment buf = arena.allocate(Math.max(len, 1));
+        try {
             UnixDomainNative.RecvFromResult result;
             try {
                 result = UnixDomainContext.blocking(context, fd, "recvfrom",
-                        () -> UnixDomainNative.recvFrom(fd, buf, len));
+                        () -> UnixDomainNative.recvFrom(fd, len));
             } catch (Exception e) {
                 int errno = UnixDomainContext.lastErrno(context);
                 if (errno == UnixDomainNative.EAGAIN) return null;
                 throw runtime.newErrnoFromInt(errno, "recvfrom(2)");
             }
-            byte[] bytes = new byte[(int) result.n];
-            MemorySegment.copy(buf, ValueLayout.JAVA_BYTE, 0, bytes, 0, bytes.length);
-            return new DgramReceived(runtime.newString(new ByteList(bytes, false)), result.srcPath);
+            return new DgramReceived(runtime.newString(new ByteList(result.data, false)), result.srcPath);
         } finally {
             setFlagsOrRaise(runtime, fd, oldFlags);
         }

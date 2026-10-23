@@ -1,4 +1,4 @@
-From a0ccb11268cf38e6ae1a611201976685744f277b Mon Sep 17 00:00:00 2001
+From 4b67307e3a9ca2a760ddfc4e8561937f8c3af7e7 Mon Sep 17 00:00:00 2001
 From: CufeHaco <redeagleteam2005@gmail.com>
 Date: Thu, 22 Oct 2026 16:07:08 -0400
 Subject: [PATCH 5/5] Qualified backtrace labels for Ruby 3.4+
@@ -13,7 +13,10 @@ Binding in compiled code, and module_function's singleton copy.
 core/thread/backtrace: 4 failures (master: 41); no spec in core/thread,
 kernel, exception, method, proc, module or language newly fails.
 
-Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Java-format frames (a Java exception's backtrace) keep the plain method
+name. jruby's own tests that matched pre-3.4 labels (test_caller,
+test_thread_backtrace) now expect what MRI 4.0.5 prints
+for the same files.
 ---
  core/src/main/java/org/jruby/Ruby.java        | 47 +++++++++++
  core/src/main/java/org/jruby/RubyKernel.java  |  4 +-
@@ -36,10 +39,12 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
  .../jruby/runtime/MixedModeIRBlockBody.java   |  2 +-
  .../java/org/jruby/runtime/ThreadContext.java | 33 ++++++--
  .../runtime/backtrace/BacktraceData.java      | 72 +++++++++++++++-
- .../backtrace/RubyStackTraceElement.java      | 27 +++++-
+ .../backtrace/RubyStackTraceElement.java      | 30 ++++++-
  .../jruby/runtime/backtrace/TraceType.java    |  2 +
  .../java/org/jruby/util/JavaNameMangler.java  | 15 ++--
- 24 files changed, 441 insertions(+), 44 deletions(-)
+ test/jruby/test_caller.rb                     |  8 +-
+ test/jruby/test_thread_backtrace.rb           | 12 +--
+ 26 files changed, 453 insertions(+), 55 deletions(-)
 
 diff --git a/core/src/main/java/org/jruby/Ruby.java b/core/src/main/java/org/jruby/Ruby.java
 index fb421576af..4a4f9f035a 100644
@@ -985,7 +990,7 @@ index 8f2af94d88..6246cd79e2 100644
          Map<String, String> javaToRuby = boundMethods.get(className);
          return javaToRuby == null ? null : javaToRuby.get(methodName);
 diff --git a/core/src/main/java/org/jruby/runtime/backtrace/RubyStackTraceElement.java b/core/src/main/java/org/jruby/runtime/backtrace/RubyStackTraceElement.java
-index 2db62a07d1..4916966601 100644
+index 2db62a07d1..15d87e7a69 100644
 --- a/core/src/main/java/org/jruby/runtime/backtrace/RubyStackTraceElement.java
 +++ b/core/src/main/java/org/jruby/runtime/backtrace/RubyStackTraceElement.java
 @@ -68,6 +68,31 @@ public class RubyStackTraceElement implements java.io.Serializable {
@@ -1020,7 +1025,17 @@ index 2db62a07d1..4916966601 100644
      public final FrameType getFrameType() {
          return frameType;
      }
-@@ -93,7 +118,7 @@ public class RubyStackTraceElement implements java.io.Serializable {
+@@ -76,7 +101,8 @@ public class RubyStackTraceElement implements java.io.Serializable {
+ 
+     public final StackTraceElement asStackTraceElement() {
+         if ( element != null ) return element;
+-        return element = new StackTraceElement(className, methodName, fileName, lineNumber);
++        // the Java view keeps the plain method name ("times", not "Integer#times")
++        return element = new StackTraceElement(className, baseName(methodName), fileName, lineNumber);
+     }
+ 
+     public String toString() {
+@@ -93,7 +119,7 @@ public class RubyStackTraceElement implements java.io.Serializable {
          line.cat(CommonByteLists.COLON);
          line.cat(ConvertBytes.longToByteListCached(element.getLineNumber()));
          line.cat(CommonByteLists.BACKTRACE_IN);
@@ -1070,6 +1085,74 @@ index 26f91e2b66..0d94352625 100644
              base = RUBY_MARKER + DELIMITER + BLOCK_MARKER + DELIMITER + mangleMethodNameInternal(name);
          } else if (scope instanceof IRMetaClassBody) {
              base = RUBY_MARKER + DELIMITER + METACLASS_MARKER;
+diff --git a/test/jruby/test_caller.rb b/test/jruby/test_caller.rb
+index 3f28e7b4ca..27c9954f2a 100644
+--- a/test/jruby/test_caller.rb
++++ b/test/jruby/test_caller.rb
+@@ -4,11 +4,11 @@ class TestCaller < Test::Unit::TestCase
+ 
+   def test_normal_caller
+     trace0 = caller(0)
+-    assert_match(/test\/jruby\/test_caller\.rb\:6\:in 'test_normal_caller'/, trace0.first)
++    assert_match(/test\/jruby\/test_caller\.rb\:6\:in 'TestCaller#test_normal_caller'/, trace0.first)
+     assert(trace0.length > 1, "caller(0) is not > 1: #{trace0.inspect}")
+ 
+     trace = caller
+-    assert_not_match(/test\/jruby\/test_caller\.rb\:16\:in 'test_normal_caller'/, trace[0])
++    assert_not_match(/test\/jruby\/test_caller\.rb\:16\:in 'TestCaller#test_normal_caller'/, trace[0])
+     assert_equal trace0[1..-1], trace
+   end
+ 
+@@ -22,8 +22,8 @@ class TestCaller < Test::Unit::TestCase
+     # simple test, make sure the trace is more than one entry
+     assert(trace.length > 1, "caller(0) is not > 1: #{trace.inspect}")
+ 
+-    assert_match(/test\/jruby\/test_caller\.rb\:\d\d\:in 'eval'/, trace[1])
+-    assert_match(/test\/jruby\/test_caller\.rb\:\d\d\:in 'foo0'/, trace[2])
++    assert_match(/test\/jruby\/test_caller\.rb\:\d\d\:in 'Kernel#eval'/, trace[1])
++    assert_match(/test\/jruby\/test_caller\.rb\:\d\d\:in 'TestCaller#foo0'/, trace[2])
+   end
+ 
+   def test_jitted_caller_excludes_abstractscript
+diff --git a/test/jruby/test_thread_backtrace.rb b/test/jruby/test_thread_backtrace.rb
+index eba981a605..b74804ad05 100644
+--- a/test/jruby/test_thread_backtrace.rb
++++ b/test/jruby/test_thread_backtrace.rb
+@@ -12,9 +12,9 @@ class TestThreadBacktrace < Test::Unit::TestCase
+     end.value
+ 
+     if $0 == __FILE__
+-      expected = [ /test\/jruby\/test_thread_backtrace\.rb:8:in 'block in test_simple_backtrace'/ ]
++      expected = [ /test\/jruby\/test_thread_backtrace\.rb:8:in 'block in TestThreadBacktrace#test_simple_backtrace'/ ]
+     else
+-      expected = [ /test\/jruby\/test_thread_backtrace\.rb:8:in 'block in test_simple_backtrace'/ ]
++      expected = [ /test\/jruby\/test_thread_backtrace\.rb:8:in 'block in TestThreadBacktrace#test_simple_backtrace'/ ]
+     end
+ 
+     puts "  " + backtrace.join("\n  ") if $VERBOSE
+@@ -29,7 +29,7 @@ class TestThreadBacktrace < Test::Unit::TestCase
+     [__method__].map do
+       location = Thread.current.backtrace_locations[1]
+       assert_equal 'test_backtrace_location_label', location.base_label
+-      assert_equal 'block in test_backtrace_location_label', location.label
++      assert_equal 'block in TestThreadBacktrace#test_backtrace_location_label', location.label
+     end
+   end
+ 
+@@ -37,10 +37,10 @@ class TestThreadBacktrace < Test::Unit::TestCase
+   def test_backtrace_location_label_equal # GH-5163
+     location = Thread.current.backtrace_locations[1]
+     assert_equal __method__.to_s, location.base_label
+-    assert_equal __method__.to_s, location.label
+-    assert location.base_label.equal?(location.label)
++    # Ruby 3.4+: the label is qualified with its owner; base_label stays the bare name
++    assert_equal "TestThreadBacktrace##{__method__}", location.label
+ 
+-    assert_end_with "test/jruby/test_thread_backtrace.rb:38:in 'test_backtrace_location_label_equal'", location.to_s
++    assert_end_with "test/jruby/test_thread_backtrace.rb:38:in 'TestThreadBacktrace#test_backtrace_location_label_equal'", location.to_s
+   end
+ 
+   def assert_end_with(exp, str)
 -- 
 2.43.0
 

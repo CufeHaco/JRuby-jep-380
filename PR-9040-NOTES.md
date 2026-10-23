@@ -7,21 +7,21 @@ These notes are for writing the PR and for review. Section 1 says what each comm
 whether it is in #9040's scope. Section 2 lists every bug found and fixed along the way.
 Section 3 lists what was found and deliberately left alone. Section 4 covers the rebase onto
 current `master`. Section 5 lists the design trade-offs a reviewer should know about.
-Section 6 has the test results. The full history of each finding is in `INTERPRETER.md`
-(Landmines 2-20).
+Section 6 has the test results. Section 8 covers the first CI round on the PR and what it
+found. The full history of each finding is in `INTERPRETER.md` (Landmines 2-21).
 
 ## 1. Branch layout and scope
 
 | # | commit | scope | files | builds alone | tested alone |
 |---|---|---|---|---|---|
-| 1 | Keep bytes from interrupted reads and report socket EOF to recv_nonblock | **out of scope**: general IO bugs, reproduce on stock with TCPSocket | 3 | yes | - |
-| 2 | Move UNIX sockets to JEP-380 channels and FFM (#9040) | **in scope** | 16 | yes | unixsocket + unixserver specs 0F/0E, wake-up probe = MRI |
-| 3 | Match MRI across library/socket | **out of scope**: MRI compatibility, most of it fails on stock too | 11 | yes | - |
+| 1 | Keep bytes from interrupted reads and report socket EOF to recv_nonblock | **out of scope**: general IO bugs, reproduce on stock with TCPSocket (plus `File.identical?` on pipes) | 4 | yes | - |
+| 2 | Move UNIX sockets to JEP-380 channels and FFM (#9040) | **in scope** | 19 | yes | unixsocket + unixserver specs 0F/0E, wake-up probe = MRI |
+| 3 | Match MRI across library/socket | **out of scope**: MRI compatibility, most of it fails on stock too | 13 | yes | - |
 | 4 | Poll native fds before registering a Selector in selectReadyOps | **out of scope**: performance (sysread), needs commit 2's FFM layer | 1 | yes | - |
-| 5 | Qualified backtrace labels for Ruby 3.4+ | **out of scope**: unrelated to sockets, can be its own PR | 24 | yes | - |
+| 5 | Qualified backtrace labels for Ruby 3.4+ | **out of scope**: unrelated to sockets, can be its own PR | 26 | yes | - |
 
-Commits 1-4 together equal the tested socket diff byte for byte, and commit 5 equals the tested
-labels diff. The whole branch was tested as one build (section 6).
+Every commit compiles on JDK 21 and JDK 25. The whole branch was tested as one build on both
+(sections 6 and 8).
 
 **Plan: one PR with all five commits**, as on the branch. The commits keep the scopes readable
 for review; the code is not split into separate PRs unless Charles asks. If he does, the cuts
@@ -37,15 +37,16 @@ are ready:
 The split is by changed line, not by file, so a few out-of-scope lines ride in commit 2 because
 the in-scope code needs them:
 
-- `RubyBasicSocket`: `waitFd` (the interruptible poll wait) replaces the `sendmsg_nonblock`
-  NotImplemented stub in the same hunk. Between commits 2 and 3, `sendmsg_nonblock` is missing
-  from Java; commit 3's `socket.rb` defines it.
+- `RubyBasicSocket`: `waitFd` (the interruptible poll wait) sits where `master`'s
+  `sendmsg_nonblock` stub was; the stub is kept, so commit 2 changes no Ruby-visible API there.
 - `RubySocket#connect`: removing the jnr `UnixSocketChannel` branch and adding the EISCONN check
   (MRI) are one change.
 - `RubySocket#initChannelFD`: the JEP-380 stream channel, the FFM datagram socket and
   `javaFamily()` (INET/INET6 family for java.nio) were written together.
-- `UnixDomainNative` is one new file. It holds the FFM bindings that commits 3 and 4 use too
-  (`getsockopt`/`setsockopt`, `ioctl`, `recv`/`send` with flags, `poll`).
+- `UnixDomainNative` (facade) and `UnixDomainFFM` (backend, `core/src/main/java22`) are new files.
+  They hold the native calls commits 3 and 4 use too (`getsockopt`/`setsockopt`, `ioctl`,
+  `recv`/`send` with flags, `poll`). Commit 2 also adds the `ffm` Maven profile (`core/pom.rb`,
+  `core/pom.xml`) that compiles the backend on a 22+ build JDK.
 
 ## 2. Bugs found and fixed
 
@@ -86,6 +87,8 @@ are in the branch; they are listed so a reviewer knows which edges were already 
 | `UNIXSocket`/`UNIXServer` never set binmode or nonblock (L5) | `init_sock` | 2 |
 | `UNIXSocket#recvfrom` rejected its 3-argument form (L5) | | 2 |
 | `UNIXServer.for_fd(...).path` NPE (L5) | | 2 |
+| `File.identical?` with IO arguments (pipes, sockets) compared paths, so `File.identical?(r, r)` was false for a pipe | any IO | 1 |
+| `Addrinfo` from `getifaddrs` reported pfamily 0 for INET addresses | `Socket.getifaddrs` | 3 |
 | `Socket.new(:UNIX, :DGRAM)` never worked: an INET DatagramChannel, then a null-message SocketError on bind (L6) | missing capability | 2 |
 | `Socket.new(:UNIX, :STREAM)#bind` was a no-op (jnr) (L18) | | 2 |
 | Blocking UDP receive could not be interrupted: thread stuck "run" until the socket closed (L18) | | 3 |
@@ -95,7 +98,9 @@ are in the branch; they are listed so a reviewer knows which edges were already 
 
 ## 3. Found, not fixed (pre-existing, each worth its own issue)
 
-- **`Thread.interrupt()` inside any java.nio channel read closes the channel** (L14). `RubyThread#interrupt`
+- **`Thread.interrupt()` inside any java.nio channel read closes the channel** (L14). Filed as
+  [jruby/jruby#9875](https://github.com/jruby/jruby/issues/9875) (repro: 10/100 sockets destroyed on
+  master, 23/100 on 10.1.0.0, 0/100 on MRI); same root cause as the closed #9722/#9768. `RubyThread#interrupt`
   calls the JVM's `Thread.interrupt()`; if the target is inside an `AbstractInterruptibleChannel`
   read just after `select()`, the channel closes. About 1 in 10 under a sustained 2MB transfer with
   a kill at a random point; plain `TCPSocket`, stock JRuby. Fixing it means changing
@@ -104,7 +109,8 @@ are in the branch; they are listed so a reviewer knows which edges were already 
   `postReadWrite` runs `pollThreadEvents()` in a `finally`, so a pending kill/raise replaces the
   already-computed byte count, and the bytes are gone. About 5% in the same stress test on stock
   TCP and jnr; commit 1's `salvagePartialRead` cannot reach it (the count never arrives). Hot path
-  for every blocking IO call.
+  for every blocking IO call. **Not filed**: MRI 4.0.5 drops a killed thread's read the same way
+  (99/100 trials), so JRuby matches MRI here.
 - **Compiled `module_function`**: once JIT-compiled, both copies share one frame name, so a call on
   the module shows `M#name` (interpreted shows `M.name` correctly).
 - **`core/thread/backtrace`**: 4 failures left (`master`: 41), all path canonicalization.
@@ -143,19 +149,24 @@ Kestowv's own timing: 1 in 26 gate runs on the patched build and 1 in 26 on stoc
   (`waitFd`).
 - **`waitFd` polls in slices** backing off from 1ms to 100ms (poll(2) cannot be woken from Java):
   readiness is immediate, an interrupt is seen within one slice, an idle wait costs ~10 wakeups/s.
-- **Native access.** `bin/jruby` already passes `--enable-native-access=org.jruby.dist` (since
-  March 2025), so FFM works out of the box. An embedder loading `jruby.jar` from the classpath gets
-  the JDK's restricted-method warning (jffi triggers the same warning on stock). With native access
-  denied (`--illegal-native-access=deny`), the FFM pieces fail closed: stream pairs fall back to a
-  temporary-path JEP-380 pair, named sockets are unaffected, and datagram pairs raise
-  `Errno::EOPNOTSUPP` (stock JRuby has no datagram pairs at all). Checked both ways.
+- **Java 21 and native access.** FFM is final only from Java 22. `UnixDomainNative` is a facade
+  that compiles on 21; at class init it loads the FFM backend (`UnixDomainFFM`) only on 22+, and
+  the `ffm` Maven profile compiles that backend only on a 22+ build JDK. `bin/jruby` already grants
+  native access (`--enable-native-access=org.jruby.dist`, since March 2025). Without the backend
+  (Java 21, or `--illegal-native-access=deny`) every capability bit is off and behaviour is
+  `master`'s wherever `master` had the feature: named sockets on JEP-380 with the JDK channel
+  flipped non-blocking, `UNIXSocket.pair` of any type is a stream pair (JRuby always ignored the
+  type), `Socket.pair(:UNIX, :DGRAM)` raises EOPNOTSUPP, fd passing goes through jnr-posix
+  `sendmsg`, `for_fd` wraps with jnr's `fromFD`, send/recv flags are ignored, `sendmsg`/`recvmsg`
+  are the NotImplemented stubs, and `Socket::AncillaryData` and the Linux socket-option constants
+  are not defined. Checked with the full CI suites on JDK 21 (section 8).
 - **`Socket#listen` replaces the bound SocketChannel with a ServerSocketChannel** on the same address,
   so the fd number changes at `listen`.
 - **`nonblock?` reports MRI's default (true)** without flipping the internal flag, because setting it
   would skip the pre-read select that keeps Thread#kill from closing java.nio channels.
 - **jnr's `UnixSocketAddress` survives as a value type** in `Sockaddr`/`Addrinfo`; JDK channels get
   a `UnixDomainSocketAddress` through `RubySocket.jdkAddress`.
-- **Per-thread FFM scratch buffer** (`UnixFdChannel.scratch`) is a plain ThreadLocal: it is filled and
+- **Per-thread FFM scratch buffer** (`UnixDomainFFM`'s `SCRATCH`) is a plain ThreadLocal: it is filled and
   drained within one call and never seen across a fiber switch. Fiber-visible state
   (`UnixDomainContext`) hangs off ThreadContext instead.
 
@@ -176,6 +187,23 @@ On the rebased branch against plain `master` built the same way:
   An earlier quieter run on the old base: 1.06x / 1.09x / 1.04x / 1.30x. `syswrite`+`sysread`
   2.5x faster than jnr (commit 4).
 
+After the CI round (section 8), with jruby's own CI suites run the way `.github/workflows/ci.yml`
+runs them (`./mvnw -Pbootstrap clean package`, `bundle install`, `rake <target>`), on JDK 21
+and JDK 25:
+
+| suite | JDK 21 | JDK 25 |
+|---|---|---|
+| `test:mri:stdlib` | 4884 tests, 0 F, 0 E (= master) | 4888 tests, 0 F, 0 E (4 more than master: the socket tests that now run) |
+| `spec:ruby:fast` | 31638 examples, 1 F (`gethostname`) | 31638 examples, 0 F, 0 E |
+| `test:jruby:int` / `aot` / `--dev test:jruby` | 2 F (`test_sysopen`) | 2 F (`test_sysopen`) |
+| `spec:regression` | 1 F (GH-1075) | 403 examples, 0 F |
+| `spec:ji`, `spec:ffi`, `spec:compiler`, `spec:ruby:slow`, `spec:ruby:debug`, `spec:ruby:fast:jit`, `test:slow_suites`, `spec:jrubyc`, `spec:profiler`, `test:jit_compile`, `mvn package -Ptest`, error-prone build | pass | pass |
+
+Every remaining failure also fails on plain `master` built and run the same way on this host:
+`test_sysopen` (the host's umask), `Socket.gethostname` (the host name doesn't resolve; on 22+
+the PR reads it with gethostname(2)), GH-1075 and `TestThread#test_ignore_deadlock` (thread
+timing under load). They pass on GitHub's runners.
+
 Evidence for each run is under `evidence/`.
 
 ## 7. Draft PR description
@@ -195,10 +223,33 @@ Evidence for each run is under `evidence/`.
 > the minimal #9040 change.
 >
 > `library/socket` passes completely; nothing in core/io, thread, fiber, kernel, exception,
-> method, proc, module or language that passes on master fails here. FFM works with the
-> stock launcher (it already grants native access); with native access denied, the FFM parts
-> fail closed.
+> method, proc, module or language that passes on master fails here. FFM is final only from
+> Java 22, so it sits behind a facade: on 22+ the FFM backend loads (the stock launcher already
+> grants native access), and on Java 21 or with native access denied everything falls back to
+> what master does today.
 >
 > Trade-off to look at: a blocked read on a named UNIXSocket can't be interrupted (same as jnr
 > today). Two pre-existing interrupt/IO bugs found while testing are described but not fixed
 > here; they need their own issues.
+
+## 8. First CI round on the PR (2026-10-22/23)
+
+The first push (`768f727`) got 48 checks passing and 63 failing. Everything earlier in these
+notes had been tested on JDK 25 only: valenthree's default `java`, and `source`/`target 21`
+compiles against the running JDK's class library, so JDK 25's javac accepted `java.lang.foreign`.
+Fixed on the branch, each in the commit it belongs to:
+
+| finding | cause | fix | commit |
+|---|---|---|---|
+| every Java 21 job failed to compile | FFM is a preview API on 21 | `UnixDomainNative` facade + `UnixDomainFFM` backend in `core/src/main/java22`, `ffm` Maven profile, version detected at class init | 2 |
+| named UNIXSockets failed on Java 21 ("Unknown error") | `ChannelFD` installed the FFM read/write channel without checking FFM was there | only with the FFM backend; otherwise stock JRuby's path | 2 |
+| GH-3799 (`spec/regression`): blocking `IO#read` on a nonblock pair raised EAGAIN | `OpenFile#waitReadable(context, fd)` only waited on selectable channels | waits on a `UnixFdChannel`'s fd with poll(2) | 2 |
+| MRI `fiber/test_io_close.rb` hung on Java 22+ | scheduler reads were emulated only for selectable channels; the FFM pair read blocked the scheduler's thread | same emulated path for `UnixFdChannel` | 2 |
+| received fds weren't close-on-exec | no `MSG_CMSG_CLOEXEC` (MRI passes it) | added for `recv_io`/`recvmsg` | 2 |
+| `UNIXSocket.pair(:SEQPACKET)` raised EOPNOTSUPP | only stream/datagram allowed | SEQPACKET pairs with native access (Linux, as MRI) | 2 |
+| temp-path fallback pair reported its temp path as peer address | the fallback pair is connected through a real path | its ends report "" as MRI's socketpair ends do | 2 |
+| Java 21 regressions vs master: send/recv flags (Net::FTP), `send_io`/`recv_io`, `for_fd`, `sendmsg` API surface, IPv6 `connect_to` | the fallback must be master's behaviour where master had the feature | listed in section 5's Java 21 bullet | 2, 3 |
+| Java exceptions' backtraces showed `RubyFixnum.Integer#times` | the qualified Ruby label leaked into Java-format frames | Java-format frames use the bare method name | 5 |
+| 7 jruby tests (`test_caller`, `test_thread_backtrace`) failed | they asserted pre-3.4 labels; MRI 4.0.5 fails them identically | updated to what MRI prints | 5 |
+| 4 jruby tests (`test_addrinfo`, `test_socket`) failed | they expected link-layer ifaddrs as AF_UNSPEC (with a TODO for AF_PACKET) | expect AF_PACKET where defined, as MRI | 3 |
+| `File.identical?(pipe, pipe)` was false | pre-existing; reached by MRI's socket tests once fd passing works | IO arguments are statted through their fd | 1 |

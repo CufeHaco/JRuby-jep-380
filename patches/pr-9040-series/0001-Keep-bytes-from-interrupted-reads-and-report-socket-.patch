@@ -1,4 +1,4 @@
-From 7ba0c9251b0f99c1f7741c643d77294ef89c7e14 Mon Sep 17 00:00:00 2001
+From f2b67e4219f474806f15bca52b0e68b4adb8fe41 Mon Sep 17 00:00:00 2001
 From: CufeHaco <redeagleteam2005@gmail.com>
 Date: Thu, 22 Oct 2026 16:37:26 -0400
 Subject: [PATCH 1/5] Keep bytes from interrupted reads and report socket EOF
@@ -20,13 +20,51 @@ readChannel now keeps the raw count and NONBLOCK_EOF marks EOF. On a
 DatagramChannel, a zero-length datagram is data ("" in MRI), not
 EAGAIN, and read_nonblock reads it as EOF as MRI does.
 
-Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+File.identical? with IO arguments compared paths, and a pipe or socket
+has none, so File.identical?(r, r) was false for a pipe. An IO argument
+is now statted through its open fd, as MRI does (reached by MRI's
+socket tests once fd passing works).
 ---
+ .../src/main/java/org/jruby/RubyFileTest.java | 16 +++-
  core/src/main/java/org/jruby/RubyIO.java      | 24 +++++-
  .../org/jruby/ext/socket/RubyBasicSocket.java | 64 ++++++++++-----
  .../main/java/org/jruby/util/io/OpenFile.java | 80 ++++++++++++++++---
- 3 files changed, 134 insertions(+), 34 deletions(-)
+ 4 files changed, 148 insertions(+), 36 deletions(-)
 
+diff --git a/core/src/main/java/org/jruby/RubyFileTest.java b/core/src/main/java/org/jruby/RubyFileTest.java
+index fcf270e6ba..656bcaab8d 100644
+--- a/core/src/main/java/org/jruby/RubyFileTest.java
++++ b/core/src/main/java/org/jruby/RubyFileTest.java
+@@ -184,8 +184,10 @@ public class RubyFileTest {
+ 
+         // Try posix first
+         if (!Platform.IS_WINDOWS && context.runtime.getPosix().isNative()) {
+-            FileStat stat1 = file1.stat();
+-            FileStat stat2 = file2.stat();
++            FileStat stat1 = ioStat(context, filename1);
++            if (stat1 == null) stat1 = file1.stat();
++            FileStat stat2 = ioStat(context, filename2);
++            if (stat2 == null) stat2 = file2.stat();
+ 
+             return asBoolean(context, stat1 != null && stat2 != null && stat1.isIdentical(stat2));
+         }
+@@ -204,6 +206,16 @@ public class RubyFileTest {
+         return context.fals;
+     }
+ 
++    // An IO argument is statted through its open fd, as MRI's rb_stat does: a pipe or a
++    // socket has no path, so looking one up never matched (File.identical?(r, r) was false)
++    private static FileStat ioStat(ThreadContext context, IRubyObject arg) {
++        if (!(arg instanceof RubyIO io) || io.isClosed()) return null;
++        int fd = io.getOpenFileChecked().fd().realFileno;
++        if (fd < 0) return null;
++        FileStat stat = context.runtime.getPosix().fstat(fd);
++        return stat == null || stat.ino() == 0 && stat.dev() == 0 ? null : stat;
++    }
++
+     @JRubyMethod(name = "owned?", module = true)
+     public static IRubyObject owned_p(ThreadContext context, IRubyObject recv, IRubyObject filename) {
+         FileStat stat = fileResource(context, filename).stat();
 diff --git a/core/src/main/java/org/jruby/RubyIO.java b/core/src/main/java/org/jruby/RubyIO.java
 index 2c201037eb..7c8ed034fa 100644
 --- a/core/src/main/java/org/jruby/RubyIO.java

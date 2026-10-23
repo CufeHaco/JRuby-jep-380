@@ -4,11 +4,6 @@ import org.jruby.runtime.ThreadContext;
 import org.jruby.runtime.builtin.IRubyObject;
 import org.jruby.util.collections.ConcurrentWeakHashMap;
 
-import java.lang.foreign.FunctionDescriptor;
-import java.lang.foreign.Linker;
-import java.lang.foreign.MemorySegment;
-import java.lang.foreign.ValueLayout;
-import java.lang.invoke.MethodHandle;
 
 /**
  * CRuby-like per-execution-context frame for Unix-domain IPC.
@@ -37,9 +32,6 @@ public final class UnixDomainContext {
         public int lastRc;
         public long enteredNanos;
     }
-
-    private static volatile MethodHandle MH_ERRNO_LOC;
-    private static volatile boolean ERRNO_PROBED;
 
     // ConcurrentWeakHashMap (already in JRuby's util.collections, Doug Lea /
     // JSR-166, public domain), not WeakHashMap+synchronized: get() doesn't
@@ -111,14 +103,7 @@ public final class UnixDomainContext {
     }
 
     public static int captureErrno() {
-        MethodHandle loc = errnoLocation();
-        if (loc == null) return 0;
-        try {
-            MemorySegment ptr = (MemorySegment) loc.invokeExact();
-            return ptr.reinterpret(4).get(ValueLayout.JAVA_INT, 0);
-        } catch (Throwable t) {
-            return 0;
-        }
+        return UnixDomainNative.lastErrno();
     }
 
     public static void record(ThreadContext context, String op, int rc) {
@@ -126,26 +111,6 @@ public final class UnixDomainContext {
         frame.lastOp = op;
         frame.lastRc = rc;
         frame.lastErrno = rc < 0 ? captureErrno() : 0;
-    }
-
-    private static MethodHandle errnoLocation() {
-        if (ERRNO_PROBED) return MH_ERRNO_LOC;
-        synchronized (UnixDomainContext.class) {
-            if (ERRNO_PROBED) return MH_ERRNO_LOC;
-            try {
-                Linker linker = Linker.nativeLinker();
-                MemorySegment sym = linker.defaultLookup()
-                        .find("__errno_location")
-                        .or(() -> linker.defaultLookup().find("__error"))
-                        .orElseThrow();
-                MH_ERRNO_LOC = linker.downcallHandle(sym,
-                        FunctionDescriptor.of(ValueLayout.ADDRESS));
-            } catch (Throwable t) {
-                MH_ERRNO_LOC = null;
-            }
-            ERRNO_PROBED = true;
-            return MH_ERRNO_LOC;
-        }
     }
 
     @FunctionalInterface

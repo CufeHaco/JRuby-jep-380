@@ -1175,3 +1175,22 @@ Two findings while organizing:
 - With native access denied (`--illegal-native-access=deny`, embedded), `UNIXSocket.pair(:DGRAM)`
   leaked a Java `UnsupportedOperationException`. Now `Errno::EOPNOTSUPP`, as `Socket.pair` was.
   Stream pairs fall back to a JEP-380 pair and named sockets are unaffected (checked).
+
+## Landmine 22
+
+**The first CI round: Java 21, and jruby's own suites.** Everything before had run on JDK 25 only
+(valenthree's default `java`; `source`/`target 21` still compiles against the running JDK's class
+library, so `java.lang.foreign` compiled). jruby's minimum is Java 21, where FFM is a preview API,
+so every Java 21 job failed to compile. `UnixDomainNative` is now a facade with no FFM types that
+picks a backend at class init (Kestowv's detect-then-route shape): `UnixDomainFFM` from
+`core/src/main/java22` on 22+, built by an `ffm` Maven profile only on a 22+ build JDK; otherwise
+every capability bit is off. Enabling preview instead would tie the class files to exactly Java 21
+and make every user pass `--enable-preview`.
+
+Running jruby's CI suites locally on JDK 21 and 25 (`ci.yml`'s bootstrap build + `rake <target>`)
+then found the rest: fallback gaps against master on 21 (flags, fd passing, for_fd, the sendmsg API
+surface, IPv6 option constants, the temp-path pair's peer address), GH-3799 and a scheduler-read hang
+on the FFM pair path, missing `MSG_CMSG_CLOEXEC`, SEQPACKET pairs, a Ruby label leaking into
+Java-format frames, jruby tests pinned to pre-3.4 labels and AF_UNSPEC, and `File.identical?` on
+pipes. Full table: `PR-9040-NOTES.md` section 8. Every remaining local failure also fails on master
+on the same host.
