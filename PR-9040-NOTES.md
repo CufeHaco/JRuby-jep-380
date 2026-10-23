@@ -255,3 +255,17 @@ Fixed on the branch, each in the commit it belongs to:
 | 4 jruby tests (`test_addrinfo`, `test_socket`) failed | they expected link-layer ifaddrs as AF_UNSPEC (with a TODO for AF_PACKET) | expect AF_PACKET where defined, as MRI | 3 |
 | 4 jruby tests failed on Windows (second push: 135 passed, 1 failed) | link-layer ifaddrs reported AF_PACKET on every OS, but `Socket::AF_PACKET` is Linux-only | AF_PACKET on Linux only; AF_UNSPEC elsewhere, as on master | 3 |
 | `File.identical?(pipe, pipe)` was false | pre-existing; reached by MRI's socket tests once fd passing works | IO arguments are statted through their fd | 1 |
+
+**CI after the fixes** (`6c2656f`, then `5fdb5c0` with an identical tree to get a fresh run):
+134 passed / 2 failed, then 135 passed / 1 failed. None of the remaining failures repeats on the
+same code, and none is in code this PR touches:
+
+- `concurrent-ruby` (thread-timing specs) failed once; passed on the next run, and the PR build
+  passes concurrent-ruby's full `spec:ci` (3032 examples) twice locally.
+- `language specs (OpenBSD)` failed once while rsyncing into its VM, before any spec ran.
+- `spec:ruby:fast:jit (Java 25 -indy)` failed once on `IO#isatty is an alias of IO#tty?` (the
+  io-console issue in section 3) and passed on the identical tree the run before. Locally in that
+  exact mode (`-Xcompile.invokedynamic=false -X+C -Xjit.threshold=0`) the PR passes 31638 examples
+  with 0 failures; plain `master` fails the same isatty spec there.
+
+A fork PR's author can't re-run single jobs; a maintainer can.
